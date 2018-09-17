@@ -1,1 +1,24 @@
-# script like https://github.com/coreos/init/blob/master/scripts/issuegen lives here
+#!/bin/bash
+
+set -e
+
+print_issue() {
+    echo
+    echo 'This is \n (\s \m \r) \t'
+    for note in /run/coreos/issue.d/*; do
+        [ -f "${note}" ] && cat "${note}"
+    done
+    echo
+}
+
+case "$1" in
+    add)
+        mkdir -p /run/coreos/issue.d
+        echo "${2}: \\4{${2}} \\6{${2}}" > "/run/coreos/issue.d/${2}"
+        ;;
+    remove)
+        rm -f "/run/coreos/issue.d/${2}"
+        ;;
+esac
+
+print_issue > /run/coreos/issue
