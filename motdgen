@@ -1,24 +1,22 @@
-# script like https://github.com/coreos/init/blob/master/scripts/motdgen lives here
-
 #!/bin/bash
 
 set -e
 
 source /usr/lib/os-release
 
-mkdir -p /run/coreos
-echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/coreos/motd
+mkdir -p /run
+echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/motd
 
 # TODO: get systemd failed units (less verbose than systemctl list-units --failed)
 # See https://github.com/coreos/init/commit/4b05ed5eae948ecd51d289097b3f43022e2baf34#diff-892b6c24ac66bd41b13adeaeb077da83
 # Question: where can core user startup scripts be found? https://github.com/coreos/init/commit/5e82c6bf46d746545281a219ce82af57e950f026#diff-892b6c24ac66bd41b13adeaeb077da83
-echo -e "To override this message, place a file at /etc/motd\n---" >> /run/coreos/motd
+echo -e "To override this message, place a file at /etc/motd\n---" >> /run/motd
 
-# What it looks like if we want to add a note in the /run/coreos/motd.d/ directory.
+# What it looks like if we want to add a note in the /run/motd.d/ directory.
 echo "Red Hat CoreOS \
   Information: https://url.corp.redhat.com/redhat-coreos \
   Bugs: https://github.com/openshift/os \
 ---
-" > /run/coreos/motd.d/test-info
+" > /run/motd.d/test-info.motd
 
 # Do not read /etc/motd.d directory here - up to user to break symlink and add something.

@@ -21,4 +21,5 @@ case "$1" in
         ;;
 esac
 
-print_issue > /run/coreos/issue
+# /run/issue is symlinked from /etc/issue
+print_issue > /run/issue
