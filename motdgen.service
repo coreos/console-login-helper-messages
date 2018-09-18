@@ -1,1 +1,7 @@
-# unit file like https://github.com/coreos/init/blob/master/systemd/system/motdgen.service lives here
+[Unit]
+Description=Generate /run/motd
+Before=systemd-user-sessions.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/coreos/motdgen

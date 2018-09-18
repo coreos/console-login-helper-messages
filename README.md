@@ -11,7 +11,7 @@ Repo to contain development files for fedora-coreos login messages
 ## How the directory looks after ./install.sh
 
 ```
-[rob@localhost fedora-coreos-login-messages]$ ./install.sh 
+[rob@localhost fedora-coreos-login-messages]$ ./install.sh
 Installing to /home/rob/vagrants/fedora-coreos-login-messages/install
 [rob@localhost fedora-coreos-login-messages]$ tree install
 install
@@ -44,6 +44,9 @@ install
 
 ## Issues to figure out right now
  - have symlinks be treated like files - if a file is written where the symlink is, the symlink gets deleted and file goes in its place
+    - users can use cp --remove-destination my-motd /etc/motd to delete the symlink first, then put a file in to replace it. other option is rm /etc/motd and
+- on second run of install, symlink `/etc/motd -> /run/motd` becomes symlink `/etc/motd -> /usr/lib/motd` instead - possibly use absolute symlinks to avoid this? or remove all symlinks to clean up first
+- appropriate selinux perms for systemd units
 
 ## Enhancements for future
 - have upstream PAM include the "trying" functionality, use this config rather than symlinks

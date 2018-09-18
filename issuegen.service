@@ -1,1 +1,8 @@
-# unit file like https://github.com/coreos/init/blob/master/systemd/system/issuegen.service lives here
+[Unit]
+Description=Generate /run/issue
+Before=systemd-user-sessions.service
+After=sshd-keygen.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/coreos/issuegen
