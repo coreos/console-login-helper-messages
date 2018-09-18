@@ -6,6 +6,7 @@ Repo to contain development files for fedora-coreos login messages
 - within motdgen and issuegen scripts, generate a single motd/issue file (don't append anything in `/etc/motd.d`)
     - PAM and agetty search /etc/motd.d and /etc/issue.d, so users can drop messages in here (after removing the symlink) - no need to append in issuegen or motdgen
     - issuegen only appends things in `/run/coreos/issue.d`, not `/run/issue.d`; the former is in our control and latter is for users
+    - the init process (or any process with systemd_u in SELinux security context) must install the motd scripts, otherwise `systemctl start motdgen.service` runs into permission errors
 - if users wish to override things, they may delete the symlinks at etc, drop their own files there, create their own systemd units writing to etc
 
 ## How the directory looks after ./install.sh
