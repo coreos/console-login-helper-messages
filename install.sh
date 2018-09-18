@@ -3,8 +3,7 @@
 set -eo pipefail
 
 # Leave as empty to install to root (/)
-INSTALL_PATH=$PWD/install
-# INSTALL_PATH=""
+INSTALL_PATH="$1"
 
 echo "Installing to $INSTALL_PATH/"
 
@@ -39,14 +38,21 @@ echo "Test file in /usr/lib/motd.d" > $USRLIB_DEST/motd.d/test.motd
 # mkdir -p $USRLIB_DEST/issue.d
 # echo "Test file in /usr/lib/issue.d" > $USRLIB_DEST/issue.d/test.motd
 
-ln -sf $RUN_DEST/motd $ETC_DEST/motd
-ln -sf $RUN_DEST/motd.d $ETC_DEST/motd.d
-# ln -sf $INSTALL_PATH/run/issue $INSTALL_PATH/etc/issue
-# ln -sf $INSTALL_PATH/run/issue.d $INSTALL_PATH/etc/issue.d
+ln -sfT $RUN_DEST/motd $ETC_DEST/motd
+ln -sfT $RUN_DEST/motd.d $ETC_DEST/motd.d
+# ln -sfT $INSTALL_PATH/run/issue $INSTALL_PATH/etc/issue
+# ln -sfT $INSTALL_PATH/run/issue.d $INSTALL_PATH/etc/issue.d
 
-ln -sf $USRLIB_DEST/motd $RUN_DEST/motd
-ln -sf $USRLIB_DEST/motd.d $RUN_DEST/motd.d
-# ln -sf $USRLIB_DEST/issue $RUN_DEST/issue
-# ln -sf $USRLIB_DEST/issue.d $RUN_DEST/issue.d
+# ln -sfT $USRLIB_DEST/motd $RUN_DEST/motd
+# ln -sfT $USRLIB_DEST/motd.d $RUN_DEST/motd.d
+# ln -sfT $USRLIB_DEST/issue $RUN_DEST/issue
+# ln -sfT $USRLIB_DEST/issue.d $RUN_DEST/issue.d
 
-chcon -u system_u /usr/lib/coreos/motdgen
+chcon -u system_u $SCRIPT_DEST/motdgen
+chcon -u system_u $SYSTEMD_UNIT_DEST/motdgen.service
+chcon -u system_u $SYSTEMD_UNIT_DEST/motdgen.path
+touch /run/motd
+chcon -u system_u /run/motd
+mkdir -p /run/motd.d
+touch /run/motd.d/test-info.motd
+chcon -u system_u /run/motd.d/test-info.motd
