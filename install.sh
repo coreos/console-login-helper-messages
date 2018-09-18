@@ -22,6 +22,7 @@ mkdir -p $RUN_DEST
 mkdir -p $USRLIB_DEST
 mkdir -p $USRLIB_DEST/motd.d
 mkdir -p $USRLIB_DEST/issue.d
+mkdir -p $RUN_DEST/coreos/issue.d
 
 cp ./issuegen.service $SYSTEMD_UNIT_DEST/
 cp ./motdgen.service $SYSTEMD_UNIT_DEST/
@@ -35,6 +36,7 @@ echo "Fallback /usr/lib/motd" > $USRLIB_DEST/motd
 echo "Test file in /usr/lib/motd.d" > $USRLIB_DEST/motd.d/test.motd
 echo "Fallback /usr/lib/issue" > $USRLIB_DEST/issue
 echo "Test file in /usr/lib/issue.d" > $USRLIB_DEST/issue.d/test.motd
+echo "\"Private\" issue file in /run/coreos/issue.d" > $RUN_DEST/coreos/issue.d/test-info.issue
 
 # ---- make symlinks ----
 
