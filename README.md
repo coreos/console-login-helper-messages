@@ -36,12 +36,12 @@ install
 ```
 
 ## Next steps
-- account for issue in install.sh (for testing)
-- script to enable the systemd units and reboot (for testing)
-- script to configure PAM (for testing)
-- make systemd-tmpfiles config to create symlinks
-- wrap everything up with rpm spec file (includes gen scripts, tmpfiles config, systemd units)
-- show systemd failed units, or find out where this is currently being done https://github.com/coreos/init/commit/5e82c6bf46d746545281a219ce82af57e950f026#diff-892b6c24ac66bd41b13adeaeb077da83
+- [x] account for issue in install.sh (for testing)
+- [x] script to enable the systemd units and reboot (for testing)
+- [ ] script to configure PAM (for testing)
+- [ ] make systemd-tmpfiles config to create symlinks
+- [ ] wrap everything up with rpm spec file (includes gen scripts, tmpfiles config, systemd units)
+- [ ] show systemd failed units, or find out where this is currently being done https://github.com/coreos/init/commit/5e82c6bf46d746545281a219ce82af57e950f026#diff-892b6c24ac66bd41b13adeaeb077da83
 
 ## Issues to figure out right now
  - have symlinks be treated like files - if a file is written where the symlink is, the symlink gets deleted and file goes in its place

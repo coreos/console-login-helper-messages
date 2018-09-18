@@ -22,7 +22,7 @@ chcon -u system_u $RUN_DEST
 chcon -u system_u $USRLIB_DEST
 chcon -u system_u $USRLIB_DEST/motd.d
 chcon -u system_u $USRLIB_DEST/issue.d
-chcon -u system_u $USRLIB_DEST/coreos/issue.d
+chcon -u system_u $RUN_DEST/coreos/issue.d
 
 chcon -u system_u $SYSTEMD_UNIT_DEST/issuegen.service
 chcon -u system_u $SYSTEMD_UNIT_DEST/motdgen.service

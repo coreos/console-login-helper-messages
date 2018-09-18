@@ -14,7 +14,7 @@ echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/motd
 echo -e "To override this message, place a file at /etc/motd\n---" >> /run/motd
 
 # What it looks like if we want to add a note in the /run/motd.d/ directory.
-echo "Red Hat CoreOS \n\
+echo -e "Red Hat CoreOS \n\
   Information: https://url.corp.redhat.com/redhat-coreos \n\
   Bugs: https://github.com/openshift/os \n\
 ---
