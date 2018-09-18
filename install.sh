@@ -40,6 +40,49 @@ echo "\"Private\" issue file in /run/coreos/issue.d" > $RUN_DEST/coreos/issue.d/
 
 # ---- make symlinks ----
 
+# improved error checking would be to assert that a symlink exists in the "else"
+# conditions of all of these
+if [ -f "$RUN_DEST/motd" ]
+then
+  if [ -h "$RUN_DEST/motd" ]
+  then
+    echo "Symlink already exists run/motd"
+  else
+    echo "Removing run/motd file"
+    rm $RUN_DEST/motd
+  fi
+fi
+if [ -d "$RUN_DEST/motd.d" ]
+then
+  if [ -h "$RUN_DEST/motd.d" ]
+  then
+    echo "Symlink already exists run/motd.d"
+  else
+    echo "Removing run/motd.d dir"
+    rm -r $RUN_DEST/motd.d
+  fi
+fi
+if [ -f "$RUN_DEST/issue" ]
+then
+  if [ -h "$RUN_DEST/issue" ]
+  then
+    echo "Symlink already exists run/issue"
+  else
+    echo "Removing run/issue file"
+    rm $RUN_DEST/issue
+  fi
+fi
+if [ -d "$RUN_DEST/issue.d" ]
+then
+  if [ -h "$RUN_DEST/issue.d" ]
+  then
+    echo "Symlink already exists run/issue.d"
+  else
+    echo "Removing run/issue.d dir"
+    rm -r $RUN_DEST/issue.d
+  fi
+fi
+
 ln -sfT $RUN_DEST/motd $ETC_DEST/motd
 ln -sfT $RUN_DEST/motd.d $ETC_DEST/motd.d
 ln -sfT $INSTALL_PATH/run/issue $INSTALL_PATH/etc/issue

@@ -5,7 +5,7 @@ set -eo pipefail
 # Leave as empty to install to root (/)
 INSTALL_PATH="$1"
 
-echo "Installing to $INSTALL_PATH/"
+echo "Starting, from install path $INSTALL_PATH/"
 
 SCRIPT_DEST=$INSTALL_PATH/usr/lib/coreos
 SYSTEMD_UNIT_DEST=$INSTALL_PATH/usr/lib/systemd/system
@@ -49,34 +49,38 @@ if [ -h "$RUN_DEST/motd" ]
 then
   echo "Removing run/motd symlink"
   rm $RUN_DEST/motd
-  touch /run/motd
-  chcon -u system_u $RUN_DEST/motd
 fi
 if [ -h "$RUN_DEST/motd.d" ]
 then
   echo "Removing run/motd.d symlink"
   rm $RUN_DEST/motd.d
-  mkdir -p $RUN_DEST/motd.d
-  chcon -u system_u $RUN_DEST/motd.d
-  touch $RUN_DEST/motd.d/test-info.motd
-  chcon -u system_u $RUN_DEST/motd.d/test-info.motd
 fi
 if [ -h "$RUN_DEST/issue" ]
 then
   echo "Removing run/issue symlink"
   rm $RUN_DEST/issue
-  touch /run/issue
-  chcon -u system_u $RUN_DEST/issue
 fi
 if [ -h "$RUN_DEST/issue.d" ]
 then
   echo "Removing run/issue.d symlink"
   rm $RUN_DEST/issue.d
-  mkdir -p $RUN_DEST/issue.d
-  chcon -u system_u $RUN_DEST/issue.d
-  touch $RUN_DEST/issue.d/test-info.issue
-  chcon -u system_u $RUN_DEST/issue.d/test-info.issue
 fi
+
+touch /run/motd
+chcon -u system_u $RUN_DEST/motd
+
+mkdir -p $RUN_DEST/motd.d
+chcon -u system_u $RUN_DEST/motd.d
+touch $RUN_DEST/motd.d/test-info.motd
+chcon -u system_u $RUN_DEST/motd.d/test-info.motd
+
+touch /run/issue
+chcon -u system_u $RUN_DEST/issue
+
+mkdir -p $RUN_DEST/issue.d
+chcon -u system_u $RUN_DEST/issue.d
+touch $RUN_DEST/issue.d/test-info.issue
+chcon -u system_u $RUN_DEST/issue.d/test-info.issue
 
 # --- start services ----
 
