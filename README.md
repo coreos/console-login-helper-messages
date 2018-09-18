@@ -4,7 +4,7 @@ Repo to contain development files for fedora-coreos login messages
 ## Operation
 - use symlinks (see tree output below, issue will have similar idea)
 - within motdgen and issuegen scripts, generate a single motd/issue file (don't append anything in `/etc/motd.d`)
-    - PAM and agetty search /etc/motd.d and /etc/issue.d, so users can drop messages in here (after removing the symblink) - no need to append in issuegen or motdgen
+    - PAM and agetty search /etc/motd.d and /etc/issue.d, so users can drop messages in here (after removing the symlink) - no need to append in issuegen or motdgen
     - issuegen only appends things in `/run/coreos/issue.d`, not `/run/issue.d`; the former is in our control and latter is for users
 - if users wish to override things, they may delete the symlinks at etc, drop their own files there, create their own systemd units writing to etc
 
@@ -35,6 +35,7 @@ install
 ```
 
 ## Next steps
+- account for issue in install.sh (for testing)
 - script to enable the systemd units and reboot (for testing)
 - script to configure PAM (for testing)
 - make systemd-tmpfiles config to create symlinks
