@@ -53,5 +53,3 @@ mkdir -p $RUN_DEST/issue.d
 chcon -u system_u $RUN_DEST/issue.d
 touch $RUN_DEST/issue.d/test-info.issue
 chcon -u system_u $RUN_DEST/issue.d/test-info.issue
-
-chcon -u system_u $RUN_DEST/coreos/issue.d/test-info-priv.issue

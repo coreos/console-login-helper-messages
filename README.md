@@ -16,7 +16,7 @@ Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide 
         # ./setup-run.sh
         # ./start.sh
 
-5. Now edit the sshd PAM configuration of RHCOS in `/etc/pam.d/sshd`:
+5. Now edit the sshd PAM configuration of RHCOS in `vi /etc/pam.d/sshd`:
 
 Add the following line just before `session include password-auth`:
 
@@ -37,7 +37,7 @@ Add the following line just before `session include password-auth`:
 
 3. `# chcon -u system_u /usr/lib/udev/rules.d/90-issuegen.rules`
 
-4. **WIP**: need to reboot or `udevadm control --reload-rules` here, running into issues with those
+4. **WIP**: need to reboot or `udevadm control --reload-rules` here, running into issues with those. doing this on `fedora/28-cloud-base` works
 
 5. `vagrant ssh`, and check the contents of `/run/coreos/issue.d`. If there are device files in there, then the udev rule successfully transferred the information to issue.
 
