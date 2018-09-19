@@ -9,6 +9,10 @@ source ./envvars
 
 echo "Setting up run for $INSTALL_PATH/"
 
+# --- make sure symlinks are created from tmpfiles ---
+
+systemd-tmpfiles --create
+
 # ---- deal with SELinux for everything created ----
 
 chcon -u system_u $SCRIPT_DEST
@@ -37,33 +41,7 @@ chcon -h -u system_u $ETC_DEST/motd.d
 chcon -h -u system_u $ETC_DEST/issue
 chcon -h -u system_u $ETC_DEST/issue.d
 
-chcon -h -u system_u $RUN_DEST/motd
-chcon -h -u system_u $RUN_DEST/motd.d
-chcon -h -u system_u $RUN_DEST/issue
-chcon -h -u system_u $RUN_DEST/issue.d
-
 # ---- get things ready for motdgen/issuegen ----
-
-if [ -h "$RUN_DEST/motd" ]
-then
-  echo "Removing run/motd symlink"
-  rm $RUN_DEST/motd
-fi
-if [ -h "$RUN_DEST/motd.d" ]
-then
-  echo "Removing run/motd.d symlink"
-  rm $RUN_DEST/motd.d
-fi
-if [ -h "$RUN_DEST/issue" ]
-then
-  echo "Removing run/issue symlink"
-  rm $RUN_DEST/issue
-fi
-if [ -h "$RUN_DEST/issue.d" ]
-then
-  echo "Removing run/issue.d symlink"
-  rm $RUN_DEST/issue.d
-fi
 
 touch $RUN_DEST/motd
 chcon -u system_u $RUN_DEST/motd
