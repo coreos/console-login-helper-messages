@@ -11,6 +11,8 @@ print_issue() {
     echo
 }
 
+mkdir -p /run/issue.d
+
 case "$1" in
     add)
         mkdir -p /run/coreos/issue.d

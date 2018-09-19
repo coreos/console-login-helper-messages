@@ -4,7 +4,7 @@ set -e
 
 source /usr/lib/os-release
 
-mkdir -p /run
+mkdir -p /run/motd.d
 
 echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/motd
 

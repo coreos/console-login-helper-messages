@@ -2,12 +2,32 @@
 
 set -eo pipefail
 
+# This logic will be included in the installer
+
 # Leave as empty to install to root (/)
 INSTALL_PATH="$1"
 
 echo "Installing to $INSTALL_PATH/"
 
 source ./envvars
+
+# Installer assumes these symlinks are nonexistent
+if [ -h /etc/motd ]
+then
+  rm -f /etc/motd
+fi
+if [ -h /etc/motd.d ]
+then
+  rm -f /etc/motd.d
+fi
+if [ -h /etc/issue ]
+then
+  rm -f /etc/issue
+fi
+if [ -h /etc/issue.d ]
+then
+  rm -f /etc/issue.d
+fi
 
 # ---- create files and directories ----
 
@@ -35,4 +55,6 @@ echo "Fallback /usr/lib/motd" > $USRLIB_DEST/motd
 echo "Test file in /usr/lib/motd.d" > $USRLIB_DEST/motd.d/test.motd
 echo "Fallback /usr/lib/issue" > $USRLIB_DEST/issue
 echo "Test file in /usr/lib/issue.d" > $USRLIB_DEST/issue.d/test.motd
+
+# Installer will not do this
 echo "\"Private\" issue file in /run/coreos/issue.d" > $RUN_DEST/coreos/issue.d/test-info.issue

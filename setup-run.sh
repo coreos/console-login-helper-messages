@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# None of this logic will be included in the installer
+# this is just to workaround to get system_u added so
+# systemctl can be used to start the services when testing.
+
 set -eo pipefail
 
 # Leave as empty to install to root (/)
@@ -8,10 +12,6 @@ INSTALL_PATH="$1"
 source ./envvars
 
 echo "Setting up run for $INSTALL_PATH/"
-
-# --- make sure symlinks are created from tmpfiles ---
-
-systemd-tmpfiles --create
 
 # ---- deal with SELinux for everything created ----
 
@@ -35,11 +35,6 @@ chcon -u system_u $SYSTEMD_TMPFILES_DEST/issuegen.conf
 
 chcon -u system_u $USRLIB_DEST/motd
 chcon -u system_u $USRLIB_DEST/motd.d/test.motd
-
-chcon -h -u system_u $ETC_DEST/motd
-chcon -h -u system_u $ETC_DEST/motd.d
-chcon -h -u system_u $ETC_DEST/issue
-chcon -h -u system_u $ETC_DEST/issue.d
 
 # ---- get things ready for motdgen/issuegen ----
 
