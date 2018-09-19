@@ -25,3 +25,5 @@ esac
 
 # /run/issue is symlinked from /etc/issue
 print_issue > /run/issue
+
+echo "Test \"Public\" issue in /run/issue.d" > /run/issue.d/test-info.issue

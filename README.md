@@ -1,70 +1,29 @@
 # fedora-coreos-login-messages
-Repo to contain development files for fedora-coreos login messages
+
+Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide an `issue/motd` mechanism for RHCOS/FCOS. To be distributed as an RPM, with some additional manual configuration required to work with software like PAM, agetty, udev, ...
 
 ## Operation
-- use symlinks (see tree output below, issue will have similar idea) created by systemd-tmpfiles
-- within motdgen and issuegen scripts, generate a single motd/issue file (don't append anything in `/etc/motd.d`)
-    - PAM and agetty search /etc/motd.d and /etc/issue.d, so users can drop messages in here (after removing the symlink) - no need to append in issuegen or motdgen
-    - issuegen only appends things in `/run/coreos/issue.d`, not `/run/issue.d`; the former is in our control and latter is for users
-    - the init process (or any process with systemd_u in SELinux security context) must install the motd scripts, otherwise `systemctl start motdgen.service` runs into permission errors
-- if users wish to override things, they may place a new file in tmpfiles.d to change/delete the symlinks, drop their own files into issue/motd/issue.d/motd.d
-- to integrate with PAM, agetty, etc, this is up to the user to configure those - this RPM will only install the systemd units, scripts, and tmpfiles config
 
-## How the directory looks after ./install.sh
+- Symlinks from `/etc/` to `/run/` (see below) are set by `systemd-tmpfiles`.
+- `issuegen` and `motdgen` generate `issue`/`motd` files in `/run/`, `/run/motd.d/`, and `/run/issue.d`, based on updated system data.
+- New system data may be "fed" at runtime to `issuegen`/`motdgen` by placing a file in the corresponding private folder in `/run/coreos/issue.d` or `/run/coreos/motd.d`. This is currently how `isssuegen` works in CL to get IP address.
+- Users may customize `issue` or `motd` by breaking the necessary symlinks and placing a file in `/etc/`. This overshadows the generated ones in `/run/`
+- If users would like to keep the original generated `issue`/`motd` and append their own `issue`/`motd`, they may break the symlinks `/etc/motd.d` or `/etc/issue.d`, create directories in their place, and place files in those directories (`/etc/motd.d/`/`/etc/issue.d/`).
+- PAM and agetty must be configured to search `/etc/motd.d` and `/etc/issue.d` respectively, for the messages in those directories to be shown at login. This is default for agetty, and default for PAM as long as the `pam_motd.so` module is specified in the necessary `/etc/pam.d` configuration files.
+
+## Directory tree after `./install.sh install`
 
 ```
-[root@localhost fedora-coreos-login-messages]# ./install.sh $PWD/install
-Installing to /vagrant/fedora-coreos-login-messages/install/
-[root@localhost fedora-coreos-login-messages]# tree install
 install
 ├── etc
-│   ├── issue -> /vagrant/fedora-coreos-login-messages/install/run/issue
-│   ├── issue.d -> /vagrant/fedora-coreos-login-messages/install/run/issue.d
-│   ├── motd -> /vagrant/fedora-coreos-login-messages/install/run/motd
-│   └── motd.d -> /vagrant/fedora-coreos-login-messages/install/run/motd.d
+│   ├── issue -> ../run/issue
+│   ├── issue.d -> ../run/issue.d
+│   ├── motd -> ../run/motd
+│   └── motd.d -> ../run/motd.d
 ├── run
 │   ├── coreos
 │   │   └── issue.d
-│   │       └── test-info.issue
-│   ├── issue -> /vagrant/fedora-coreos-login-messages/install/usr/lib/issue
-│   ├── issue.d -> /vagrant/fedora-coreos-login-messages/install/usr/lib/issue.d
-│   ├── motd -> /vagrant/fedora-coreos-login-messages/install/usr/lib/motd
-│   └── motd.d -> /vagrant/fedora-coreos-login-messages/install/usr/lib/motd.d
-└── usr
-    └── lib
-        ├── coreos
-        │   ├── issuegen
-        │   └── motdgen
-        ├── issue
-        ├── issue.d
-        │   └── test.motd
-        ├── motd
-        ├── motd.d
-        │   └── test.motd
-        └── systemd
-            └── system
-                ├── issuegen.service
-                ├── motdgen.path
-                └── motdgen.service
-
-15 directories, 14 files
-[root@localhost fedora-coreos-login-messages]# ./setup-run.sh $PWD/install
-Starting, from install path /vagrant/fedora-coreos-login-messages/install/
-Removing run/motd symlink
-Removing run/motd.d symlink
-Removing run/issue symlink
-Removing run/issue.d symlink
-[root@localhost fedora-coreos-login-messages]# tree install
-install
-├── etc
-│   ├── issue -> /vagrant/fedora-coreos-login-messages/install/run/issue
-│   ├── issue.d -> /vagrant/fedora-coreos-login-messages/install/run/issue.d
-│   ├── motd -> /vagrant/fedora-coreos-login-messages/install/run/motd
-│   └── motd.d -> /vagrant/fedora-coreos-login-messages/install/run/motd.d
-├── run
-│   ├── coreos
-│   │   └── issue.d
-│   │       └── test-info.issue
+│   │       └── test-info-priv.issue
 │   ├── issue
 │   ├── issue.d
 │   │   └── test-info.issue
@@ -78,18 +37,18 @@ install
         │   └── motdgen
         ├── issue
         ├── issue.d
-        │   └── test.motd
+        │   └── test.issue
         ├── motd
         ├── motd.d
         │   └── test.motd
-        └── systemd
-            └── system
-                ├── issuegen.service
-                ├── motdgen.path
-                └── motdgen.service
-
-15 directories, 16 files
-
+        ├── systemd
+        │   └── system
+        │       ├── issuegen.service
+        │       ├── motdgen.path
+        │       └── motdgen.service
+        └── tmpfiles.d
+            ├── issuegen.conf
+            └── motdgen.conf
 ```
 
 ## Next steps
@@ -108,6 +67,8 @@ install
 - delete symlinks/files existing in /etc/ before install?
 - create backup symlink from /run/{motd,issue} to /usr/lib/{motd,issue}?
 - rpm packaging and making sure the services are run by init script (which has system_u SELinux user)
+- path for update configuration changes in motdgen.path unit file
+- how do `motd` and `issue` get updated at runtime (e.g. if a systemd unit fails, new device appears, etc)?
 
 ## Enhancements for future
 - have upstream PAM include the "trying" functionality, use this config rather than symlinks

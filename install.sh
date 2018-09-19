@@ -54,7 +54,7 @@ cp ./motdgen.conf $SYSTEMD_TMPFILES_DEST/
 echo "Fallback /usr/lib/motd" > $USRLIB_DEST/motd
 echo "Test file in /usr/lib/motd.d" > $USRLIB_DEST/motd.d/test.motd
 echo "Fallback /usr/lib/issue" > $USRLIB_DEST/issue
-echo "Test file in /usr/lib/issue.d" > $USRLIB_DEST/issue.d/test.motd
+echo "Test file in /usr/lib/issue.d" > $USRLIB_DEST/issue.d/test.issue
 
 # Installer will not do this
-echo "\"Private\" issue file in /run/coreos/issue.d" > $RUN_DEST/coreos/issue.d/test-info.issue
+echo "\"Private\" issue file in /run/coreos/issue.d" > $RUN_DEST/coreos/issue.d/test-info-priv.issue
