@@ -2,6 +2,30 @@
 
 Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide an `issue/motd` mechanism for RHCOS/FCOS. To be distributed as an RPM, with some additional manual configuration required to work with software like PAM, agetty, udev, ...
 
+## Steps to test motd in RHCOS
+
+1. After cloning this repository, download the latest RHCOS Vagrant box
+2. `vagrant box add --name rhcos /path/to/box.box` (any name other than `rhcos` works here, just be sure to update the Vagrantfile)
+3. In this repository, `vagrant up && vagrant ssh`
+4. Run the following commands once ssh has completed
+
+        $ sudo su
+        # ostree admin unlock
+        # cd /srv/fedora-coreos-login-messages
+        # ./install.sh
+        # ./setup-run.sh
+        # ./start.sh
+
+4. Now edit the sshd PAM configuration of RHCOS in `/etc/pam.d/sshd`:
+
+Add the following line just before `session include password-auth`:
+
+        session optional pam_motd.so
+
+5. `# exit`, then `$ exit` to exit SSH.
+
+6. `vagrant ssh`, now an additional `motd` should appear!
+
 ## Operation
 
 - Symlinks from `/etc/` to `/run/` (see below) are set by `systemd-tmpfiles`.
@@ -11,10 +35,10 @@ Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide 
 - If users would like to keep the original generated `issue`/`motd` and append their own `issue`/`motd`, they may break the symlinks `/etc/motd.d` or `/etc/issue.d`, create directories in their place, and place files in those directories (`/etc/motd.d/`/`/etc/issue.d/`).
 - PAM and agetty must be configured to search `/etc/motd.d` and `/etc/issue.d` respectively, for the messages in those directories to be shown at login. This is default for agetty, and default for PAM as long as the `pam_motd.so` module is specified in the necessary `/etc/pam.d` configuration files.
 
-## Directory tree after `./install.sh install`
+## Directory tree after `./install.sh
 
 ```
-install
+/
 ├── etc
 │   ├── issue -> ../run/issue
 │   ├── issue.d -> ../run/issue.d
