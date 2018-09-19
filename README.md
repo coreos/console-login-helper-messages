@@ -13,23 +13,23 @@ Repo to contain development files for fedora-coreos login messages
 ## How the directory looks after ./install.sh
 
 ```
-[root@localhost fedora-coreos-login-messages]# ./install.sh install
-Installing to install/
-[root@localhost fedora-coreos-login-messages]# tree install
-install
+[root@localhost fedora-coreos-login-messages]# ./install.sh $PWD/install
+Installing to /vagrant/fedora-coreos-login-messages/install/
+[root@localhost fedora-coreos-login-messages]# tree $PWD/install/
+/vagrant/fedora-coreos-login-messages/install/
 ├── etc
-│   ├── issue -> install/run/issue
-│   ├── issue.d -> install/run/issue.d
-│   ├── motd -> install/run/motd
-│   └── motd.d -> install/run/motd.d
+│   ├── issue -> /vagrant/fedora-coreos-login-messages/install/run/issue
+│   ├── issue.d -> /vagrant/fedora-coreos-login-messages/install/run/issue.d
+│   ├── motd -> /vagrant/fedora-coreos-login-messages/install/run/motd
+│   └── motd.d -> /vagrant/fedora-coreos-login-messages/install/run/motd.d
 ├── run
 │   ├── coreos
 │   │   └── issue.d
 │   │       └── test-info.issue
-│   ├── issue -> install/usr/lib/issue
-│   ├── issue.d -> install/usr/lib/issue.d
-│   ├── motd -> install/usr/lib/motd
-│   └── motd.d -> install/usr/lib/motd.d
+│   ├── issue -> /vagrant/fedora-coreos-login-messages/install/usr/lib/issue
+│   ├── issue.d -> /vagrant/fedora-coreos-login-messages/install/usr/lib/issue.d
+│   ├── motd -> /vagrant/fedora-coreos-login-messages/install/usr/lib/motd
+│   └── motd.d -> /vagrant/fedora-coreos-login-messages/install/usr/lib/motd.d
 └── usr
     └── lib
         ├── coreos
