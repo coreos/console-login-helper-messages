@@ -15,8 +15,8 @@ Repo to contain development files for fedora-coreos login messages
 ```
 [root@localhost fedora-coreos-login-messages]# ./install.sh $PWD/install
 Installing to /vagrant/fedora-coreos-login-messages/install/
-[root@localhost fedora-coreos-login-messages]# tree $PWD/install/
-/vagrant/fedora-coreos-login-messages/install/
+[root@localhost fedora-coreos-login-messages]# tree install
+install
 ├── etc
 │   ├── issue -> /vagrant/fedora-coreos-login-messages/install/run/issue
 │   ├── issue.d -> /vagrant/fedora-coreos-login-messages/install/run/issue.d
@@ -46,6 +46,50 @@ Installing to /vagrant/fedora-coreos-login-messages/install/
                 ├── issuegen.service
                 ├── motdgen.path
                 └── motdgen.service
+
+15 directories, 14 files
+[root@localhost fedora-coreos-login-messages]# ./setup-run.sh $PWD/install
+Starting, from install path /vagrant/fedora-coreos-login-messages/install/
+Removing run/motd symlink
+Removing run/motd.d symlink
+Removing run/issue symlink
+Removing run/issue.d symlink
+[root@localhost fedora-coreos-login-messages]# tree install
+install
+├── etc
+│   ├── issue -> /vagrant/fedora-coreos-login-messages/install/run/issue
+│   ├── issue.d -> /vagrant/fedora-coreos-login-messages/install/run/issue.d
+│   ├── motd -> /vagrant/fedora-coreos-login-messages/install/run/motd
+│   └── motd.d -> /vagrant/fedora-coreos-login-messages/install/run/motd.d
+├── run
+│   ├── coreos
+│   │   └── issue.d
+│   │       └── test-info.issue
+│   ├── issue
+│   ├── issue.d
+│   │   └── test-info.issue
+│   ├── motd
+│   └── motd.d
+│       └── test-info.motd
+└── usr
+    └── lib
+        ├── coreos
+        │   ├── issuegen
+        │   └── motdgen
+        ├── issue
+        ├── issue.d
+        │   └── test.motd
+        ├── motd
+        ├── motd.d
+        │   └── test.motd
+        └── systemd
+            └── system
+                ├── issuegen.service
+                ├── motdgen.path
+                └── motdgen.service
+
+15 directories, 16 files
+
 ```
 
 ## Next steps
