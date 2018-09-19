@@ -50,14 +50,22 @@ Add the following line just before `session include password-auth`:
 - If users would like to keep the original generated `issue`/`motd` and append their own `issue`/`motd`, they may break the symlinks `/etc/motd.d` or `/etc/issue.d`, create directories in their place, and place files in those directories (`/etc/motd.d/`/`/etc/issue.d/`).
 - PAM and agetty must be configured to search `/etc/motd.d` and `/etc/issue.d` respectively, for the messages in those directories to be shown at login. This is default for agetty, and default for PAM as long as the `pam_motd.so` module is specified in the necessary `/etc/pam.d` configuration files.
 
-## Directory tree after `./install.sh
+## Directory tree
 
 ```
 /
 ├── etc
+│   ├── issue -> ../run/issue
+│   ├── issue.d -> ../run/issue.d
+│   ├── motd -> ../run/motd
+│   └── motd.d -> ../run/motd.d
 ├── run
-│   └── coreos
-│       └── issue.d
+│   ├── coreos
+│   │   └── issue.d
+│   ├── issue
+│   ├── issue.d
+│   ├── motd
+│   └── motd.d
 └── usr
     └── lib
         ├── coreos
