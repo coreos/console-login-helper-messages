@@ -104,8 +104,9 @@ install
 
 ## Issues to figure out right now
  - have symlinks be treated like files - if a file is written where the symlink is, the symlink gets deleted and file goes in its place
-    - users can use cp --remove-destination my-motd /etc/motd to delete the symlink first, then put a file in to replace it. other option is rm /etc/motd and
+    - users can use cp --remove-destination my-motd /etc/motd to delete the symlink first, then put a file in to replace it
     - another option is delete the tmpfile creating the symlinks
+    - to simplify, can have only the symlink from /etc to /run, then just include some static motd as a fallback in /usr/lib (until changes are implemented in upstream PAM)
 - appropriate selinux perms for systemd units (the units, scripts, symlinks need to have context with user system_u)
 
 ## Enhancements for future
