@@ -17,6 +17,7 @@ USRLIB_DEST=$INSTALL_PATH/usr/lib
 
 chcon -u system_u $SCRIPT_DEST
 chcon -u system_u $SYSTEMD_UNIT_DEST
+chcon -u system_u $SYSTEMD_TMPFILES_DEST
 chcon -u system_u $ETC_DEST
 chcon -u system_u $RUN_DEST
 chcon -u system_u $USRLIB_DEST
@@ -29,6 +30,8 @@ chcon -u system_u $SYSTEMD_UNIT_DEST/motdgen.service
 chcon -u system_u $SYSTEMD_UNIT_DEST/motdgen.path
 chcon -u system_u $SCRIPT_DEST/issuegen
 chcon -u system_u $SCRIPT_DEST/motdgen
+chcon -u system_u $SYSTEMD_TMPFILES_DEST/motdgen.conf
+chcon -u system_u $SYSTEMD_TMPFILES_DEST/issuegen.conf
 
 chcon -u system_u $USRLIB_DEST/motd
 chcon -u system_u $USRLIB_DEST/motd.d/test.motd

@@ -9,6 +9,7 @@ echo "Installing to $INSTALL_PATH/"
 
 SCRIPT_DEST=$INSTALL_PATH/usr/lib/coreos
 SYSTEMD_UNIT_DEST=$INSTALL_PATH/usr/lib/systemd/system
+SYSTEMD_TMPFILES_DEST=$INSTALL_PATH/usr/lib/tmpfiles.d
 ETC_DEST=$INSTALL_PATH/etc
 RUN_DEST=$INSTALL_PATH/run
 USRLIB_DEST=$INSTALL_PATH/usr/lib
@@ -17,6 +18,7 @@ USRLIB_DEST=$INSTALL_PATH/usr/lib
 
 mkdir -p $SCRIPT_DEST
 mkdir -p $SYSTEMD_UNIT_DEST
+mkdir -p $SYSTEMD_TMPFILES_DEST
 mkdir -p $ETC_DEST
 mkdir -p $RUN_DEST
 mkdir -p $USRLIB_DEST
@@ -31,6 +33,8 @@ cp ./issuegen $SCRIPT_DEST/
 chmod +x $SCRIPT_DEST/issuegen
 cp ./motdgen $SCRIPT_DEST/
 chmod +x $SCRIPT_DEST/motdgen
+cp ./issuegen.conf $SYSTEMD_TMPFILES_DEST/
+cp ./motdgen.conf $SYSTEMD_TMPFILES_DEST/
 
 echo "Fallback /usr/lib/motd" > $USRLIB_DEST/motd
 echo "Test file in /usr/lib/motd.d" > $USRLIB_DEST/motd.d/test.motd
