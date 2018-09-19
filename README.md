@@ -55,20 +55,9 @@ Add the following line just before `session include password-auth`:
 ```
 /
 ├── etc
-│   ├── issue -> ../run/issue
-│   ├── issue.d -> ../run/issue.d
-│   ├── motd -> ../run/motd
-│   └── motd.d -> ../run/motd.d
 ├── run
-│   ├── coreos
-│   │   └── issue.d
-│   │       └── test-info-priv.issue
-│   ├── issue
-│   ├── issue.d
-│   │   └── test-info.issue
-│   ├── motd
-│   └── motd.d
-│       └── test-info.motd
+│   └── coreos
+│       └── issue.d
 └── usr
     └── lib
         ├── coreos
@@ -81,10 +70,10 @@ Add the following line just before `session include password-auth`:
         ├── motd.d
         │   └── test.motd
         ├── systemd
-        │   └── system
-        │       ├── issuegen.service
-        │       ├── motdgen.path
-        │       └── motdgen.service
+        │   └── system
+        │       ├── issuegen.service
+        │       ├── motdgen.path
+        │       └── motdgen.service
         └── tmpfiles.d
             ├── issuegen.conf
             └── motdgen.conf
