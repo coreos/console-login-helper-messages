@@ -7,12 +7,7 @@ INSTALL_PATH="$1"
 
 echo "Installing to $INSTALL_PATH/"
 
-SCRIPT_DEST=$INSTALL_PATH/usr/lib/coreos
-SYSTEMD_UNIT_DEST=$INSTALL_PATH/usr/lib/systemd/system
-SYSTEMD_TMPFILES_DEST=$INSTALL_PATH/usr/lib/tmpfiles.d
-ETC_DEST=$INSTALL_PATH/etc
-RUN_DEST=$INSTALL_PATH/run
-USRLIB_DEST=$INSTALL_PATH/usr/lib
+source ./envvars
 
 # ---- create files and directories ----
 

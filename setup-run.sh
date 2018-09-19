@@ -5,13 +5,9 @@ set -eo pipefail
 # Leave as empty to install to root (/)
 INSTALL_PATH="$1"
 
-echo "Starting, from install path $INSTALL_PATH/"
+source ./envvars
 
-SCRIPT_DEST=$INSTALL_PATH/usr/lib/coreos
-SYSTEMD_UNIT_DEST=$INSTALL_PATH/usr/lib/systemd/system
-ETC_DEST=$INSTALL_PATH/etc
-RUN_DEST=$INSTALL_PATH/run
-USRLIB_DEST=$INSTALL_PATH/usr/lib
+echo "Setting up run for $INSTALL_PATH/"
 
 # ---- deal with SELinux for everything created ----
 
