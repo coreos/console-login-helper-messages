@@ -16,21 +16,36 @@ Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide 
         # ./setup-run.sh
         # ./start.sh
 
-4. Now edit the sshd PAM configuration of RHCOS in `/etc/pam.d/sshd`:
+5. Now edit the sshd PAM configuration of RHCOS in `/etc/pam.d/sshd`:
 
 Add the following line just before `session include password-auth`:
 
         session optional pam_motd.so
 
-5. `# exit`, then `$ exit` to exit SSH.
+6. `# exit`, then `$ exit` to exit SSH.
 
-6. `vagrant ssh`, now an additional `motd` should appear!
+7. `vagrant ssh`, now new `motd`s should appear!
+
+## Steps to test issue in RHCOS
+
+1. Follow steps 1-4 in "Steps to test motd..." above
+
+2. Create a new file `# vi /usr/lib/udev/rules.d/90-issuegen.rules` with contents of the following (same rule as CL):
+
+        ACTION=="add", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/coreos/issuegen add $env{INTERFACE}"
+        ACTION=="remove", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/coreos/issuegen remove $env{INTERFACE}"
+
+3. `# chcon -u system_u /usr/lib/udev/rules.d/90-issuegen.rules`
+
+4. **WIP**: need to reboot or `udevadm control --reload-rules` here, running into issues with those
+
+5. `vagrant ssh`, and check the contents of `/run/coreos/issue.d`. If there are device files in there, then the udev rule successfully transferred the information to issue.
 
 ## Operation
 
 - Symlinks from `/etc/` to `/run/` (see below) are set by `systemd-tmpfiles`.
 - `issuegen` and `motdgen` generate `issue`/`motd` files in `/run/`, `/run/motd.d/`, and `/run/issue.d`, based on updated system data.
-- New system data may be "fed" at runtime to `issuegen`/`motdgen` by placing a file in the corresponding private folder in `/run/coreos/issue.d` or `/run/coreos/motd.d`. This is currently how `isssuegen` works in CL to get IP address.
+- New system data may be "fed" at runtime to `issuegen`/`motdgen` by placing a file in the corresponding private folder in `/run/coreos/issue.d` or `/run/coreos/motd.d`. This is currently how `isssuegen` works in CL to get an IP address.
 - Users may customize `issue` or `motd` by breaking the necessary symlinks and placing a file in `/etc/`. This overshadows the generated ones in `/run/`
 - If users would like to keep the original generated `issue`/`motd` and append their own `issue`/`motd`, they may break the symlinks `/etc/motd.d` or `/etc/issue.d`, create directories in their place, and place files in those directories (`/etc/motd.d/`/`/etc/issue.d/`).
 - PAM and agetty must be configured to search `/etc/motd.d` and `/etc/issue.d` respectively, for the messages in those directories to be shown at login. This is default for agetty, and default for PAM as long as the `pam_motd.so` module is specified in the necessary `/etc/pam.d` configuration files.

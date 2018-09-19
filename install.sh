@@ -11,23 +11,28 @@ echo "Installing to $INSTALL_PATH/"
 
 source ./envvars
 
-# Installer assumes these symlinks are nonexistent
-if [ -h /etc/motd ]
-then
-  rm -f /etc/motd
-fi
-if [ -h /etc/motd.d ]
-then
-  rm -f /etc/motd.d
-fi
-if [ -h /etc/issue ]
-then
-  rm -f /etc/issue
-fi
-if [ -h /etc/issue.d ]
-then
-  rm -f /etc/issue.d
-fi
+# # Installer assumes these symlinks are nonexistent
+# if [ -h /etc/motd ]
+# then
+#   rm -f /etc/motd
+# fi
+# if [ -h /etc/motd.d ]
+# then
+#   rm -f /etc/motd.d
+# fi
+# if [ -h /etc/issue ]
+# then
+#   rm -f /etc/issue
+# fi
+# if [ -h /etc/issue.d ]
+# then
+#   rm -f /etc/issue.d
+# fi
+
+rm -f /etc/motd
+rm -f /etc/motd.d
+rm -f /etc/issue
+rm -f /etc/issue.d
 
 # ---- create files and directories ----
 
