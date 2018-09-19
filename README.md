@@ -105,6 +105,7 @@ Add the following line just before `session include password-auth`:
 - rpm packaging and making sure the services are run by init script (which has system_u SELinux user)
 - path for update configuration changes in motdgen.path unit file
 - how do `motd` and `issue` get updated at runtime (e.g. if a systemd unit fails, new device appears, etc)?
+- integrating the issuegen and motdgen systemd units into current init system
 
 ## Enhancements for future
 - have upstream PAM include the "trying" functionality, use this config rather than symlinks
