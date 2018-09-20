@@ -86,8 +86,14 @@ Add the following line just before `session include password-auth`:
 - [x] make systemd-tmpfiles config to create symlinks
     - rpm installation can also set up symlinks, but it should be a responsibility of systemd to keep the symlinks maintained (user can easily override by placing config in /etc/\*.conf acting on top of /usr/lib/\*.conf)
 - [ ] wrap everything up with rpm spec file (includes gen scripts, tmpfiles config, systemd units)
-- [ ] show systemd failed units, or find out where this is currently being done https://github.com/coreos/init/commit/5e82c6bf46d746545281a219ce82af57e950f026#diff-892b6c24ac66bd41b13adeaeb077da83
+- [x] show systemd failed units, or find out where this is currently being done https://github.com/coreos/init/commit/5e82c6bf46d746545281a219ce82af57e950f026#diff-892b6c24ac66bd41b13adeaeb077da83
 - [ ] testing that the info we need shows in RHCOS
+  - [ ] a "you should not be sshing into this OS" message in motd
+  - [ ] a "dev info" message (motd and issue)
+  - [ ] ssh keys in issue and motd
+  - [ ] added users in issue and motd
+  - [ ] ip address in issue
+  - [ ] some info  on updates (booting, pending, etc) from rpm-ostree status --json? in motd
 
 ## Issues to figure out right now
 
