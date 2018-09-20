@@ -2,4 +2,4 @@
 Description=Watch for /etc/coreos/motd.d changes
 
 [Path]
-PathChanged=/etc/coreos/motd.d/
+PathChanged=/etc/coreos/motd.d

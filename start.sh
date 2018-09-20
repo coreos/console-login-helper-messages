@@ -10,5 +10,10 @@ systemd-tmpfiles --create
 
 # --- start services ----
 
+systemctl enable motdgen.path
+systemctl start motdgen.path
 systemctl start motdgen.service
+
+systemctl enable issuegen.path
+systemctl start issuegen.path
 systemctl start issuegen.service

@@ -2,4 +2,4 @@
 Description=Watch for /etc/coreos/issue.d changes
 
 [Path]
-PathChanged=/etc/coreos/issue.d/
+PathChanged=/etc/coreos/issue.d
