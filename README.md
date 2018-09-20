@@ -2,6 +2,52 @@
 
 Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide an `issue/motd` mechanism for RHCOS/FCOS. To be distributed as an RPM, with some additional manual configuration required to work with software like PAM, agetty, udev, ...
 
+## Operation
+
+- Symlinks from `/etc/` to `/run/` (see below) are set by `systemd-tmpfiles`.
+- `issuegen` and `motdgen` generate `issue`/`motd` files in `/run/`, `/run/motd.d/`, and `/run/issue.d`, based on updated system data.
+- New system data may be "fed" at runtime to `issuegen`/`motdgen` by placing a file in the corresponding private folder in `/run/coreos/issue.d` or `/run/coreos/motd.d`. This is currently how `isssuegen` works in CL to get an IP address.
+- Users may customize `issue` or `motd` by breaking the necessary symlinks and placing a file in `/etc/`. This overshadows the generated ones in `/run/`
+- If users would like to keep the original generated `issue`/`motd` and append their own `issue`/`motd`, they may break the symlinks `/etc/motd.d` or `/etc/issue.d`, create directories in their place, and place files in those directories (`/etc/motd.d/`/`/etc/issue.d/`).
+- PAM and agetty must be configured to search `/etc/motd.d` and `/etc/issue.d` respectively, for the messages in those directories to be shown at login. This is default for agetty, and default for PAM as long as the `pam_motd.so` module is specified in the necessary `/etc/pam.d` configuration files.
+
+## Directory tree (after install and systemd-tmpfiles)
+
+```
+/
+├── etc
+│   ├── issue -> ../run/issue
+│   ├── issue.d -> ../run/issue.d
+│   ├── motd -> ../run/motd
+│   └── motd.d -> ../run/motd.d
+├── run
+│   ├── coreos
+│   │   └── issue.d
+│   ├── issue
+│   ├── issue.d
+│   ├── motd
+│   └── motd.d
+└── usr
+    └── lib
+        ├── coreos
+        │   ├── issuegen
+        │   └── motdgen
+        ├── issue
+        ├── issue.d
+        │   └── test.issue
+        ├── motd
+        ├── motd.d
+        │   └── test.motd
+        ├── systemd
+        │   └── system
+        │       ├── issuegen.service
+        │       ├── motdgen.path
+        │       └── motdgen.service
+        └── tmpfiles.d
+            ├── issuegen.conf
+            └── motdgen.conf
+```
+
 ## Steps to test motd in RHCOS
 
 1. After cloning this repository, download the latest RHCOS Vagrant box
@@ -40,52 +86,6 @@ Add the following line just before `session include password-auth`:
 4. **WIP**: need to reboot or `udevadm control --reload-rules` here, running into issues with those. doing this on `fedora/28-cloud-base` works
 
 5. `vagrant ssh`, and check the contents of `/run/coreos/issue.d`. If there are device files in there, then the udev rule successfully transferred the information to issue.
-
-## Operation
-
-- Symlinks from `/etc/` to `/run/` (see below) are set by `systemd-tmpfiles`.
-- `issuegen` and `motdgen` generate `issue`/`motd` files in `/run/`, `/run/motd.d/`, and `/run/issue.d`, based on updated system data.
-- New system data may be "fed" at runtime to `issuegen`/`motdgen` by placing a file in the corresponding private folder in `/run/coreos/issue.d` or `/run/coreos/motd.d`. This is currently how `isssuegen` works in CL to get an IP address.
-- Users may customize `issue` or `motd` by breaking the necessary symlinks and placing a file in `/etc/`. This overshadows the generated ones in `/run/`
-- If users would like to keep the original generated `issue`/`motd` and append their own `issue`/`motd`, they may break the symlinks `/etc/motd.d` or `/etc/issue.d`, create directories in their place, and place files in those directories (`/etc/motd.d/`/`/etc/issue.d/`).
-- PAM and agetty must be configured to search `/etc/motd.d` and `/etc/issue.d` respectively, for the messages in those directories to be shown at login. This is default for agetty, and default for PAM as long as the `pam_motd.so` module is specified in the necessary `/etc/pam.d` configuration files.
-
-## Directory tree
-
-```
-/
-├── etc
-│   ├── issue -> ../run/issue
-│   ├── issue.d -> ../run/issue.d
-│   ├── motd -> ../run/motd
-│   └── motd.d -> ../run/motd.d
-├── run
-│   ├── coreos
-│   │   └── issue.d
-│   ├── issue
-│   ├── issue.d
-│   ├── motd
-│   └── motd.d
-└── usr
-    └── lib
-        ├── coreos
-        │   ├── issuegen
-        │   └── motdgen
-        ├── issue
-        ├── issue.d
-        │   └── test.issue
-        ├── motd
-        ├── motd.d
-        │   └── test.motd
-        ├── systemd
-        │   └── system
-        │       ├── issuegen.service
-        │       ├── motdgen.path
-        │       └── motdgen.service
-        └── tmpfiles.d
-            ├── issuegen.conf
-            └── motdgen.conf
-```
 
 ## Next steps
 - [x] account for issue in install.sh (for testing)
