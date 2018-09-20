@@ -13,13 +13,13 @@ echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/motd
 echo -e "Test motd in /run/motd.d.\n" > /run/coreos/motd.d/test.motd
 
 if [[ -d "/usr/lib/coreos/motd.d" ]]; then
-	cat /usr/lib/coreos/motd.d/*.conf 2>/dev/null >> /run/motd || true
+	cat /usr/lib/coreos/motd.d/* 2>/dev/null >> /run/motd || true
 fi
 
 if [[ -d "/run/coreos/motd.d" ]]; then
-	cat /run/coreos/motd.d/*.conf 2>/dev/null >> /run/motd || true
+	cat /run/coreos/motd.d/* 2>/dev/null >> /run/motd || true
 fi
 
 if [[ -d "/etc/coreos/motd.d" ]]; then
-	cat /etc/coreos/motd.d/*.conf 2>/dev/null >> /run/motd || true
+	cat /etc/coreos/motd.d/* 2>/dev/null >> /run/motd || true
 fi
