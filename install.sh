@@ -41,6 +41,7 @@ cp ./motdgen $SCRIPT_DEST/
 chmod +x $SCRIPT_DEST/motdgen
 cp ./issuegen.conf $SYSTEMD_TMPFILES_DEST/
 cp ./motdgen.conf $SYSTEMD_TMPFILES_DEST/
+cp ./base.issue $USRLIB_DEST/coreos/issue.d
 
 echo "Test motd in /usr/lib/coreos/motd.d" > $USRLIB_DEST/coreos/motd.d/test.motd
 echo "Test issue in /usr/lib/coreos/issue.d" > $USRLIB_DEST/coreos/issue.d/test.issue

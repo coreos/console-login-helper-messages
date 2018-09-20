@@ -93,7 +93,7 @@ Add the following line just before `session include password-auth`:
 
 - delete symlinks/files existing in /etc/ before install?
 - rpm packaging and making sure the services are run by init script (which has system_u SELinux user)
-- how do `motd` and `issue` get updated at runtime (e.g. if a systemd unit fails, new device appears, updates finished installing, etc)?
+- how do `motd` and `issue` get updated at runtime (e.g. if a systemd unit fails, new device appears, updates finished installing, user drops something in /etc/... etc)?
 - integrating the issuegen and motdgen systemd units into current init system
 - regeneration should be triggering when file is changed in /etc/coreos/x.d
 

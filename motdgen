@@ -6,11 +6,9 @@ source /usr/lib/os-release
 
 mkdir -p /run/coreos/motd.d
 
-# TODO: put this in /usr/lib/coreos/motd.d, don't generate it from text here.
-echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/motd
+rm -f /run/motd
 
-# A dynamically aquired file would go here
-echo -e "Test motd in /run/motd.d." > /run/coreos/motd.d/test.motd
+echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/motd
 
 if [[ -d "/usr/lib/coreos/motd.d" ]]; then
 	cat /usr/lib/coreos/motd.d/* 2>/dev/null >> /run/motd || true
