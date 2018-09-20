@@ -5,4 +5,4 @@ After=sshd-keygen.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/coreos/issuegen
+ExecStart=/usr/libexec/issuegen

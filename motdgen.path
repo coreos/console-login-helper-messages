@@ -1,6 +1,0 @@
-[Unit]
-Description=Watch for update engine configuration changes
-
-# Path will need to be changed to what RHCOS uses
-[Path]
-PathChanged=/etc/coreos/update.conf

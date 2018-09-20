@@ -4,16 +4,22 @@ set -e
 
 source /usr/lib/os-release
 
-mkdir -p /run/motd.d
+mkdir -p /run/coreos/motd.d
 
+# TODO: put this in /usr/lib/coreos/motd.d, don't generate it from text here.
 echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/motd
 
-# TODO: get systemd failed units (less verbose than systemctl list-units --failed)
-# See https://github.com/coreos/init/commit/4b05ed5eae948ecd51d289097b3f43022e2baf34#diff-892b6c24ac66bd41b13adeaeb077da83
-# Question: where can core user startup scripts be found? https://github.com/coreos/init/commit/5e82c6bf46d746545281a219ce82af57e950f026#diff-892b6c24ac66bd41b13adeaeb077da83
-echo -e "To override this message, place a file at /etc/motd\n---" >> /run/motd
+# A dynamically aquired file would go here
+echo -e "Test motd in /run/motd.d.\n" > /run/coreos/motd.d/test.motd
 
-# What it looks like if we want to add a note in the /run/motd.d/ directory.
-echo -e "Test additional \"public\" MOTD in /run/motd.d.\n" > /run/motd.d/test-info.motd
+if [[ -d "/usr/lib/coreos/motd.d" ]]; then
+	cat /usr/lib/coreos/motd.d/*.conf 2>/dev/null >> /run/motd || true
+fi
 
-# Do not read /etc/motd.d directory here - up to user to break symlink and add something.
+if [[ -d "/run/coreos/motd.d" ]]; then
+	cat /run/coreos/motd.d/*.conf 2>/dev/null >> /run/motd || true
+fi
+
+if [[ -d "/etc/coreos/motd.d" ]]; then
+	cat /etc/coreos/motd.d/*.conf 2>/dev/null >> /run/motd || true
+fi

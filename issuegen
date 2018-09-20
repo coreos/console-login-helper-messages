@@ -2,28 +2,29 @@
 
 set -e
 
-print_issue() {
-    echo
-    echo 'This is \n (\s \m \r) \t'
-    for note in /run/coreos/issue.d/*; do
-        [ -f "${note}" ] && cat "${note}"
-    done
-    echo
-}
-
-mkdir -p /run/issue.d
+mkdir -p /run/coreos/issue.d
 
 case "$1" in
     add)
-        mkdir -p /run/coreos/issue.d
-        echo "${2}: \\4{${2}} \\6{${2}}" > "/run/coreos/issue.d/${2}"
+        echo "${2}: \\4{${2}} \\6{${2}}" > "/run/coreos/issue.d/${2}.issue"
         ;;
     remove)
-        rm -f "/run/coreos/issue.d/${2}"
+        rm -f "/run/coreos/issue.d/${2}.issue"
         ;;
 esac
 
-# /run/issue is symlinked from /etc/issue
-print_issue > /run/issue
+# Dynamically generated
+echo -e "Test issue in /run/coreos/issue.d.\n" > /run/coreos/issue.d/test.issue
 
-echo "Test \"Public\" issue in /run/issue.d" > /run/issue.d/test-info.issue
+echo
+echo 'This is \n (\s \m \r) \t' > /run/coreos/issue # TODO: put this in /usr/lib/coreos/issue.d
+if [[ -d "/usr/lib/coreos/issue.d" ]]; then
+  cat /usr/lib/coreos/issue.d/*.issue 2>/dev/null >> /run/issue || true
+fi
+if [[ -d "/run/coreos/motd.d" ]]; then
+  cat /run/coreos/issue.d/*.issue 2>/dev/null >> /run/issue || true
+fi
+if [[ -d "/etc/coreos/motd.d" ]]; then
+  cat /etc/coreos/issue.d/*.issue 2>/dev/null >> /run/issue || true
+fi
+echo

@@ -1,0 +1,2 @@
+ACTION=="add", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/coreos/issuegen add $env{INTERFACE}"
+ACTION=="remove", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/coreos/issuegen remove $env{INTERFACE}"
