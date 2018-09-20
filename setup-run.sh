@@ -37,7 +37,7 @@ chcon -u system_u $SCRIPT_DEST/issuegen
 chcon -u system_u $SCRIPT_DEST/motdgen
 chcon -u system_u $SYSTEMD_TMPFILES_DEST/motdgen.conf
 chcon -u system_u $SYSTEMD_TMPFILES_DEST/issuegen.conf
-chcon -u system_u $UDEV_RULES_DEST/90-issuegen.rules
+chcon -u system_u $UDEV_RULES_DEST/91-issuegen.rules
 chcon -u system_u $USRLIB_DEST/coreos/issue.d/base.issue
 
 chcon -u system_u $USRLIB_DEST/coreos/motd.d/test.motd
@@ -48,11 +48,5 @@ chcon -u system_u $USRLIB_DEST/coreos/issue.d/test.issue
 touch $RUN_DEST/motd
 chcon -u system_u $RUN_DEST/motd
 
-touch $RUN_DEST/coreos/motd.d/test.motd
-chcon -u system_u $RUN_DEST/coreos/motd.d/test.motd
-
 touch $RUN_DEST/issue
 chcon -u system_u $RUN_DEST/issue
-
-touch $RUN_DEST/coreos/issue.d/test.issue
-chcon -u system_u $RUN_DEST/coreos/issue.d/test.issue

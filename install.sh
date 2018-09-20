@@ -34,7 +34,7 @@ cp ./issuegen.service $SYSTEMD_UNIT_DEST/
 cp ./issuegen.path $SYSTEMD_UNIT_DEST/
 cp ./motdgen.service $SYSTEMD_UNIT_DEST/
 cp ./motdgen.path $SYSTEMD_UNIT_DEST/
-cp ./90-issuegen.rules $UDEV_RULES_DEST/
+cp ./91-issuegen.rules $UDEV_RULES_DEST/
 cp ./issuegen $SCRIPT_DEST/
 chmod +x $SCRIPT_DEST/issuegen
 cp ./motdgen $SCRIPT_DEST/

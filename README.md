@@ -40,7 +40,7 @@ Let `x` denote `{motd,issue}`.
     │   │   ├── issuegen.conf
     │   │   └── motdgen.conf
     │   └── udev
-    │       └── 90-issuegen.rules
+    │       └── 91-issuegen.rules
     └── libexec
         ├── issuegen
         └── motdgen
