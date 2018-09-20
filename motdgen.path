@@ -1,0 +1,5 @@
+[Unit]
+Description=Watch for /etc/coreos/motd.d changes
+
+[Path]
+PathChanged=/etc/coreos/motd.d/

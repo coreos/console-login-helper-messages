@@ -95,6 +95,7 @@ Add the following line just before `session include password-auth`:
 - rpm packaging and making sure the services are run by init script (which has system_u SELinux user)
 - how do `motd` and `issue` get updated at runtime (e.g. if a systemd unit fails, new device appears, updates finished installing, etc)?
 - integrating the issuegen and motdgen systemd units into current init system
+- regeneration should be triggering when file is changed in /etc/coreos/x.d
 
 ## Enhancements for future
 - have upstream PAM include the "trying" functionality, use this config rather than symlinks

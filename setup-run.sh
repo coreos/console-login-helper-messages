@@ -30,7 +30,9 @@ chcon -u system_u $USRLIB_DEST/coreos/motd.d
 chcon -u system_u $USRLIB_DEST/coreos/issue.d
 
 chcon -u system_u $SYSTEMD_UNIT_DEST/issuegen.service
+chcon -u system_u $SYSTEMD_UNIT_DEST/issuegen.path
 chcon -u system_u $SYSTEMD_UNIT_DEST/motdgen.service
+chcon -u system_u $SYSTEMD_UNIT_DEST/motdgen.path
 chcon -u system_u $SCRIPT_DEST/issuegen
 chcon -u system_u $SCRIPT_DEST/motdgen
 chcon -u system_u $SYSTEMD_TMPFILES_DEST/motdgen.conf

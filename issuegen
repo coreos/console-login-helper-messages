@@ -14,7 +14,7 @@ case "$1" in
 esac
 
 # Dynamically generated
-echo -e "Test issue in /run/coreos/issue.d.\n" > /run/coreos/issue.d/test.issue
+echo -e "Test issue in /run/coreos/issue.d." > /run/coreos/issue.d/test.issue
 
 echo
 echo 'This is \n (\s \m \r) \t' > /run/issue # TODO: put this in /usr/lib/coreos/issue.d

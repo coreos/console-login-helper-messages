@@ -10,7 +10,7 @@ mkdir -p /run/coreos/motd.d
 echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/motd
 
 # A dynamically aquired file would go here
-echo -e "Test motd in /run/motd.d.\n" > /run/coreos/motd.d/test.motd
+echo -e "Test motd in /run/motd.d." > /run/coreos/motd.d/test.motd
 
 if [[ -d "/usr/lib/coreos/motd.d" ]]; then
 	cat /usr/lib/coreos/motd.d/* 2>/dev/null >> /run/motd || true

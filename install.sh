@@ -31,7 +31,9 @@ mkdir -p $USRLIB_DEST/coreos/motd.d
 mkdir -p $USRLIB_DEST/coreos/issue.d
 
 cp ./issuegen.service $SYSTEMD_UNIT_DEST/
+cp ./issuegen.path $SYSTEMD_UNIT_DEST/
 cp ./motdgen.service $SYSTEMD_UNIT_DEST/
+cp ./motdgen.path $SYSTEMD_UNIT_DEST/
 cp ./90-issuegen.rules $UDEV_RULES_DEST/
 cp ./issuegen $SCRIPT_DEST/
 chmod +x $SCRIPT_DEST/issuegen
