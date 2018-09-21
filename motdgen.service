@@ -4,4 +4,4 @@ Before=systemd-user-sessions.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/libexec/motdgen
+ExecStart=/usr/lib/coreos/motdgen
