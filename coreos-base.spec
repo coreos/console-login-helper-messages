@@ -1,18 +1,46 @@
 Name:           coreos-base
 Version:        0.1
 Release:        1%{?dist}
-Summary:        Base files for Fedora Coreos.
+Summary:        Base scripts, systemd units, rules for Fedora CoreOS
 
 License:
 URL:            https://example.com/%{name}
 Source0:        https://example.com/%{name}/release/%{name}-%{version}.tar.gz
 
 BuildRequires:
-Requires:       bash,systemd
+Requires:       bash
+Requires:       systemd
 
 %description
+%{summary}.
 
-Long description goes here.
+%package motdgen
+Summary:        Message of the day generator files for Fedora CoreOS
+Requires:       coreos-base
+Requires:       bash
+Requires:       systemd
+Requires:       pam >= 1.3.1
+
+%description motdgen
+%{summary}.
+
+%package issuegen
+Summary:        Issue generator files for Fedora CoreOS
+Requires:       coreos-base
+Requires:       bash
+Requires        systemd
+Requires:       agetty
+
+%description issuegen
+%{summary}.
+
+%package profile
+Summary:        Profile script for Fedora CoreOS
+Requires:       bash
+Requires:       systemd
+
+%description profile
+%{summary}.
 
 %prep
 %setup -q
@@ -24,6 +52,8 @@ Long description goes here.
 # Vendor-scoped directories
 mkdir -p %{buildroot}%{_prefix}/lib/%{name}/issue.d
 mkdir -p %{buildroot}%{_prefix}/lib/%{name}/motd.d
+mkdir -p %{buildroot}/run/%{name}/issue.d
+mkdir -p %{buildroot}/run/%{name}/motd.d
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/issue.d
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/motd.d
 mkdir -p %{buildroot}%{_prefix}/share/%{name}
@@ -53,8 +83,34 @@ install -DpZm 0644 base.issue %{buildroot}%{_prefix}/lib/%{name}/issue.d/base.is
 %doc README.md
 %license LICENSE
 %dir %{_prefix}/lib/%{name}
+%dir /run/%{name}
+%dir %{_sysconfdir}/%{name}
+%dir %{_prefix}/share/%{name}
 
+%files issuegen
+%{_unitdir}/issuegen.path
+%{_unitdir}/issuegen.service
+%{_tmpfilesdir}/issuegen.conf
+%{_prefix}/lib/udev/rules.d/91-issuegen.rules
+%{_prefix}/lib/%{name}/issuegen
+%dir %{_prefix}/lib/%{name}/issue.d
+%{_prefix}/lib/%{name}/issue.d/base.issue
+%dir /run/%{name}/issue.d
+%dir %{_sysconfdir}/%{name}/issue.d
+
+%files motdgen
+%{_unitdir}/motdgen.path
+%{_unitdir}/motdgen.service
+%{_tmpfilesdir}/motdgen.conf
+%{_prefix}/lib/%{name}/motdgen
+%dir %{_prefix}/lib/%{name}/motd.d
+%dir /run/%{name}/motd.d
+%dir %{_sysconfdir}/%{name}/motd.d
+
+%files profile
+%{_tmpfilesdir}/coreos-profile.conf
+%{_prefix}/share/%{name}/coreos-profile.sh
 
 %changelog
-*
--
+* Fri Sept 21 2018 Robert Fairley <rfairley@redhat.com> - 0.1
+- Initial Package
