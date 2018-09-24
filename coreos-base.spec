@@ -3,11 +3,14 @@ Version:        0.1
 Release:        1%{?dist}
 Summary:        Base scripts, systemd units, rules for Fedora CoreOS
 
+# TODO: fill in license
 License:
 URL:            https://example.com/%{name}
 Source0:        https://example.com/%{name}/release/%{name}-%{version}.tar.gz
 
-BuildRequires:
+BuildArch:      noarch
+BuildRequires:  systemd
+%{?systemd_requires}
 Requires:       bash
 Requires:       systemd
 
@@ -67,17 +70,42 @@ mkdir -p %{buildroot}%{_prefix}/lib/udev/rules.d
 # TODO: once moved to new dirs, use * for things like base.issue
 install -DpZm 0644 issuegen.path %{buildroot}%{_unitdir}/issuegen.path
 install -DpZm 0644 issuegen.service %{buildroot}%{_unitdir}/issuegen.service
-install -DpZm 0644 issuegen.conf %{buildroot}%{_tmpfilesdir}/issuegen.conf
+install -DpZm 0644 issuegen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/issuegen.conf
 install -DpZm 0644 motdgen.path %{buildroot}%{_unitdir}/motdgen.path
 install -DpZm 0644 motdgen.service %{buildroot}%{_unitdir}/motdgen.service
-install -DpZm 0644 motdgen.conf %{buildroot}%{_tmpfilesdir}/motdgen.conf
+install -DpZm 0644 motdgen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/motdgen.conf
 install -DpZm 0644 91-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/91-issuegen.rules
-install -DpZm 0644 coreos-profile.conf %{buildroot}%{_tmpfilesdir}/coreos-profile.conf
+install -DpZm 0644 coreos-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/coreos-profile.conf
 
 install -DpZm 0755 issuegen %{buildroot}%{_prefix}/lib/%{name}/issuegen
 install -DpZm 0755 motdgen %{buildroot}%{_prefix}/lib/%{name}/motdgen
 install -DpZm 0755 coreos-profile.sh %{buildroot}%{_prefix}/share/%{name}/coreos-profile.sh
 install -DpZm 0644 base.issue %{buildroot}%{_prefix}/lib/%{name}/issue.d/base.issue
+
+%pre
+tmpfiles_create_package issuegen issuegen-tmpfiles.conf
+tmpfiles_create_package motdgen motdgen-tmpfiles.conf
+tmpfiles_create_package coreos-profile coreos-profile-tmpfiles.conf
+
+# TODO: check presets will enable the services in RHCOS
+# TODO: can %pre, %post, etc. be specified as e.g. %pre issuegen
+%post
+%systemd_post issuegen.path
+%systemd_post issuegen.service
+%systemd_post motdgen.path
+%systemd_post motdgen.service
+
+%preun
+%systemd_preun issuegen.path
+%systemd_preun issuegen.service
+%systemd_preun motdgen.path
+%systemd_preun motdgen.service
+
+%postun
+%systemd_postun_with_restart issuegen.path
+%systemd_postun_with_restart issuegen.service
+%systemd_postun_with_restart motdgen.path
+%systemd_postun_with_restart motdgen.service
 
 %files
 %doc README.md
