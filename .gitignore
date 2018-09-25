@@ -1,5 +1,6 @@
 **/rpms
 **/.buildroot
 **/.build
+**/.vagrant
 coreos-base-0.1
 coreos-base-0.1.tar.gz

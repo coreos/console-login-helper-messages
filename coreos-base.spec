@@ -3,6 +3,9 @@ Version:        0.1
 Release:        1%{?dist}
 Summary:        Base scripts, systemd units, rules for Fedora CoreOS
 
+# TODO: decide on Name: and package scope
+# TODO: %check
+
 # TODO: check license
 License:        ASL 2.0
 URL:            https://example.com/%{name}
@@ -22,7 +25,8 @@ Summary:        Message of the day generator files for Fedora CoreOS
 Requires:       coreos-base
 Requires:       bash
 Requires:       systemd
-Requires:       pam >= 1.3.1
+Requires:       pam
+# Requires:       pam >= 1.3.1 TODO need this in RHCOS
 
 %description motdgen
 %{summary}.
@@ -32,7 +36,7 @@ Summary:        Issue generator files for Fedora CoreOS
 Requires:       coreos-base
 Requires:       bash
 Requires:       systemd
-Requires:       agetty
+Requires:       util-linux
 
 %description issuegen
 %{summary}.
@@ -80,10 +84,12 @@ install -DpZm 0755 usr/lib/coreos/motdgen %{buildroot}%{_prefix}/lib/%{name}/mot
 install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/share/%{name}/coreos-profile.sh
 install -DpZm 0644 usr/lib/issue.d/* %{buildroot}%{_prefix}/lib/%{name}/issue.d
 
+# TODO: handle pkg-* being created more nicely
+# TODO: fix problem with symlink path in tmpfile not necessarily matching %{name}
 %pre
-tmpfiles_create_package issuegen issuegen-tmpfiles.conf
-tmpfiles_create_package motdgen motdgen-tmpfiles.conf
-tmpfiles_create_package coreos-profile coreos-profile-tmpfiles.conf
+%tmpfiles_create_package issuegen issuegen-tmpfiles.conf
+%tmpfiles_create_package motdgen motdgen-tmpfiles.conf
+%tmpfiles_create_package coreos-profile coreos-profile-tmpfiles.conf
 
 # TODO: check presets will enable the services in RHCOS
 # TODO: can %pre, %post, etc. be specified as e.g. %pre issuegen

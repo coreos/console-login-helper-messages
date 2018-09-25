@@ -30,10 +30,10 @@ Let `x` denote `{motd,issue}`.
 └── usr
     |-- lib
     |   |-- coreos
+    |   |   |-- issue.d
+    |   |   |   `-- base.issue
     |   |   |-- issuegen
     |   |   `-- motdgen
-    |   |-- issue.d
-    |   |   `-- base.issue
     |   |-- systemd
     |   |   `-- system
     |   |       |-- issuegen.path
