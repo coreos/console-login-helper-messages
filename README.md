@@ -28,21 +28,28 @@ Let `x` denote `{motd,issue}`.
 │   ├── issue
 │   └── motd
 └── usr
-    └── lib
-        ├── coreos
-        │   ├── issue.d
-        │   ├── issuegen
-        │   ├── motd.d
-        │   └── motdgen
-        ├── systemd
-        │   └── system
-        │       ├── issuegen.service
-        │       └── motdgen.service
-        ├── tmpfiles.d
-        │   ├── issuegen.conf
-        │   └── motdgen.conf
-        └── udev
-            └── 91-issuegen.rules  
+    |-- lib
+    |   |-- coreos
+    |   |   |-- issuegen
+    |   |   `-- motdgen
+    |   |-- issue.d
+    |   |   `-- base.issue
+    |   |-- systemd
+    |   |   `-- system
+    |   |       |-- issuegen.path
+    |   |       |-- issuegen.service
+    |   |       |-- motdgen.path
+    |   |       `-- motdgen.service
+    |   |-- tmpfiles.d
+    |   |   |-- coreos-profile-tmpfiles.conf
+    |   |   |-- issuegen-tmpfiles.conf
+    |   |   `-- motdgen-tmpfiles.conf
+    |   `-- udev
+    |       `-- rules.d
+    |           `-- 91-issuegen.rules
+    `-- share
+        `-- coreos
+            `-- coreos-profile.sh
 ```
 
 ## Steps to test motd in RHCOS
