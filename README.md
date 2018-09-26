@@ -5,7 +5,7 @@ Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide 
 ## RPM build
 
 ```
-$ git clone https://github.com/rfairley/fedora-coreos-login-messages
+$ git clone https://github.com/rfairley/fedora-coreos-login-messages && cd fedora-coreos-login-messages
 $ ./rpm-build.sh
 ```
 
