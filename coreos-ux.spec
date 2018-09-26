@@ -81,19 +81,19 @@ install -DpZm 0644 usr/lib/tmpfiles.d/issuegen-tmpfiles.conf %{buildroot}%{_tmpf
 install -DpZm 0644 usr/lib/systemd/system/motdgen.path %{buildroot}%{_unitdir}/motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/motdgen.service %{buildroot}%{_unitdir}/motdgen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/motdgen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/motdgen.conf
+install -DpZm 0644 usr/lib/tmpfiles.d/coreos-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/coreos-profile.conf
 install -DpZm 0644 usr/lib/udev/rules.d/91-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/91-issuegen.rules
 
 install -DpZm 0755 usr/lib/coreos/issuegen %{buildroot}%{_prefix}/lib/coreos/issuegen
 install -DpZm 0644 usr/lib/coreos/issue.d/* %{buildroot}%{_prefix}/lib/coreos/issue.d
 install -DpZm 0755 usr/lib/coreos/motdgen %{buildroot}%{_prefix}/lib/coreos/motdgen
 install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/share/coreos/coreos-profile.sh
-# TODO: below symlink not working with percent{buildroot} prepended to LINK_NAME
-ln -snf %{_prefix}/share/coreos/coreos-profile.sh %{_sysconfdir}/profile.d/coreos-profile.sh
 
 # TODO: handle pkg-* being created more nicely
 %pre
 %tmpfiles_create_package issuegen issuegen-tmpfiles.conf
 %tmpfiles_create_package motdgen motdgen-tmpfiles.conf
+%tmpfiles_create_package coreos-profile coreos-profile-tmpfiles.conf
 
 # TODO: check presets will enable the services in RHCOS
 # TODO: can %pre, %post, etc. be specified as e.g. %pre issuegen?
@@ -147,6 +147,7 @@ ln -snf %{_prefix}/share/coreos/coreos-profile.sh %{_sysconfdir}/profile.d/coreo
 
 %files profile
 %{_prefix}/share/coreos/coreos-profile.sh
+%{_tmpfilesdir}/coreos-profile.conf
 
 %changelog
 * Tue Sep 25 2018 Robert Fairley <rfairley@redhat.com> - 0.1-1
