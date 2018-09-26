@@ -6,10 +6,9 @@ Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide 
 
 Let `x` denote `{motd,issue}`.
 
-- Symlinks from `/etc/x` to `/run/x` (see below) are set by `systemd-tmpfiles`.
+- Symlinks from `/etc/x` to `/run/x` are set by `systemd-tmpfiles`.
 - `issuegen` and `motdgen` generate `/run/x`, from files in `/etc/coreos/x.d`, `/run/coreos/x.d`, `/lib/usr/coreos/x.d`.
 - Users may append to `issue` or `motd` by placing a file in `/etc/coreos/x.d/`.
-- PAM and agetty must be configured to search `/etc/motd.d` and `/etc/issue.d` respectively, for the messages in those directories to be shown at login. This is default for agetty, and default for PAM as long as the `pam_motd.so` module is specified in the necessary `/etc/pam.d` configuration files.
 
 ## Directory tree (unpacking the rpm)
 
@@ -82,11 +81,11 @@ Let `x` denote `{motd,issue}`.
   - [x] failed units on login
 - [ ] check installation against RHCOS and FCOS
 
-## Issues to figure out right now
+## Issues to figure out
 
-- How to manage files existing at /etc/motd and /etc/issue before installing? If they exist, this causes problems when installing if they are included under `%files` as part of the coreos-ux package. The symlinks `/etc/motd -> /etc/run` and `/etc/issue -> /run/issue` do not get created if they exist.
-- After a system update, how do motd/issue source the updated info? Possibly add a PathChanged to the appropriate system/\*.path unit file, so that motd and issue can update.
-- How to make sure issuegen.* and motdgen.* are enabled (i.e. run every boot, and whenever something is dropped into a motd.d/issue.d) after installing? Done in `%post`? `WantedBy` a `.target` required? Or is this done by preset config?
+- [ ] How to manage files existing at /etc/motd and /etc/issue before installing? If they exist, this causes problems when installing if they are included under `%files` as part of the coreos-ux package. The symlinks `/etc/motd -> /etc/run` and `/etc/issue -> /run/issue` do not get created if they exist.
+- [ ] After a system update, how do motd/issue source the updated info? Possibly add a PathChanged to the appropriate system/\*.path unit file, so that motd and issue can update.
+- [ ] How to make sure issuegen.* and motdgen.* are enabled (i.e. run every boot, and whenever something is dropped into a motd.d/issue.d) after installing? Done in `%post`? `WantedBy` a `.target` required? Or is this done by preset config?
 
 ## Enhancements for future
 - have upstream PAM include the "trying" functionality, use this config rather than symlinks
