@@ -20,7 +20,9 @@ Let `x` denote `{motd,issue}`.
 │   │   ├── issue.d
 │   │   └── motd.d
 │   ├── issue -> ../run/issue
-│   └── motd -> ../run/motd
+│   ├── motd -> ../run/motd
+│   └── profile.d
+│       └── coreos-profile.sh -> /usr/share/coreos/coreos-profile.sh
 ├── run
 │   ├── coreos
 │   │   ├── issue.d
@@ -32,6 +34,7 @@ Let `x` denote `{motd,issue}`.
     |   |-- coreos
     |   |   |-- issue.d
     |   |   |   `-- base.issue
+    |   |   |-- motd.d
     |   |   |-- issuegen
     |   |   `-- motdgen
     |   |-- systemd
@@ -41,7 +44,6 @@ Let `x` denote `{motd,issue}`.
     |   |       |-- motdgen.path
     |   |       `-- motdgen.service
     |   |-- tmpfiles.d
-    |   |   |-- coreos-profile-tmpfiles.conf
     |   |   |-- issuegen-tmpfiles.conf
     |   |   `-- motdgen-tmpfiles.conf
     |   `-- udev
