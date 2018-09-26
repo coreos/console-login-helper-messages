@@ -2,6 +2,29 @@
 
 Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide an `issue/motd` mechanism for RHCOS/FCOS. To be distributed as an RPM, with some additional manual configuration required to work with software like PAM, agetty, ...
 
+## RPM build
+
+```
+$ git clone https://github.com/rfairley/fedora-coreos-login-messages
+$ ./rpm-build.sh
+```
+
+Then edit `config.vm.box` in the `Vagrantfile` in this repo. I named an RHCOS box `rhcos` on my system. Can also install on `fedora/28-cloud-base`.
+
+```
+$ vagrant up
+$ vagrant ssh
+```
+
+Once SSH'd in (RHCOS example):
+
+```
+$ sudo su
+# cd /srv/fedora-coreos-login-messages
+# rpm-ostree install rpms/noarch/*
+# systemctl reboot
+```
+
 ## Operation
 
 Let `x` denote `{motd,issue}`.
