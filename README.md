@@ -11,47 +11,56 @@ Let `x` denote `{motd,issue}`.
 - Users may append to `issue` or `motd` by placing a file in `/etc/coreos/x.d/`.
 - PAM and agetty must be configured to search `/etc/motd.d` and `/etc/issue.d` respectively, for the messages in those directories to be shown at login. This is default for agetty, and default for PAM as long as the `pam_motd.so` module is specified in the necessary `/etc/pam.d` configuration files.
 
-## Directory tree (after install and runtime initialization)
+## Directory tree (unpacking the rpm)
 
 ```
-/
-├── etc
-│   ├── coreos
-│   │   ├── issue.d
-│   │   └── motd.d
-│   ├── issue -> ../run/issue
-│   ├── motd -> ../run/motd
-│   └── profile.d
-│       └── coreos-profile.sh -> /usr/share/coreos/coreos-profile.sh
-├── run
-│   ├── coreos
-│   │   ├── issue.d
-│   │   └── motd.d
-│   ├── issue
-│   └── motd
-└── usr
-    |-- lib
-    |   |-- coreos
-    |   |   |-- issue.d
-    |   |   |   `-- base.issue
-    |   |   |-- motd.d
-    |   |   |-- issuegen
-    |   |   `-- motdgen
-    |   |-- systemd
-    |   |   `-- system
-    |   |       |-- issuegen.path
-    |   |       |-- issuegen.service
-    |   |       |-- motdgen.path
-    |   |       `-- motdgen.service
-    |   |-- tmpfiles.d
-    |   |   |-- issuegen-tmpfiles.conf
-    |   |   `-- motdgen-tmpfiles.conf
-    |   `-- udev
-    |       `-- rules.d
-    |           `-- 91-issuegen.rules
-    `-- share
-        `-- coreos
-            `-- coreos-profile.sh
+[root@a5cba1b23420 view-rpm-tree-output]# ../view-rpm-tree.sh
+
+...
+
+[root@a5cba1b23420 view-rpm-tree-output]# tree
+.
+|-- etc
+|   `-- coreos
+|       |-- issue.d
+|       `-- motd.d
+|-- run
+|   `-- coreos
+|       |-- issue.d
+|       `-- motd.d
+|-- usr
+|   |-- lib
+|   |   |-- coreos
+|   |   |   |-- issue.d
+|   |   |   |   `-- base.issue
+|   |   |   |-- issuegen
+|   |   |   |-- motd.d
+|   |   |   `-- motdgen
+|   |   |-- systemd
+|   |   |   `-- system
+|   |   |       |-- issuegen.path
+|   |   |       |-- issuegen.service
+|   |   |       |-- motdgen.path
+|   |   |       `-- motdgen.service
+|   |   |-- tmpfiles.d
+|   |   |   |-- coreos-profile.conf
+|   |   |   |-- issuegen.conf
+|   |   |   `-- motdgen.conf
+|   |   `-- udev
+|   |       `-- rules.d
+|   |           `-- 91-issuegen.rules
+|   `-- share
+|       |-- coreos
+|       |   `-- coreos-profile.sh
+|       |-- doc
+|       |   `-- coreos-ux
+|       |       `-- README.md
+|       `-- licenses
+|           `-- coreos-ux
+|               `-- LICENSE
+`-- view-rpm-tree-output
+
+25 directories, 14 files
 ```
 
 ## Next steps
