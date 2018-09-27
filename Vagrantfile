@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "rhcos"
+  config.vm.box = "fedora/28-atomic-host"
 
   config.vm.synced_folder ".", "/srv/fedora-coreos-login-messages", type: "rsync",
     rsync__exclude: ".git/"

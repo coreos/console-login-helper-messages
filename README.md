@@ -97,12 +97,13 @@ view-rpm-tree-output/
 - [ ] testing that the info we need shows in RHCOS
   - [ ] a "you should not be sshing into this OS" message in motd
   - [ ] a "dev info" message (motd and issue)
-  - [ ] ssh keys in issue and motd
+  - [ ] ssh keys in issue and motd (NOTE: ssh-keygen functionality will not be handled here)
   - [ ] added users in issue and motd
   - [x] ip address in issue
   - [ ] some info  on updates (booting, pending, etc) from rpm-ostree status --json? in motd
   - [x] failed units on login
 - [ ] check installation against RHCOS and FCOS
+- [ ] ensure licensing is correct
 
 ## Issues to figure out
 

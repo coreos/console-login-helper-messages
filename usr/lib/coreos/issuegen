@@ -2,10 +2,14 @@
 
 set -e
 
+SSH_DIR=/etc/ssh
+mkdir -p ${SSH_DIR}
+
 mkdir -p /run/coreos/issue.d
 
 rm -f /run/issue
 
+# Data from udev rules
 case "$1" in
     add)
         echo "${2}: \\4{${2}} \\6{${2}}" > "/run/coreos/issue.d/${2}"
@@ -14,6 +18,11 @@ case "$1" in
         rm -f "/run/coreos/issue.d/${2}"
         ;;
 esac
+
+# Provide key fingerprints via issue
+for KEY_FILE in $(find ${SSH_DIR} -name 'ssh_host_*_key') ; do
+  ssh-keygen -l -f ${KEY_FILE}
+done | awk '{print "SSH host key: " $2 " " $4}' > /run/coreos/issue.d/00_ssh_host_keys
 
 echo
 if [[ -d "/usr/lib/coreos/issue.d" ]]; then
