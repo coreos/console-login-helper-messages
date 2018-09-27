@@ -2,6 +2,23 @@
 
 Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide an `issue/motd` mechanism for RHCOS/FCOS. To be distributed as an RPM, with some additional manual configuration required to work with software like PAM, agetty, ...
 
+## Installation
+
+Scratch build: https://koji.fedoraproject.org/koji/taskinfo?taskID=29923592
+
+1. Load up a VM with RHCOS, FCOS, fedora/28-atomic-host, fedora/28-cloud-base...
+2. SSH in and log in as root, `sudo su`
+3. Do the following (replace dnf with rpm-ostree for \*COS, atomic):
+
+```
+# rm -f /etc/issue /etc/motd
+# curl --remote-name-all https://kojipkgs.fedoraproject.org//work/tasks/3592/29923592/coreos-ux-0.1-1.fc28.noarch.rpm https://kojipkgs.fedoraproject.org//work/tasks/3592/29923592/coreos-ux-issuegen-0.1-1.fc28.noarch.rpm https://kojipkgs.fedoraproject.org//work/tasks/3592/29923592/coreos-ux-motdgen-0.1-1.fc28.noarch.rpm https://kojipkgs.fedoraproject.org//work/tasks/3592/29923592/coreos-ux-profile-0.1-1.fc28.noarch.rpm
+# dnf install coreos-ux-*
+# systemctl reboot
+```
+
+4. SSH back in
+
 ## RPM build
 
 ```
