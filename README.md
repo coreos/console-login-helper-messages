@@ -11,6 +11,7 @@ Scratch build: https://koji.fedoraproject.org/koji/taskinfo?taskID=29923592
 3. Do the following (replace dnf with rpm-ostree for \*COS, atomic):
 
 ```
+# unlink /etc/issue /etc/motd
 # rm -f /etc/issue /etc/motd
 # curl --remote-name-all https://kojipkgs.fedoraproject.org//work/tasks/3592/29923592/coreos-ux-0.1-1.fc28.noarch.rpm https://kojipkgs.fedoraproject.org//work/tasks/3592/29923592/coreos-ux-issuegen-0.1-1.fc28.noarch.rpm https://kojipkgs.fedoraproject.org//work/tasks/3592/29923592/coreos-ux-motdgen-0.1-1.fc28.noarch.rpm https://kojipkgs.fedoraproject.org//work/tasks/3592/29923592/coreos-ux-profile-0.1-1.fc28.noarch.rpm
 # dnf install coreos-ux-*
