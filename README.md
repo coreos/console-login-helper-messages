@@ -24,7 +24,7 @@ Scratch build: https://koji.fedoraproject.org/koji/taskinfo?taskID=29923592
 
 ```
 systemctl start motdgen.service motdgen.path issuegen.service issuegen.path
-``
+```
 
 ## RPM build
 
