@@ -6,18 +6,14 @@ source /usr/lib/os-release
 
 mkdir -p /run/coreos/motd.d
 
-rm -f /run/motd
+rm -f /run/coreos.motd
 
-echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/motd
+echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/coreos.motd
 
 if [[ -d "/usr/lib/coreos/motd.d" ]]; then
-	cat /usr/lib/coreos/motd.d/* 2>/dev/null >> /run/motd || true
+	cat /usr/lib/coreos/motd.d/* 2>/dev/null >> /run/coreos.motd || true
 fi
 
 if [[ -d "/run/coreos/motd.d" ]]; then
-	cat /run/coreos/motd.d/* 2>/dev/null >> /run/motd || true
-fi
-
-if [[ -d "/etc/coreos/motd.d" ]]; then
-	cat /etc/coreos/motd.d/* 2>/dev/null >> /run/motd || true
+	cat /run/coreos/motd.d/* 2>/dev/null >> /run/coreos.motd || true
 fi

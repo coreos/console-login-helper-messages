@@ -1,5 +1,5 @@
 [Unit]
-Description=Watch for /etc/coreos/issue.d changes
+Description=Watch for /run/coreos/issue.d changes
 
 [Path]
-PathChanged=/etc/coreos/issue.d
+PathChanged=/run/coreos/issue.d

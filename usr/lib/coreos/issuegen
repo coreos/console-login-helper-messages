@@ -7,7 +7,7 @@ mkdir -p ${SSH_DIR}
 
 mkdir -p /run/coreos/issue.d
 
-rm -f /run/issue
+rm -f /run/coreos.issue
 
 # Data from udev rules
 case "$1" in
@@ -26,12 +26,9 @@ done | awk '{print "SSH host key: " $2 " " $4}' > /run/coreos/issue.d/00_ssh_hos
 
 echo
 if [[ -d "/usr/lib/coreos/issue.d" ]]; then
-  cat /usr/lib/coreos/issue.d/* 2>/dev/null >> /run/issue || true
+  cat /usr/lib/coreos/issue.d/* 2>/dev/null >> /run/coreos.issue || true
 fi
 if [[ -d "/run/coreos/issue.d" ]]; then
-  cat /run/coreos/issue.d/* 2>/dev/null >> /run/issue || true
-fi
-if [[ -d "/etc/coreos/issue.d" ]]; then
-  cat /etc/coreos/issue.d/* 2>/dev/null >> /run/issue || true
+  cat /run/coreos/issue.d/* 2>/dev/null >> /run/coreos.issue || true
 fi
 echo

@@ -66,11 +66,12 @@ mkdir -p %{buildroot}%{_prefix}/lib/coreos/issue.d
 mkdir -p %{buildroot}%{_prefix}/lib/coreos/motd.d
 mkdir -p %{buildroot}/run/coreos/issue.d
 mkdir -p %{buildroot}/run/coreos/motd.d
-mkdir -p %{buildroot}%{_sysconfdir}/coreos/issue.d
-mkdir -p %{buildroot}%{_sysconfdir}/coreos/motd.d
 mkdir -p %{buildroot}%{_prefix}/share/coreos
 
 # External directories
+mkdir -p %{buildroot}%{_sysconfdir}/issue.d
+mkdir -p %{buildroot}%{_sysconfdir}/motd.d
+mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 mkdir -p %{buildroot}%{_unitdir}
 mkdir -p %{buildroot}%{_tmpfilesdir}
 mkdir -p %{buildroot}%{_prefix}/lib/udev/rules.d
@@ -87,7 +88,12 @@ install -DpZm 0644 usr/lib/udev/rules.d/91-issuegen.rules %{buildroot}%{_prefix}
 install -DpZm 0755 usr/lib/coreos/issuegen %{buildroot}%{_prefix}/lib/coreos/issuegen
 install -DpZm 0644 usr/lib/coreos/issue.d/* %{buildroot}%{_prefix}/lib/coreos/issue.d
 install -DpZm 0755 usr/lib/coreos/motdgen %{buildroot}%{_prefix}/lib/coreos/motdgen
+install -DpZm 0644 usr/lib/coreos/motd.d/* %{buildroot}%{_prefix}/lib/coreos/motd.d
 install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/share/coreos/coreos-profile.sh
+
+ln -snf /run/coreos.issue %{buildroot}%{_sysconfdir}/issue.d/coreos.issue
+ln -snf /run/coreos.motd %{buildroot}%{_sysconfdir}/motd.d/coreos.motd
+ln -snf %{_prefix}/share/coreos/coreos-profile.sh %{buildroot}%{_sysconfdir}/profile.d/coreos-profile.sh
 
 # TODO: handle pkg-* being created more nicely
 %pre
@@ -122,7 +128,6 @@ install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/sha
 %license LICENSE
 %dir %{_prefix}/lib/coreos
 %dir /run/coreos
-%dir %{_sysconfdir}/coreos
 %dir %{_prefix}/share/coreos
 
 %files issuegen
@@ -134,7 +139,7 @@ install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/sha
 %dir %{_prefix}/lib/coreos/issue.d
 %{_prefix}/lib/coreos/issue.d/base.issue
 %dir /run/coreos/issue.d
-%dir %{_sysconfdir}/coreos/issue.d
+%{_sysconfdir}/issue.d/coreos.issue
 
 %files motdgen
 %{_unitdir}/motdgen.path
@@ -142,12 +147,14 @@ install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/sha
 %{_tmpfilesdir}/motdgen.conf
 %{_prefix}/lib/coreos/motdgen
 %dir %{_prefix}/lib/coreos/motd.d
+%{_prefix}/lib/coreos/motd.d/base.motd
 %dir /run/coreos/motd.d
-%dir %{_sysconfdir}/coreos/motd.d
+%{_sysconfdir}/motd.d/coreos.motd
 
 %files profile
 %{_prefix}/share/coreos/coreos-profile.sh
 %{_tmpfilesdir}/coreos-profile.conf
+%{_sysconfdir}/profile.d/coreos-profile.sh
 
 %changelog
 * Tue Sep 25 2018 Robert Fairley <rfairley@redhat.com> - 0.1-1
