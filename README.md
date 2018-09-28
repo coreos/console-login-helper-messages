@@ -18,6 +18,12 @@ Scratch build: https://koji.fedoraproject.org/koji/taskinfo?taskID=29923592
 
 4. SSH back in
 
+5. Note: have to manually start the units right now (issuegen only triggers because of the udev rule)
+
+```
+systemctl start motdgen.service motdgen.path issuegen.service issuegen.path
+```
+
 ## Operation
 
 Let `x` denote `{motd,issue}`.
