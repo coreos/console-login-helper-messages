@@ -2,12 +2,14 @@
 
 set -e
 
+GENERATED_ISSUE="/run/fedora-user-messages.issue"
+
 SSH_DIR=/etc/ssh
 mkdir -p ${SSH_DIR}
 
 mkdir -p /run/fedora-user-messages/issue.d
 
-rm -f /run/fedora-user-messages.issue
+rm -f $GENERATED_ISSUE
 
 # Data from udev rules
 case "$1" in
@@ -25,10 +27,17 @@ for KEY_FILE in $(find ${SSH_DIR} -name 'ssh_host_*_key') ; do
 done | awk '{print "SSH host key: " $2 " " $4}' > /run/fedora-user-messages/issue.d/00_ssh_host_keys
 
 echo
+
 if [[ -d "/usr/lib/fedora-user-messages/issue.d" ]]; then
-  cat /usr/lib/fedora-user-messages/issue.d/* 2>/dev/null >> /run/fedora-user-messages.issue || true
+  cat /usr/lib/fedora-user-messages/issue.d/* 2>/dev/null >> $GENERATED_ISSUE || true
 fi
+
 if [[ -d "/run/fedora-user-messages/issue.d" ]]; then
-  cat /run/fedora-user-messages/issue.d/* 2>/dev/null >> /run/fedora-user-messages.issue || true
+  cat /run/fedora-user-messages/issue.d/* 2>/dev/null >> $GENERATED_ISSUE || true
 fi
+
+if [[ -d "/etc/fedora-user-messages/issue.d" ]]; then
+  cat /etc/fedora-user-messages/issue.d/* 2>/dev/null >> $GENERATED_ISSUE || true
+fi
+
 echo

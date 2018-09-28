@@ -2,18 +2,37 @@
 
 set -e
 
+GENERATED_MOTD="/run/fedora-user-messages.motd"
+
 source /usr/lib/os-release
+
+print_rpm_ostree_update_info() {
+	echo "rpm-ostree update info here"
+}
+
+print_dnf_update_info() {
+	echo "dnf update info here"
+}
 
 mkdir -p /run/fedora-user-messages/motd.d
 
-rm -f /run/fedora-user-messages.motd
+rm -f $GENERATED_MOTD
 
-echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/fedora-user-messages.motd
+echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > $GENERATED_MOTD
 
-if [[ -d "/usr/lib/fedora-user-messages/motd.d" ]]; then
-	cat /usr/lib/fedora-user-messages/motd.d/* 2>/dev/null >> /run/fedora-user-messages.motd || true
+if [ -x "$(command -v rpm-ostree)" ]; then
+	print_rpm_ostree_update_info() >> $GENERATED_MOTD
+fi
+if [ -x "$(command -v dnf)" ]; then
+	print_dnf_update_info() >> $GENERATED_MOTD
 fi
 
+if [[ -d "/usr/lib/fedora-user-messages/motd.d" ]]; then
+	cat /usr/lib/fedora-user-messages/motd.d/* 2>/dev/null >> $GENERATED_MOTD || true
+fi
 if [[ -d "/run/fedora-user-messages/motd.d" ]]; then
-	cat /run/fedora-user-messages/motd.d/* 2>/dev/null >> /run/fedora-user-messages.motd || true
+	cat /run/fedora-user-messages/motd.d/* 2>/dev/null >> $GENERATED_MOTD || true
+fi
+if [[ -d "/etc/fedora-user-messages/motd.d" ]]; then
+	cat /etc/fedora-user-messages/motd.d/* 2>/dev/null >> $GENERATED_MOTD || true
 fi

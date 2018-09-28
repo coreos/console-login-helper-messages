@@ -25,6 +25,8 @@ Summary:        Message of the day generator
 Requires:       fedora-user-messages
 Requires:       bash
 Requires:       systemd
+# PAM 1.3.1 has searching /etc/motd.d.
+# Needed for the generated motd symlink to display.
 Requires:       pam >= 1.3.1
 
 %description motdgen
@@ -35,6 +37,8 @@ Summary:        Issue generator
 Requires:       fedora-user-messages
 Requires:       bash
 Requires:       systemd
+# agetty is included in util-linux, which searches /etc/issue.d.
+# Needed for the generated issue symlink to display.
 Requires:       util-linux
 
 %description issuegen
@@ -62,6 +66,9 @@ mkdir -p %{buildroot}%{_prefix}/lib/%{name}/motd.d
 mkdir -p %{buildroot}/run/%{name}/issue.d
 mkdir -p %{buildroot}/run/%{name}/motd.d
 mkdir -p %{buildroot}%{_prefix}/share/%{name}
+mkdir -p %{buildroot}%{_sysconfdir}/%{name}/issue.d
+mkdir -p %{buildroot}%{_sysconfdir}/%{name}/motd.d
+
 
 # External directories
 mkdir -p %{buildroot}%{_sysconfdir}/issue.d
@@ -124,6 +131,7 @@ ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/p
 %dir %{_prefix}/lib/%{name}
 %dir /run/%{name}
 %dir %{_prefix}/share/%{name}
+%dir %{_sysconfdir}/%{name}
 
 %files issuegen
 %{_unitdir}/issuegen.path
@@ -135,6 +143,7 @@ ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/p
 %{_prefix}/lib/%{name}/issue.d/base.issue
 %dir /run/%{name}/issue.d
 %{_sysconfdir}/issue.d/%{name}.issue
+%dir %{_sysconfdir}/%{name}/issue.d
 
 %files motdgen
 %{_unitdir}/motdgen.path
@@ -145,6 +154,7 @@ ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/p
 %{_prefix}/lib/%{name}/motd.d/base.motd
 %dir /run/%{name}/motd.d
 %{_sysconfdir}/motd.d/%{name}.motd
+%dir %{_sysconfdir}/%{name}/motd.d
 
 %files profile
 %{_prefix}/share/%{name}/%{name}-profile.sh

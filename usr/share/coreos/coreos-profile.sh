@@ -1,9 +1,8 @@
-# /usr/share/coreos/coreos-profile.sh
+# /usr/share/fedora-user-messages/fedora-user-messages-profile.sh
 
 # Only print for interactive shells.
 if [[ $- == *i* ]]; then
 
-  echo "test: Failed systemd units will show here, if there are any."
   FAILED=$(systemctl list-units --state=failed --no-legend)
   if [[ ! -z "${FAILED}" ]]; then
   	COUNT=$(wc -l <<<"${FAILED}")
