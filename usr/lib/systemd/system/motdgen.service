@@ -1,7 +1,7 @@
 [Unit]
-Description=Generate /run/motd
+Description=Generate /run/fedora-user-messages.motd
 Before=systemd-user-sessions.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/coreos/motdgen
+ExecStart=/usr/lib/fedora-user-messages/motdgen

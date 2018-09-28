@@ -1,14 +1,10 @@
 %global github_owner    rfairley
-%global github_project  fedora-coreos-login-messages
+%global github_project  fedora-user-messages
 
-# TODO: discuss whether {name} should be used to create directories, and if that name should be "coreos".
-#       then this package would become the "base" package, and include any unit files, scripts, configs
-#       not necessarily related to ux. For now, "coreos" is used in the install paths below and is
-#       independent of the package {name}.
-Name:           coreos-ux
+Name:           fedora-user-messages
 Version:        0.1
 Release:        1%{?dist}
-Summary:        Fedora CoreOS user-experience-related modules (motd, issue, profile)
+Summary:        Combines Fedora motd, issue, profile features to show system information to the user
 # TODO: check license
 # TODO: finalize URLs below
 License:        ASL 2.0
@@ -25,19 +21,18 @@ Requires:       systemd
 %{summary}.
 
 %package motdgen
-Summary:        Message of the day generator for Fedora CoreOS
-Requires:       coreos-ux
+Summary:        Message of the day generator
+Requires:       fedora-user-messages
 Requires:       bash
 Requires:       systemd
-# Note: pam 1.3.1 not needed since not using motd.d feature of pam_motd
-Requires:       pam
+Requires:       pam >= 1.3.1
 
 %description motdgen
 %{summary}.
 
 %package issuegen
-Summary:        Issue generator for Fedora CoreOS
-Requires:       coreos-ux
+Summary:        Issue generator
+Requires:       fedora-user-messages
 Requires:       bash
 Requires:       systemd
 Requires:       util-linux
@@ -46,8 +41,8 @@ Requires:       util-linux
 %{summary}.
 
 %package profile
-Summary:        Profile script for Fedora CoreOS
-Requires:       coreos-ux
+Summary:        Profile script
+Requires:       fedora-user-messages
 Requires:       bash
 Requires:       systemd
 
@@ -62,11 +57,11 @@ Requires:       systemd
 %install
 
 # Vendor-scoped directories
-mkdir -p %{buildroot}%{_prefix}/lib/coreos/issue.d
-mkdir -p %{buildroot}%{_prefix}/lib/coreos/motd.d
-mkdir -p %{buildroot}/run/coreos/issue.d
-mkdir -p %{buildroot}/run/coreos/motd.d
-mkdir -p %{buildroot}%{_prefix}/share/coreos
+mkdir -p %{buildroot}%{_prefix}/lib/%{name}/issue.d
+mkdir -p %{buildroot}%{_prefix}/lib/%{name}/motd.d
+mkdir -p %{buildroot}/run/%{name}/issue.d
+mkdir -p %{buildroot}/run/%{name}/motd.d
+mkdir -p %{buildroot}%{_prefix}/share/%{name}
 
 # External directories
 mkdir -p %{buildroot}%{_sysconfdir}/issue.d
@@ -82,24 +77,24 @@ install -DpZm 0644 usr/lib/tmpfiles.d/issuegen-tmpfiles.conf %{buildroot}%{_tmpf
 install -DpZm 0644 usr/lib/systemd/system/motdgen.path %{buildroot}%{_unitdir}/motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/motdgen.service %{buildroot}%{_unitdir}/motdgen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/motdgen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/motdgen.conf
-install -DpZm 0644 usr/lib/tmpfiles.d/coreos-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/coreos-profile.conf
+install -DpZm 0644 usr/lib/tmpfiles.d/coreos-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
 install -DpZm 0644 usr/lib/udev/rules.d/91-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/91-issuegen.rules
 
-install -DpZm 0755 usr/lib/coreos/issuegen %{buildroot}%{_prefix}/lib/coreos/issuegen
-install -DpZm 0644 usr/lib/coreos/issue.d/* %{buildroot}%{_prefix}/lib/coreos/issue.d
-install -DpZm 0755 usr/lib/coreos/motdgen %{buildroot}%{_prefix}/lib/coreos/motdgen
-install -DpZm 0644 usr/lib/coreos/motd.d/* %{buildroot}%{_prefix}/lib/coreos/motd.d
-install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/share/coreos/coreos-profile.sh
+install -DpZm 0755 usr/lib/coreos/issuegen %{buildroot}%{_prefix}/lib/%{name}/issuegen
+install -DpZm 0644 usr/lib/coreos/issue.d/* %{buildroot}%{_prefix}/lib/%{name}/issue.d
+install -DpZm 0755 usr/lib/coreos/motdgen %{buildroot}%{_prefix}/lib/%{name}/motdgen
+install -DpZm 0644 usr/lib/coreos/motd.d/* %{buildroot}%{_prefix}/lib/%{name}/motd.d
+install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/share/%{name}/%{name}-profile.sh
 
-ln -snf /run/coreos.issue %{buildroot}%{_sysconfdir}/issue.d/coreos.issue
-ln -snf /run/coreos.motd %{buildroot}%{_sysconfdir}/motd.d/coreos.motd
-ln -snf %{_prefix}/share/coreos/coreos-profile.sh %{buildroot}%{_sysconfdir}/profile.d/coreos-profile.sh
+ln -snf /run/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
+ln -snf /run/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
+ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
 
 # TODO: handle pkg-* being created more nicely
 %pre
 %tmpfiles_create_package issuegen issuegen-tmpfiles.conf
 %tmpfiles_create_package motdgen motdgen-tmpfiles.conf
-%tmpfiles_create_package coreos-profile coreos-profile-tmpfiles.conf
+%tmpfiles_create_package %{name}-profile %{name}-profile-tmpfiles.conf
 
 # TODO: check presets will enable the services in RHCOS
 # TODO: can %pre, %post, etc. be specified as e.g. %pre issuegen?
@@ -126,35 +121,35 @@ ln -snf %{_prefix}/share/coreos/coreos-profile.sh %{buildroot}%{_sysconfdir}/pro
 %files
 %doc README.md
 %license LICENSE
-%dir %{_prefix}/lib/coreos
-%dir /run/coreos
-%dir %{_prefix}/share/coreos
+%dir %{_prefix}/lib/%{name}
+%dir /run/%{name}
+%dir %{_prefix}/share/%{name}
 
 %files issuegen
 %{_unitdir}/issuegen.path
 %{_unitdir}/issuegen.service
 %{_tmpfilesdir}/issuegen.conf
 %{_prefix}/lib/udev/rules.d/91-issuegen.rules
-%{_prefix}/lib/coreos/issuegen
-%dir %{_prefix}/lib/coreos/issue.d
-%{_prefix}/lib/coreos/issue.d/base.issue
-%dir /run/coreos/issue.d
-%{_sysconfdir}/issue.d/coreos.issue
+%{_prefix}/lib/%{name}/issuegen
+%dir %{_prefix}/lib/%{name}/issue.d
+%{_prefix}/lib/%{name}/issue.d/base.issue
+%dir /run/%{name}/issue.d
+%{_sysconfdir}/issue.d/%{name}.issue
 
 %files motdgen
 %{_unitdir}/motdgen.path
 %{_unitdir}/motdgen.service
 %{_tmpfilesdir}/motdgen.conf
-%{_prefix}/lib/coreos/motdgen
-%dir %{_prefix}/lib/coreos/motd.d
-%{_prefix}/lib/coreos/motd.d/base.motd
-%dir /run/coreos/motd.d
-%{_sysconfdir}/motd.d/coreos.motd
+%{_prefix}/lib/%{name}/motdgen
+%dir %{_prefix}/lib/%{name}/motd.d
+%{_prefix}/lib/%{name}/motd.d/base.motd
+%dir /run/%{name}/motd.d
+%{_sysconfdir}/motd.d/%{name}.motd
 
 %files profile
-%{_prefix}/share/coreos/coreos-profile.sh
-%{_tmpfilesdir}/coreos-profile.conf
-%{_sysconfdir}/profile.d/coreos-profile.sh
+%{_prefix}/share/%{name}/%{name}-profile.sh
+%{_tmpfilesdir}/%{name}-profile.conf
+%{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
 * Tue Sep 25 2018 Robert Fairley <rfairley@redhat.com> - 0.1-1

@@ -1,2 +1,2 @@
-ACTION=="add", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/coreos/issuegen add $env{INTERFACE}"
-ACTION=="remove", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/coreos/issuegen remove $env{INTERFACE}"
+ACTION=="add", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/fedora-user-messages/issuegen add $env{INTERFACE}"
+ACTION=="remove", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/fedora-user-messages/issuegen remove $env{INTERFACE}"

@@ -1,5 +1,5 @@
 [Unit]
-Description=Watch for /run/coreos/issue.d changes
+Description=Watch for /run/fedora-user-messages/issue.d changes
 
 [Path]
-PathChanged=/run/coreos/issue.d
+PathChanged=/run/fedora-user-messages/issue.d

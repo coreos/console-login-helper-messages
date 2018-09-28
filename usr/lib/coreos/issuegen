@@ -5,30 +5,30 @@ set -e
 SSH_DIR=/etc/ssh
 mkdir -p ${SSH_DIR}
 
-mkdir -p /run/coreos/issue.d
+mkdir -p /run/fedora-user-messages/issue.d
 
-rm -f /run/coreos.issue
+rm -f /run/fedora-user-messages.issue
 
 # Data from udev rules
 case "$1" in
     add)
-        echo "${2}: \\4{${2}} \\6{${2}}" > "/run/coreos/issue.d/${2}"
+        echo "${2}: \\4{${2}} \\6{${2}}" > "/run/fedora-user-messages/issue.d/${2}"
         ;;
     remove)
-        rm -f "/run/coreos/issue.d/${2}"
+        rm -f "/run/fedora-user-messages/issue.d/${2}"
         ;;
 esac
 
 # Provide key fingerprints via issue
 for KEY_FILE in $(find ${SSH_DIR} -name 'ssh_host_*_key') ; do
   ssh-keygen -l -f ${KEY_FILE}
-done | awk '{print "SSH host key: " $2 " " $4}' > /run/coreos/issue.d/00_ssh_host_keys
+done | awk '{print "SSH host key: " $2 " " $4}' > /run/fedora-user-messages/issue.d/00_ssh_host_keys
 
 echo
-if [[ -d "/usr/lib/coreos/issue.d" ]]; then
-  cat /usr/lib/coreos/issue.d/* 2>/dev/null >> /run/coreos.issue || true
+if [[ -d "/usr/lib/fedora-user-messages/issue.d" ]]; then
+  cat /usr/lib/fedora-user-messages/issue.d/* 2>/dev/null >> /run/fedora-user-messages.issue || true
 fi
-if [[ -d "/run/coreos/issue.d" ]]; then
-  cat /run/coreos/issue.d/* 2>/dev/null >> /run/coreos.issue || true
+if [[ -d "/run/fedora-user-messages/issue.d" ]]; then
+  cat /run/fedora-user-messages/issue.d/* 2>/dev/null >> /run/fedora-user-messages.issue || true
 fi
 echo

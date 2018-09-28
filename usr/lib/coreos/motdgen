@@ -4,16 +4,16 @@ set -e
 
 source /usr/lib/os-release
 
-mkdir -p /run/coreos/motd.d
+mkdir -p /run/fedora-user-messages/motd.d
 
-rm -f /run/coreos.motd
+rm -f /run/fedora-user-messages.motd
 
-echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/coreos.motd
+echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > /run/fedora-user-messages.motd
 
-if [[ -d "/usr/lib/coreos/motd.d" ]]; then
-	cat /usr/lib/coreos/motd.d/* 2>/dev/null >> /run/coreos.motd || true
+if [[ -d "/usr/lib/fedora-user-messages/motd.d" ]]; then
+	cat /usr/lib/fedora-user-messages/motd.d/* 2>/dev/null >> /run/fedora-user-messages.motd || true
 fi
 
-if [[ -d "/run/coreos/motd.d" ]]; then
-	cat /run/coreos/motd.d/* 2>/dev/null >> /run/coreos.motd || true
+if [[ -d "/run/fedora-user-messages/motd.d" ]]; then
+	cat /run/fedora-user-messages/motd.d/* 2>/dev/null >> /run/fedora-user-messages.motd || true
 fi

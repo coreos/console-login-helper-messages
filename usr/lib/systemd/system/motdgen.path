@@ -1,5 +1,5 @@
 [Unit]
-Description=Watch for /run/coreos/motd.d changes
+Description=Watch for /run/fedora-user-messages/motd.d changes
 
 [Path]
-PathChanged=/run/coreos/motd.d
+PathChanged=/run/fedora-user-messages/motd.d

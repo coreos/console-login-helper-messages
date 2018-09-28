@@ -1,6 +1,6 @@
-# fedora-coreos-login-messages
+# fedora-user-messages
 
-Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide an `issue/motd` mechanism for RHCOS/FCOS. To be distributed as an RPM, with some additional manual configuration required to work with software like PAM, agetty, ...
+Runtime scripts, systemd unit files, tmpfiles, and installer scripts to provide an `issue/motd` mechanism for Fedora-based distributions and possibly others. To be distributed as an RPM, with some additional manual configuration required to work with software like PAM, agetty, ...
 
 ## Installation
 
@@ -47,7 +47,7 @@ Let `x` denote `{motd,issue}`.
   - [ ] ssh keys in issue and motd (NOTE: ssh-keygen functionality will not be handled here)
   - [ ] added users in issue and motd
   - [x] ip address in issue
-  - [ ] some info  on updates (booting, pending, etc) from rpm-ostree status --json? in motd
+  - [ ] some info  on updates (booting, pending, etc) from rpm-ostree status --json? in motd (see https://github.com/rtnpro/motdgen/blob/master/motdgen-cache-updateinfo)
   - [x] failed units on login
 - [ ] check installation against RHCOS and FCOS
 - [ ] ensure licensing is correct
