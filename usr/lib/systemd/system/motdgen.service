@@ -1,7 +1,12 @@
 [Unit]
 Description=Generate /run/fedora-user-messages.motd
 Before=systemd-user-sessions.service
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Type=oneshot
 ExecStart=/usr/lib/fedora-user-messages/motdgen
+
+[Install]
+WantedBy=multi-user.target
