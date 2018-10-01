@@ -3,28 +3,66 @@
 set -e
 
 GENERATED_MOTD="/run/fedora-user-messages.motd"
+ANSI_LIGHT_RED='\033[1;31m'
+ANSI_LIGHT_BLUE='\033[1;34m'
+ANSI_NC='\033[0m'
 
 source /usr/lib/os-release
 
 print_rpm_ostree_update_info() {
-	echo "rpm-ostree update info here"
+	echo -e "\n---- rpm-ostree"
+
+	rpm-ostree status --json > /run/fedora-user-messages/rpm-ostree-status.json
+	pending_deployment_exists=$(jq '.deployments[0].booted == false' /run/fedora-user-messages/rpm-ostree-status.json)
+	if [ "${pending_deployment_exists}" = "true" ]; then
+		echo -e "Deployment pending on next reboot"
+	fi
+
+	rpm-ostree upgrade --check > /run/fedora-user-messages/rpm-ostree-upgrade-check.out
+	sec_advisories=$(cat /run/fedora-user-messages/rpm-ostree-upgrade-check.out | grep "SecAdvisories")
+	pkg_diff=$(cat /run/fedora-user-messages/rpm-ostree-upgrade-check.out | grep "Diff")
+
+	if [ -n "${sec_advisories}" ]; then
+		sec_advisories=$(awk '{$1=""; sub(" ", " "); print}' <<< "${sec_advisories}")
+		sec_advisories=$(echo "${sec_advisories}" | sed -e "s/^[[:space:]]*//")
+		echo -e "${ANSI_LIGHT_RED}Security advisories:${ANSI_NC}"
+		echo -e "  ${sec_advisories}"
+	fi
+	if [ -n "${pkg_diff}" ]; then
+		num_upgrade=$(awk '{ print $2 }' <<< "${pkg_diff}")
+		num_remove=$(awk '{ print $4 }' <<< "${pkg_diff}")
+		num_add=$(awk '{ print $6 }' <<< "${pkg_diff}")
+		echo -e "${ANSI_LIGHT_BLUE}Update available:${ANSI_NC}"
+		echo "  ${num_upgrade} packages to upgrade"
+		echo "  ${num_remove} packages to remove"
+		echo "  ${num_add} new packages"
+	fi
+
+	echo "---"
 }
 
 print_dnf_update_info() {
-	echo "dnf update info here"
+	echo -e "\n---- dnf"
+	dnf -qC updateinfo > /run/fedora-user-messages/dnf-updateinfo.out
+	cat /run/fedora-user-messages/dnf-updateinfo.out
+	echo "----"
 }
 
 mkdir -p /run/fedora-user-messages/motd.d
 
-rm -f $GENERATED_MOTD
+rm -f ${GENERATED_MOTD}
 
-echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > $GENERATED_MOTD
+echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > ${GENERATED_MOTD}
 
 if [ -x "$(command -v rpm-ostree)" ]; then
-	print_rpm_ostree_update_info >> $GENERATED_MOTD
+	set +e
+	print_rpm_ostree_update_info >> ${GENERATED_MOTD}
+	set -e
 fi
 if [ -x "$(command -v dnf)" ]; then
-	print_dnf_update_info >> $GENERATED_MOTD
+	set +e
+	print_dnf_update_info >> ${GENERATED_MOTD}
+	set -e
 fi
 
 if [[ -d "/usr/lib/fedora-user-messages/motd.d" ]]; then

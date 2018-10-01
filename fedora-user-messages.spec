@@ -28,6 +28,7 @@ Requires:       systemd
 # PAM 1.3.1 has searching /etc/motd.d.
 # Needed for the generated motd symlink to display.
 Requires:       pam >= 1.3.1
+Requires:       jq
 
 %description motdgen
 %{summary}.
