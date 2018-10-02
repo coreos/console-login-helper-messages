@@ -21,7 +21,7 @@
     Edit `/etc/pam.d/sshd` to have line `session    optional     pam_motd.so` (if it does not already have it). It should look like the following:
 
     `/etc/pam.d/sshd`
-        ```
+    
         #%PAM-1.0
         auth       substack     password-auth
         auth       include      postlogin
@@ -39,7 +39,6 @@
         session    optional     pam_motd.so
         session    include      password-auth
         session    include      postlogin
-        ```
 
 6. Enable the units and restart.
 
