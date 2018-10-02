@@ -9,7 +9,15 @@ ANSI_NC='\033[0m'
 
 source /usr/lib/os-release
 
+print_added_users() {
+	echo -e "\n---- available users"
+	added_users=$(awk --field-separator ':' '{ print " ",$1 }' /etc/passwd)
+	echo "${added_users}"
+}
+
 print_rpm_ostree_update_info() {
+	# TODO: this should not print out if no other information in the if
+	# conditions below is printed.
 	echo -e "\n---- rpm-ostree"
 
 	rpm-ostree status --json > /run/fedora-user-messages/rpm-ostree-status.json
@@ -37,22 +45,23 @@ print_rpm_ostree_update_info() {
 		echo "  ${num_remove} packages to remove"
 		echo "  ${num_add} new packages"
 	fi
-
-	echo "---"
 }
 
 print_dnf_update_info() {
 	echo -e "\n---- dnf"
 	dnf -qC updateinfo > /run/fedora-user-messages/dnf-updateinfo.out
 	cat /run/fedora-user-messages/dnf-updateinfo.out
-	echo "----"
 }
 
 mkdir -p /run/fedora-user-messages/motd.d
 
 rm -f ${GENERATED_MOTD}
 
+# Get updated system information and print it to the
+# generated motd
 echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > ${GENERATED_MOTD}
+
+print_added_users >> ${GENERATED_MOTD}
 
 if [ -x "$(command -v rpm-ostree)" ]; then
 	set +e
@@ -65,6 +74,8 @@ if [ -x "$(command -v dnf)" ]; then
 	set -e
 fi
 
+# Look in directories where additional messages are dropped, append
+# to the generated motd.
 if [[ -d "/usr/lib/fedora-user-messages/motd.d" ]]; then
 	cat /usr/lib/fedora-user-messages/motd.d/* 2>/dev/null >> $GENERATED_MOTD || true
 fi
