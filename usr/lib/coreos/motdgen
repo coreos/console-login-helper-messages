@@ -6,44 +6,48 @@ GENERATED_MOTD="/run/fedora-user-messages.motd"
 ANSI_LIGHT_RED='\033[1;31m'
 ANSI_LIGHT_BLUE='\033[1;34m'
 ANSI_NC='\033[0m'
+SUBPOINT='  |->'
 
 source /usr/lib/os-release
 
-print_added_users() {
-	echo -e "\n---- available users"
-	added_users=$(awk --field-separator ':' '{ print " ",$1 }' /etc/passwd)
-	echo "${added_users}"
-}
-
 print_rpm_ostree_update_info() {
-	# TODO: this should not print out if no other information in the if
-	# conditions below is printed.
-	echo -e "\n---- rpm-ostree"
+	echo -e "\n[ostree]"
 
 	rpm-ostree status --json > /run/fedora-user-messages/rpm-ostree-status.json
-	pending_deployment_exists=$(jq '.deployments[0].booted == false' /run/fedora-user-messages/rpm-ostree-status.json)
-	if [ "${pending_deployment_exists}" = "true" ]; then
-		echo -e "Deployment pending on next reboot"
-	fi
-
 	rpm-ostree upgrade --check > /run/fedora-user-messages/rpm-ostree-upgrade-check.out
+
 	sec_advisories=$(cat /run/fedora-user-messages/rpm-ostree-upgrade-check.out | grep "SecAdvisories")
 	pkg_diff=$(cat /run/fedora-user-messages/rpm-ostree-upgrade-check.out | grep "Diff")
+	up_version=$(cat /run/fedora-user-messages/rpm-ostree-upgrade-check.out | grep "Version")
+	up_version=$(awk '{ print $2 }' <<< "${up_version}")
+	up_commit=$(cat /run/fedora-user-messages/rpm-ostree-upgrade-check.out | grep "Commit")
+	up_commit=$(awk '{ print $2 }' <<< "${up_commit}")
+	upgrade_deployment_pending_reboot=$(jq --arg commit "${up_commit}" '[.deployments[0].booted == false] and [.deployments[0]."base-checksum" | tostring == $commit]' /run/fedora-user-messages/rpm-ostree-status.json)
+	up_commit=$(echo "${up_commit}" | awk '{ print substr($0,0,6) }')
+	cur_version=$(jq '.deployments | map(select(.booted == true)) | .[]."version"' /run/fedora-user-messages/rpm-ostree-status.json)
+	cur_version=$(sed -e 's/^"//' -e 's/"$//' <<< "${cur_version}")
+	cur_commit=$(jq '.deployments | map(select(.booted == true)) | .[]."base-checksum"' /run/fedora-user-messages/rpm-ostree-status.json)
+	cur_commit=$(sed -e 's/^"//' -e 's/"$//' <<< "${cur_commit}")
+	cur_commit=$(echo "${cur_commit}" | awk '{ print substr($0,0,6) }')
+
+	echo -e "current:   ${cur_version} (${cur_commit})"
+	update_available_msg=$(echo -e "${ANSI_LIGHT_BLUE}available${ANSI_NC}: ${up_version} (${up_commit})")
+	if [ "${upgrade_deployment_pending_reboot}" = "true" ]; then
+		echo "${update_available_msg} - deployment pending next reboot"
+	else
+		echo "${update_available_msg}"
+	fi
+
 
 	if [ -n "${sec_advisories}" ]; then
 		sec_advisories=$(awk '{$1=""; sub(" ", " "); print}' <<< "${sec_advisories}")
 		sec_advisories=$(echo "${sec_advisories}" | sed -e "s/^[[:space:]]*//")
-		echo -e "${ANSI_LIGHT_RED}Security advisories:${ANSI_NC}"
-		echo -e "  ${sec_advisories}"
+		echo -e "${SUBPOINT} ${ANSI_LIGHT_RED}advisories${ANSI_NC}: ${sec_advisories}"
 	fi
 	if [ -n "${pkg_diff}" ]; then
-		num_upgrade=$(awk '{ print $2 }' <<< "${pkg_diff}")
-		num_remove=$(awk '{ print $4 }' <<< "${pkg_diff}")
-		num_add=$(awk '{ print $6 }' <<< "${pkg_diff}")
-		echo -e "${ANSI_LIGHT_BLUE}Update available:${ANSI_NC}"
-		echo "  ${num_upgrade} packages to upgrade"
-		echo "  ${num_remove} packages to remove"
-		echo "  ${num_add} new packages"
+		pkg_diff=$(awk '{ $1="" ; sub(" ", " ") ; print }' <<< "${pkg_diff}")
+		pkg_diff=$(echo "${pkg_diff}" | sed -e "s/^[[:space:]]*//")
+		echo -e "${SUBPOINT} packages: ${pkg_diff}"
 	fi
 }
 
@@ -60,8 +64,6 @@ rm -f ${GENERATED_MOTD}
 # Get updated system information and print it to the
 # generated motd
 echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > ${GENERATED_MOTD}
-
-print_added_users >> ${GENERATED_MOTD}
 
 if [ -x "$(command -v rpm-ostree)" ]; then
 	set +e
