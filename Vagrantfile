@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "fedora/28-atomic-host"
 
   config.vm.synced_folder ".", "/srv/console-login-helper-messages", type: "rsync",
-    rsync__exclude: ".git/"
+    rsync__exclude: [".git/", "view-rpm-tree-output/"]
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Get updated system information, including SSH keys and network devices,
+# and generate an issue to display before login.
+
 set -e
 
 PKG_NAME=console-login-helper-messages
@@ -28,18 +31,12 @@ for KEY_FILE in $(find ${SSH_DIR} -name 'ssh_host_*_key') ; do
 	ssh-keygen -l -f ${KEY_FILE}
 done | awk '{print "SSH host key: " $2 " " $4}' > /run/${ISSUE_DIR_PRIVATE}/00_ssh_host_keys
 
-echo
-
 if [[ -d "/etc/${ISSUE_DIR_PRIVATE}" ]]; then
 	cat /etc/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_ISSUE} || true
 fi
-
 if [[ -d "/run/${ISSUE_DIR_PRIVATE}" ]]; then
 	cat /run/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_ISSUE} || true
 fi
-
 if [[ -d "/usr/lib/${ISSUE_DIR_PRIVATE}" ]]; then
 	cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_ISSUE} || true
 fi
-
-echo

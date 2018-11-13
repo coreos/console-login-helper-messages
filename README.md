@@ -26,6 +26,7 @@ Let `x` denote `{motd,issue}`.
 - [ ] CI for master branch
 - [ ] tidy up code, comments
 - [ ] user manual (brief)
+- [ ] support yum and rpm
 
 ## Enhancements for future
 - [x] have upstream PAM include the "trying" functionality, use this config rather than symlinks
