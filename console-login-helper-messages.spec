@@ -84,14 +84,14 @@ install -DpZm 0644 usr/lib/systemd/system/issuegen.service %{buildroot}%{_unitdi
 install -DpZm 0644 usr/lib/tmpfiles.d/issuegen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/issuegen.conf
 install -DpZm 0644 usr/lib/systemd/system/motdgen.path %{buildroot}%{_unitdir}/motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/motdgen.service %{buildroot}%{_unitdir}/motdgen.service
-install -DpZm 0644 usr/lib/tmpfiles.d/coreos-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
+install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
 install -DpZm 0644 usr/lib/udev/rules.d/91-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/91-issuegen.rules
 
-install -DpZm 0755 usr/lib/coreos/issuegen %{buildroot}%{_prefix}/lib/%{name}/issuegen
-install -DpZm 0644 usr/lib/coreos/issue.d/* %{buildroot}%{_prefix}/lib/%{name}/issue.d
-install -DpZm 0755 usr/lib/coreos/motdgen %{buildroot}%{_prefix}/lib/%{name}/motdgen
-install -DpZm 0644 usr/lib/coreos/motd.d/* %{buildroot}%{_prefix}/lib/%{name}/motd.d
-install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/share/%{name}/%{name}-profile.sh
+install -DpZm 0755 usr/lib/%{name}/issuegen %{buildroot}%{_prefix}/lib/%{name}/issuegen
+install -DpZm 0644 usr/lib/%{name}/issue.d/* %{buildroot}%{_prefix}/lib/%{name}/issue.d
+install -DpZm 0755 usr/lib/%{name}/motdgen %{buildroot}%{_prefix}/lib/%{name}/motdgen
+install -DpZm 0644 usr/lib/%{name}/motd.d/* %{buildroot}%{_prefix}/lib/%{name}/motd.d
+install -DpZm 0755 usr/share/%{name}/%{name}-profile.sh %{buildroot}%{_prefix}/share/%{name}/%{name}-profile.sh
 
 ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
 ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
@@ -99,7 +99,6 @@ ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/p
 # TODO: handle pkg-* being created more nicely
 %pre
 %tmpfiles_create_package issuegen issuegen-tmpfiles.conf
-%tmpfiles_create_package motdgen motdgen-tmpfiles.conf
 %tmpfiles_create_package %{name}-profile %{name}-profile-tmpfiles.conf
 
 # TODO: check presets will enable the services in RHCOS
