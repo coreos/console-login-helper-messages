@@ -1,12 +1,12 @@
 [Unit]
-Description=Generate /run/fedora-user-messages.motd
+Description=Generate /run/motd.d/console-login-helper-messages.motd
 Before=systemd-user-sessions.service
 Wants=network-online.target
 After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/fedora-user-messages/motdgen
+ExecStart=/usr/lib/console-login-helper-messages/motdgen
 
 [Install]
 WantedBy=multi-user.target

@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "fedora/28-atomic-host"
 
-  config.vm.synced_folder ".", "/srv/fedora-coreos-login-messages", type: "rsync",
+  config.vm.synced_folder ".", "/srv/console-login-helper-messages", type: "rsync",
     rsync__exclude: ".git/"
 
   # Disable automatic box update checking. If you disable this, then

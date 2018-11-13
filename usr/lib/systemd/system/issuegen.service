@@ -1,12 +1,12 @@
 [Unit]
-Description=Generate /run/fedora-user-messages.issue
+Description=Generate /run/issue.d/console-login-helper-messages.issue
 Before=systemd-user-sessions.service
 Wants=network-online.target
 After=network-online.target sshd-keygen.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/fedora-user-messages/issuegen
+ExecStart=/usr/lib/console-login-helper-messages/issuegen
 
 [Install]
 WantedBy=multi-user.target

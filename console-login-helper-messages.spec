@@ -1,7 +1,7 @@
 %global github_owner    rfairley
-%global github_project  fedora-user-messages
+%global github_project  console-login-helper-messages
 
-Name:           fedora-user-messages
+Name:           console-login-helper-messages
 Version:        0.1
 Release:        1%{?dist}
 Summary:        Combines Fedora motd, issue, profile features to show system information to the user
@@ -22,9 +22,10 @@ Requires:       systemd
 
 %package motdgen
 Summary:        Message of the day generator
-Requires:       fedora-user-messages
+Requires:       console-login-helper-messages
 Requires:       bash
 Requires:       systemd
+# TODO: update for the latest PAM that contains list of directories
 # PAM 1.3.1 has searching /etc/motd.d.
 # Needed for the generated motd symlink to display.
 Requires:       pam >= 1.3.1
@@ -35,7 +36,7 @@ Requires:       jq
 
 %package issuegen
 Summary:        Issue generator
-Requires:       fedora-user-messages
+Requires:       console-login-helper-messages
 Requires:       bash
 Requires:       systemd
 # agetty is included in util-linux, which searches /etc/issue.d.
@@ -47,7 +48,7 @@ Requires:       util-linux
 
 %package profile
 Summary:        Profile script
-Requires:       fedora-user-messages
+Requires:       console-login-helper-messages
 Requires:       bash
 Requires:       systemd
 
@@ -70,7 +71,6 @@ mkdir -p %{buildroot}%{_prefix}/share/%{name}
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/issue.d
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/motd.d
 
-
 # External directories
 mkdir -p %{buildroot}%{_sysconfdir}/issue.d
 mkdir -p %{buildroot}%{_sysconfdir}/motd.d
@@ -84,7 +84,6 @@ install -DpZm 0644 usr/lib/systemd/system/issuegen.service %{buildroot}%{_unitdi
 install -DpZm 0644 usr/lib/tmpfiles.d/issuegen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/issuegen.conf
 install -DpZm 0644 usr/lib/systemd/system/motdgen.path %{buildroot}%{_unitdir}/motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/motdgen.service %{buildroot}%{_unitdir}/motdgen.service
-install -DpZm 0644 usr/lib/tmpfiles.d/motdgen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/motdgen.conf
 install -DpZm 0644 usr/lib/tmpfiles.d/coreos-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
 install -DpZm 0644 usr/lib/udev/rules.d/91-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/91-issuegen.rules
 
@@ -94,8 +93,7 @@ install -DpZm 0755 usr/lib/coreos/motdgen %{buildroot}%{_prefix}/lib/%{name}/mot
 install -DpZm 0644 usr/lib/coreos/motd.d/* %{buildroot}%{_prefix}/lib/%{name}/motd.d
 install -DpZm 0755 usr/share/coreos/coreos-profile.sh %{buildroot}%{_prefix}/share/%{name}/%{name}-profile.sh
 
-ln -snf /run/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
-ln -snf /run/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
+ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
 ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
 
 # TODO: handle pkg-* being created more nicely
@@ -149,12 +147,10 @@ ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/p
 %files motdgen
 %{_unitdir}/motdgen.path
 %{_unitdir}/motdgen.service
-%{_tmpfilesdir}/motdgen.conf
 %{_prefix}/lib/%{name}/motdgen
 %dir %{_prefix}/lib/%{name}/motd.d
 %{_prefix}/lib/%{name}/motd.d/base.motd
 %dir /run/%{name}/motd.d
-%{_sysconfdir}/motd.d/%{name}.motd
 %dir %{_sysconfdir}/%{name}/motd.d
 
 %files profile

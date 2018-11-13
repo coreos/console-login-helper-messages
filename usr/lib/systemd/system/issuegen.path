@@ -1,8 +1,8 @@
 [Unit]
-Description=Watch for /etc/fedora-user-messages/issue.d changes
+Description=Watch for /etc/console-login-helper-messages/issue.d changes
 
 [Path]
-PathChanged=/etc/fedora-user-messages/issue.d
+PathChanged=/etc/console-login-helper-messages/issue.d
 
 [Install]
 WantedBy=multi-user.target
