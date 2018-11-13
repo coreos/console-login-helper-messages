@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Get updated system information, including SSH keys and network devices,
+# and generate an issue to display before login.
+
+set -e
+
+PKG_NAME=console-login-helper-messages
+ISSUE_DIR_PUBLIC=issue.d
+ISSUE_DIR_PRIVATE=${PKG_NAME}/issue.d
+GENERATED_ISSUE=/run/${ISSUE_DIR_PUBLIC}/${PKG_NAME}.issue
+SSH_DIR=/etc/ssh
+
+mkdir -p ${SSH_DIR}
+mkdir -p /run/${ISSUE_DIR_PUBLIC}
+mkdir -p /run/${ISSUE_DIR_PRIVATE}
+rm -f $GENERATED_ISSUE
+
+# Data from udev rules
+case "$1" in
+	add)
+		echo "${2}: \\4{${2}} \\6{${2}}" > "/run/${ISSUE_DIR_PRIVATE}/${2}"
+		;;
+	remove)
+		rm -f "/run/${ISSUE_DIR_PRIVATE}/${2}"
+		;;
+esac
+
+# Provide key fingerprints via issue
+for KEY_FILE in $(find ${SSH_DIR} -name 'ssh_host_*_key') ; do
+	ssh-keygen -l -f ${KEY_FILE}
+done | awk '{print "SSH host key: " $2 " " $4}' > /run/${ISSUE_DIR_PRIVATE}/00_ssh_host_keys
+
+if [[ -d "/etc/${ISSUE_DIR_PRIVATE}" ]]; then
+	cat /etc/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_ISSUE} || true
+fi
+if [[ -d "/run/${ISSUE_DIR_PRIVATE}" ]]; then
+	cat /run/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_ISSUE} || true
+fi
+if [[ -d "/usr/lib/${ISSUE_DIR_PRIVATE}" ]]; then
+	cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_ISSUE} || true
+fi

@@ -1,8 +1,8 @@
 [Unit]
-Description=Watch for /etc/fedora-user-messages/motd.d changes
+Description=Watch for /etc/console-login-helper-messages/motd.d changes
 
 [Path]
-PathChanged=/etc/fedora-user-messages/motd.d
+PathChanged=/etc/console-login-helper-messages/motd.d
 
 [Install]
 WantedBy=multi-user.target
