@@ -2,9 +2,9 @@
 
 Uses `motd`, `issue`, and `profile` to show helper messages before/at login.
 
-## Usage
+Useful in situations where a desktop environment is not available and information is communicated through the terminal.
 
-## Messages shown:
+## Usage
 
 The following messages will show after installing `console-login-helper-messages` and enabling the `issuegen.service`, `issuegen.path`, `motdgen.service`, `motdgen.path` units.
 
@@ -12,8 +12,6 @@ The following messages will show after installing `console-login-helper-messages
 - [x] ip addresses of network interfaces such as `eth0`, _before_ login as an **issue**
 - [x] available system updates from rpm-ostree or dnf, _at_ login as a **motd**
 - [x] failed systemd units, _at_ login as a bash **profile** script
-
-## How to use:
 
 ### Enabling the messages
 
@@ -56,7 +54,7 @@ If a message is not showing, it could be because a symlink required to show the 
 systemd-tmpfiles --create
 ```
 
-## Regenerating the messages
+### Regenerating the messages
 
 To manually regenerate the `motd` or `issue`, the following commands can be used respectively:
 
@@ -72,5 +70,11 @@ Let `x` denote `{motd,issue}`.
 - Information about the system is sourced by running commands such as `rpm-ostree upgrade --check`, looking in directories such as `/etc/ssh`, or other ways like `udev` rules dropping files into `/run/console-login-helper-messages/issue.d`. More details are best explained by looking at the scripts in `usr/lib/console-login-helper-messages/issuegen` or `usr/lib/console-login-helper-messages/motdgen`.
 - The systemd units `issuegen.service` and `motdgen.service` are oneshot units whose job is to generate the messages at `/run/x.d/40_console-login-helper-messages.x`.
 - The systmed units `issuegen.path` and `motdgen.path` are used to check if a user dropped a file in `/etc/console-login-helper-messages/x.d`, and regenerate the messages.
-- A symlink `/etc/issue.d/console-login-helper-messages.issue -> /run/issue.d/console-login-helper-messages.issue` is created as agetty will only look for files in `/etc/issue.d` as of today, so a symlink to the generated one is required
-- A symlink `/etc/profile.d/console-login-helper-messages-profile.sh -> /usr/share/console-login-helper-messages/console-login-helper-messages-profile.sh` is created in order for the profile script to run
+- A symlink `/etc/issue.d/console-login-helper-messages.issue -> /run/issue.d/console-login-helper-messages.issue` is created as agetty will only look for files in `/etc/issue.d` as of today, so a symlink to the generated one is required.
+- A symlink `/etc/profile.d/console-login-helper-messages-profile.sh -> /usr/share/console-login-helper-messages/console-login-helper-messages-profile.sh` is created in order for the profile script to run.
+
+### Note on upstream dependencies
+
+TODO:
+ - note the PAM, sshd agetty versions, and distributions that use these versions
+ - list distributions that have the required functionality by default (where `console-login-helper-messages` has been tested)
