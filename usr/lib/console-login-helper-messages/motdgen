@@ -92,6 +92,8 @@ if [ -x "$(command -v dnf)" ]; then
 	set -e
 fi
 
+echo >> ${GENERATED_MOTD}
+
 if [[ -d "/usr/lib/${MOTD_DIR_PRIVATE}" ]]; then
 	cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
 fi

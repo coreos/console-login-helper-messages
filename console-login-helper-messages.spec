@@ -14,8 +14,7 @@ Source0:        https://example.com/%{name}/release/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  systemd
 %{?systemd_requires}
-Requires:       bash
-Requires:       systemd
+Requires:       bash systemd
 
 %description
 %{summary}.
@@ -23,11 +22,11 @@ Requires:       systemd
 %package motdgen
 Summary:        Message of the day generator
 Requires:       console-login-helper-messages
-Requires:       bash
-Requires:       systemd
-# Needed for showing multiple motds.
+Requires:       bash systemd jq
+
+# Needed to display motds under /run and /usr/lib
 Requires:       pam >= 1.3.1
-Requires:       jq
+Requires:       selinux-policy >= 3.14.3-11
 
 %description motdgen
 %{summary}.
@@ -35,10 +34,9 @@ Requires:       jq
 %package issuegen
 Summary:        Issue generator
 Requires:       console-login-helper-messages
-Requires:       bash
-Requires:       systemd
+Requires:       bash systemd
 # agetty is included in util-linux, which searches /etc/issue.d.
-# Needed for the generated issue symlink to display.
+# Needed to display issues symlinked from /etc/issue.d.
 Requires:       util-linux
 
 %description issuegen
@@ -47,8 +45,7 @@ Requires:       util-linux
 %package profile
 Summary:        Profile script
 Requires:       console-login-helper-messages
-Requires:       bash
-Requires:       systemd
+Requires:       bash systemd
 
 %description profile
 %{summary}.
