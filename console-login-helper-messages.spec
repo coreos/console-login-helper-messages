@@ -25,9 +25,7 @@ Summary:        Message of the day generator
 Requires:       console-login-helper-messages
 Requires:       bash
 Requires:       systemd
-# TODO: update for the latest PAM that contains list of directories
-# PAM 1.3.1 has searching /etc/motd.d.
-# Needed for the generated motd symlink to display.
+# Needed for showing multiple motds.
 Requires:       pam >= 1.3.1
 Requires:       jq
 
@@ -96,13 +94,10 @@ install -DpZm 0755 usr/share/%{name}/%{name}-profile.sh %{buildroot}%{_prefix}/s
 ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
 ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
 
-# TODO: handle pkg-* being created more nicely
 %pre
 %tmpfiles_create_package issuegen issuegen-tmpfiles.conf
 %tmpfiles_create_package %{name}-profile %{name}-profile-tmpfiles.conf
 
-# TODO: check presets will enable the services in RHCOS
-# TODO: can %pre, %post, etc. be specified as e.g. %pre issuegen?
 %post
 %systemd_post issuegen.path
 %systemd_post issuegen.service
