@@ -26,7 +26,9 @@ Requires:       bash systemd jq
 
 # Needed to display motds under /run and /usr/lib
 Requires:       pam >= 1.3.1
-Requires:       selinux-policy >= 3.14.3-11
+# Drop requirement on rawhide version, wait for it
+# to get into updates-testing
+#Requires:       selinux-policy >= 3.14.3-11
 
 %description motdgen
 %{summary}.
