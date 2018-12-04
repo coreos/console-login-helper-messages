@@ -70,11 +70,10 @@ Vagrant.configure("2") do |config|
         console-login-helper-messages-motdgen \
         console-login-helper-messages-issuegen \
         console-login-helper-messages-profile \
-        pam-1.3.1-12.fc29
+        selinux-policy \
+        pam --enablerepo=updates-testing
     echo "placeholder" > /run/motd
     mkdir -p /run/motd.d
-    chcon -t etc_t /run/motd
-    chcon -t etc_t /run/motd.d
     systemctl enable motdgen.service motdgen.path issuegen.service issuegen.path
     systemctl start motdgen.service issuegen.service
       SHELL

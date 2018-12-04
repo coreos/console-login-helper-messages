@@ -21,7 +21,7 @@ source /usr/lib/os-release
 # Query rpm-ostree for status and upgrade information,
 # and echo the formatted information
 print_rpm_ostree_update_info() {
-	echo -e "\n[ostree]"
+	echo "[ostree]"
 
 	status_info=${RUN_DROP_DIR}/rpm-ostree-status.json
 	upgrade_info=${RUN_DROP_DIR}/rpm-ostree-upgrade-check.out
@@ -68,12 +68,6 @@ print_rpm_ostree_update_info() {
 	fi
 }
 
-print_dnf_update_info() {
-	echo -e "\n[dnf]"
-	dnf -qC updateinfo > ${RUN_DROP_DIR}/dnf-updateinfo.out
-	cat ${RUN_DROP_DIR}/dnf-updateinfo.out
-}
-
 mkdir -p /run/${MOTD_DIR_PRIVATE}
 mkdir -p /run/${MOTD_DIR_PUBLIC}
 mkdir -p /run/${RUN_DROP_DIR}
@@ -81,25 +75,22 @@ rm -f ${GENERATED_MOTD}
 
 echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > ${GENERATED_MOTD}
 
+echo >> ${GENERATED_MOTD}
+
 if [ -x "$(command -v rpm-ostree)" ]; then
 	set +e
 	print_rpm_ostree_update_info >> ${GENERATED_MOTD}
 	set -e
 fi
-if [ -x "$(command -v dnf)" ]; then
-	set +e
-	print_dnf_update_info >> ${GENERATED_MOTD}
-	set -e
-fi
 
 echo >> ${GENERATED_MOTD}
 
-if [[ -d "/usr/lib/${MOTD_DIR_PRIVATE}" ]]; then
-	cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
+if [[ -d "/etc/${MOTD_DIR_PRIVATE}" ]]; then
+	cat /etc/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
 fi
 if [[ -d "/run/${MOTD_DIR_PRIVATE}" ]]; then
 	cat /run/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
 fi
-if [[ -d "/etc/${MOTD_DIR_PRIVATE}" ]]; then
-	cat /etc/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
+if [[ -d "/usr/lib/${MOTD_DIR_PRIVATE}" ]]; then
+	cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
 fi
