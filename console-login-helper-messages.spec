@@ -3,7 +3,7 @@
 
 Name:           console-login-helper-messages
 Version:        0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Combines Fedora motd, issue, profile features to show system information to the user
 # TODO: check license
 # TODO: finalize URLs below
@@ -25,10 +25,7 @@ Requires:       console-login-helper-messages
 Requires:       bash systemd jq
 
 # Needed to display motds under /run and /usr/lib
-Requires:       pam >= 1.3.1
-# Drop requirement on rawhide version, wait for it
-# to get into updates-testing
-#Requires:       selinux-policy >= 3.14.3-11
+Requires:       pam
 
 %description motdgen
 %{summary}.
@@ -148,5 +145,8 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Tue Dec 04 2018 Robert Fairley <rfairley@redhat.com> - 0.1-2
+- Major changes
+
 * Tue Sep 25 2018 Robert Fairley <rfairley@redhat.com> - 0.1-1
 - Initial Package
