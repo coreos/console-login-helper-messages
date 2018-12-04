@@ -76,44 +76,42 @@ mkdir -p %{buildroot}%{_unitdir}
 mkdir -p %{buildroot}%{_tmpfilesdir}
 mkdir -p %{buildroot}%{_prefix}/lib/udev/rules.d
 
-install -DpZm 0644 usr/lib/systemd/system/issuegen.path %{buildroot}%{_unitdir}/issuegen.path
-install -DpZm 0644 usr/lib/systemd/system/issuegen.service %{buildroot}%{_unitdir}/issuegen.service
-install -DpZm 0644 usr/lib/tmpfiles.d/issuegen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/issuegen.conf
-install -DpZm 0644 usr/lib/systemd/system/motdgen.path %{buildroot}%{_unitdir}/motdgen.path
-install -DpZm 0644 usr/lib/systemd/system/motdgen.service %{buildroot}%{_unitdir}/motdgen.service
+install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.path %{buildroot}%{_unitdir}/%{name}-issuegen.path
+install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.service %{buildroot}%{_unitdir}/%{name}-issuegen.service
+install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-issuegen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-issuegen.conf
+install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.path %{buildroot}%{_unitdir}/%{name}-motdgen.path
+install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.service %{buildroot}%{_unitdir}/%{name}-motdgen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
-install -DpZm 0644 usr/lib/udev/rules.d/91-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/91-issuegen.rules
+install -DpZm 0644 usr/lib/udev/rules.d/91-%{name}-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/91-%{name}-issuegen.rules
 
 install -DpZm 0755 usr/lib/%{name}/issuegen %{buildroot}%{_prefix}/lib/%{name}/issuegen
-install -DpZm 0644 usr/lib/%{name}/issue.d/* %{buildroot}%{_prefix}/lib/%{name}/issue.d
 install -DpZm 0755 usr/lib/%{name}/motdgen %{buildroot}%{_prefix}/lib/%{name}/motdgen
-install -DpZm 0644 usr/lib/%{name}/motd.d/* %{buildroot}%{_prefix}/lib/%{name}/motd.d
-install -DpZm 0755 usr/share/%{name}/%{name}-profile.sh %{buildroot}%{_prefix}/share/%{name}/%{name}-profile.sh
+install -DpZm 0755 usr/share/%{name}/profile.sh %{buildroot}%{_prefix}/share/%{name}/profile.sh
 
 ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
-ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
+ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %pre
-%tmpfiles_create_package issuegen issuegen-tmpfiles.conf
+%tmpfiles_create_package %{name}-issuegen %{name}-issuegen-tmpfiles.conf
 %tmpfiles_create_package %{name}-profile %{name}-profile-tmpfiles.conf
 
 %post
-%systemd_post issuegen.path
-%systemd_post issuegen.service
-%systemd_post motdgen.path
-%systemd_post motdgen.service
+%systemd_post %{name}-issuegen.path
+%systemd_post %{name}-issuegen.service
+%systemd_post %{name}-motdgen.path
+%systemd_post %{name}-motdgen.service
 
 %preun
-%systemd_preun issuegen.path
-%systemd_preun issuegen.service
-%systemd_preun motdgen.path
-%systemd_preun motdgen.service
+%systemd_preun %{name}-issuegen.path
+%systemd_preun %{name}-issuegen.service
+%systemd_preun %{name}-motdgen.path
+%systemd_preun %{name}-motdgen.service
 
 %postun
-%systemd_postun_with_restart issuegen.path
-%systemd_postun_with_restart issuegen.service
-%systemd_postun_with_restart motdgen.path
-%systemd_postun_with_restart motdgen.service
+%systemd_postun_with_restart %{name}-issuegen.path
+%systemd_postun_with_restart %{name}-issuegen.service
+%systemd_postun_with_restart %{name}-motdgen.path
+%systemd_postun_with_restart %{name}-motdgen.service
 
 # TODO: %check
 
@@ -126,28 +124,26 @@ ln -snf %{_prefix}/share/%{name}/%{name}-profile.sh %{buildroot}%{_sysconfdir}/p
 %dir %{_sysconfdir}/%{name}
 
 %files issuegen
-%{_unitdir}/issuegen.path
-%{_unitdir}/issuegen.service
-%{_tmpfilesdir}/issuegen.conf
-%{_prefix}/lib/udev/rules.d/91-issuegen.rules
+%{_unitdir}/%{name}-issuegen.path
+%{_unitdir}/%{name}-issuegen.service
+%{_tmpfilesdir}/%{name}-issuegen.conf
+%{_prefix}/lib/udev/rules.d/91-%{name}-issuegen.rules
 %{_prefix}/lib/%{name}/issuegen
 %dir %{_prefix}/lib/%{name}/issue.d
-%{_prefix}/lib/%{name}/issue.d/base.issue
 %dir /run/%{name}/issue.d
 %{_sysconfdir}/issue.d/%{name}.issue
 %dir %{_sysconfdir}/%{name}/issue.d
 
 %files motdgen
-%{_unitdir}/motdgen.path
-%{_unitdir}/motdgen.service
+%{_unitdir}/%{name}-motdgen.path
+%{_unitdir}/%{name}-motdgen.service
 %{_prefix}/lib/%{name}/motdgen
 %dir %{_prefix}/lib/%{name}/motd.d
-%{_prefix}/lib/%{name}/motd.d/base.motd
 %dir /run/%{name}/motd.d
 %dir %{_sysconfdir}/%{name}/motd.d
 
 %files profile
-%{_prefix}/share/%{name}/%{name}-profile.sh
+%{_prefix}/share/%{name}/profile.sh
 %{_tmpfilesdir}/%{name}-profile.conf
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
