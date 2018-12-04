@@ -10,24 +10,22 @@ ISSUE_DIR_PUBLIC=issue.d
 ISSUE_DIR_PRIVATE=${PKG_NAME}/issue.d
 GENERATED_ISSUE=/run/${ISSUE_DIR_PUBLIC}/${PKG_NAME}.issue
 SSH_DIR=/etc/ssh
-SUBPOINT='  |->'
 
 mkdir -p ${SSH_DIR}
 mkdir -p /run/${ISSUE_DIR_PUBLIC}
 mkdir -p /run/${ISSUE_DIR_PRIVATE}
-rm -f $GENERATED_ISSUE
+rm -f ${GENERATED_ISSUE}
+touch ${GENERATED_ISSUE}
 
 # Provide key fingerprints via issue
-echo "[ssh]" > "/run/${ISSUE_DIR_PRIVATE}/21_ssh_host_keys"
 for KEY_FILE in $(find ${SSH_DIR} -name 'ssh_host_*_key') ; do
 	ssh-keygen -l -f ${KEY_FILE}
-done | awk '{print "${SUBPOINT} SSH host key: " $2 " " $4}' >> "/run/${ISSUE_DIR_PRIVATE}/21_ssh_host_keys"
+done | awk '{print "SSH host key: " $2 " " $4}' > "/run/${ISSUE_DIR_PRIVATE}/21_ssh_host_keys.issue"
 
 # Data from udev rules
-echo "[netifs]" > "/run/${ISSUE_DIR_PRIVATE}/22_${2}.issue"
 case "$1" in
 	add)
-		echo -e "${SUBPOINT} ${2}: \\\\4{${2}} \\\\6{${2}}" > "/run/${ISSUE_DIR_PRIVATE}/22_${2}.issue"
+		echo "${2}: \\4{${2}} \\6{${2}}" > "/run/${ISSUE_DIR_PRIVATE}/22_${2}.issue"
 		;;
 	remove)
 		rm -f "/run/${ISSUE_DIR_PRIVATE}/${2}"

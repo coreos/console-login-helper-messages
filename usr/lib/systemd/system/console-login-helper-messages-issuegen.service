@@ -1,8 +1,8 @@
 [Unit]
 Description=Generate /run/issue.d/console-login-helper-messages.issue
 Before=systemd-user-sessions.service
-Wants=network-online.target sshd-keygen.service
-After=network-online.target sshd-keygen.target
+Wants=network-online.target
+After=network-online.target sshd-keygen.service
 
 [Service]
 Type=oneshot

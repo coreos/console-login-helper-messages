@@ -22,8 +22,7 @@ Requires:       bash systemd
 %package motdgen
 Summary:        Message of the day generator
 Requires:       console-login-helper-messages
-Requires:       bash systemd jq
-
+Requires:       bash systemd
 # Needed to display motds under /run and /usr/lib
 Requires:       pam
 
