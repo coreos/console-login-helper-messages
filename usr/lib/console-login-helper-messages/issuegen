@@ -17,6 +17,8 @@ mkdir -p /run/${ISSUE_DIR_PRIVATE}
 rm -f ${GENERATED_ISSUE}
 touch ${GENERATED_ISSUE}
 
+echo "This is \n (\s \m \r) \t" > ${GENERATED_ISSUE}
+
 # Provide key fingerprints via issue
 for KEY_FILE in $(find ${SSH_DIR} -name 'ssh_host_*_key') ; do
 	ssh-keygen -l -f ${KEY_FILE}
@@ -41,3 +43,5 @@ fi
 if [[ -d "/usr/lib/${ISSUE_DIR_PRIVATE}" ]]; then
 	cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_ISSUE} || true
 fi
+
+echo >> ${GENERATED_ISSUE}

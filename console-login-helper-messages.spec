@@ -3,7 +3,7 @@
 
 Name:           console-login-helper-messages
 Version:        0.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Combines Fedora motd, issue, profile features to show system information to the user
 # TODO: check license
 # TODO: finalize URLs below
