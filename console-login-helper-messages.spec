@@ -3,7 +3,7 @@
 
 Name:           console-login-helper-messages
 Version:        0.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Combines Fedora motd, issue, profile features to show system information to the user
 # TODO: check license
 # TODO: finalize URLs below
@@ -88,8 +88,8 @@ ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.is
 ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %pre
-%tmpfiles_create_package %{name}-issuegen %{name}-issuegen-tmpfiles.conf
-%tmpfiles_create_package %{name}-profile %{name}-profile-tmpfiles.conf
+%tmpfiles_create_package %{name}-issuegen usr/lib/tmpfiles.d/%{name}-issuegen-tmpfiles.conf
+%tmpfiles_create_package %{name}-profile usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf
 
 %post
 %systemd_post %{name}-issuegen.path
