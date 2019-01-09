@@ -3,9 +3,8 @@
 
 Name:           console-login-helper-messages
 Version:        0.1
-Release:        10%{?dist}
-Summary:        Combines Fedora motd, issue, profile features to show system information to the user
-# TODO: check license
+Release:        11%{?dist}
+Summary:        Combines motd, issue, profile features to show system information to the user before/on login
 # TODO: finalize URLs below
 License:        BSD
 URL:            https://github.com/%{github_owner}/%{github_project}
@@ -24,7 +23,7 @@ Summary:        Message of the day generator
 Requires:       console-login-helper-messages
 Requires:       bash systemd
 # Needed to display motds under /run and /usr/lib
-Requires:       pam
+Recommends:     pam >= 1.3.1-12 if sshd
 
 %description motdgen
 %{summary}.
@@ -143,11 +142,37 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Wed Jan 09 2019 Robert Fairley <rfairley@redhat.com> - 0.1-11
+- specfile cleanup, go through git commit history to write changelog
+
 * Wed Jan 09 2019 Robert Fairley <rfairley@redhat.com> - 0.1-10
-- Add license
+- Add license, tidyups
+
+* Mon Dec 10 2018 Robert Fairley <rfairley@redhat.com> - 0.1-9
+- Add tmpfiles_create_package usage to reproduce coredump
+
+* Mon Dec 10 2018 Robert Fairley <rfairley@redhat.com> - 0.1-8
+- Remove tmpfiles_create_package usage
+
+* Mon Dec 10 2018 Robert Fairley <rfairley@redhat.com> - 0.1-7
+- Fix usage of tmpfiles_create_package macro in specfile
+
+* Fri Dec 07 2018 Robert Fairley <rfairley@redhat.com> - 0.1-6
+- Fix tmpfile symlink paths
+
+* Fri Dec 07 2018 Robert Fairley <rfairley@redhat.com> - 0.1-5
+- Add [systemd] label to failed units message in profile script
+
+* Tue Dec 04 2018 Robert Fairley <rfairley@redhat.com> - 0.1-4
+- Minor formatting edits to generated issue and motd
+
+* Tue Dec 04 2018 Robert Fairley <rfairley@redhat.com> - 0.1-3
+- Remove printing package manager info (rpm-ostree, dnf)
 
 * Tue Dec 04 2018 Robert Fairley <rfairley@redhat.com> - 0.1-2
-- Major changes
+- Add CI with copr
+- Drop requirement on specifc SELinux version
+- Various tidyups including filenames
 
 * Tue Sep 25 2018 Robert Fairley <rfairley@redhat.com> - 0.1-1
 - Initial Package
