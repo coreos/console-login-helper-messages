@@ -1,26 +1,36 @@
 #!/bin/bash
 
-# Get updated system information from package managers
-# and generate a motd to display this at login.
+# Copyright (c) 2019 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2014 The CoreOS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# Modified from the CoreOS repository: https://github.com/coreos/init/blob/master/scripts/motdgen
+
+# Get updated system information and generate a motd
+# to display this at login.
 
 set -e
 
+# The public directories are to be read by higher-level programs to display
+# the motd on login, e.g. sshd and login.
+# The private directories are to be read only by this script.
 PKG_NAME=console-login-helper-messages
 MOTD_DIR_PUBLIC=motd.d
 MOTD_DIR_PRIVATE=${PKG_NAME}/motd.d
 GENERATED_MOTD=/run/${MOTD_DIR_PUBLIC}/${PKG_NAME}.motd
-
-source /usr/lib/os-release
 
 mkdir -p /run/${MOTD_DIR_PRIVATE}
 mkdir -p /run/${MOTD_DIR_PUBLIC}
 rm -f ${GENERATED_MOTD}
 touch ${GENERATED_MOTD}
 
+source /usr/lib/os-release
 echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > ${GENERATED_MOTD}
 
 echo >> ${GENERATED_MOTD}
 
+# Generate a motd from files found in the private (package-specific) directories,
+# and place the motd in a public directory.
 if [[ -d "/etc/${MOTD_DIR_PRIVATE}" ]]; then
 	cat /etc/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
 fi

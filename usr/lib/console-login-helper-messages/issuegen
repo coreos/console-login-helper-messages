@@ -3,6 +3,14 @@
 # Get updated system information, including SSH keys and network devices,
 # and generate an issue to display before login.
 
+# Copyright (c) 2019 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2013 The CoreOS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# Modified from the CoreOS repository:
+#  * https://github.com/coreos/init/blob/master/scripts/issuegen
+#  * https://github.com/coreos/init/blob/master/scripts/sshd_keygen
+
 set -e
 
 PKG_NAME=console-login-helper-messages
@@ -11,6 +19,9 @@ ISSUE_DIR_PRIVATE=${PKG_NAME}/issue.d
 GENERATED_ISSUE=/run/${ISSUE_DIR_PUBLIC}/${PKG_NAME}.issue
 SSH_DIR=/etc/ssh
 
+# The public directories are to be read by higher-level programs to display
+# the issue on login, e.g. agetty.
+# The private directories are to be read only by this script.
 mkdir -p ${SSH_DIR}
 mkdir -p /run/${ISSUE_DIR_PUBLIC}
 mkdir -p /run/${ISSUE_DIR_PRIVATE}
