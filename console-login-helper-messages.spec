@@ -3,13 +3,13 @@
 
 Name:           console-login-helper-messages
 Version:        0.1
-Release:        8%{?dist}
+Release:        10%{?dist}
 Summary:        Combines Fedora motd, issue, profile features to show system information to the user
 # TODO: check license
 # TODO: finalize URLs below
-License:        ASL 2.0
+License:        BSD
 URL:            https://github.com/%{github_owner}/%{github_project}
-Source0:        https://example.com/%{name}/release/%{name}-%{version}.tar.gz
+Source0:        https://github.com/%{github_owner}/%{github_project}/archive/%{name}-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  systemd
@@ -78,7 +78,7 @@ install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-issuegen-tmpfiles.conf %{buildroot
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.path %{buildroot}%{_unitdir}/%{name}-motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.service %{buildroot}%{_unitdir}/%{name}-motdgen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
-install -DpZm 0644 usr/lib/udev/rules.d/91-%{name}-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/91-%{name}-issuegen.rules
+install -DpZm 0644 usr/lib/udev/rules.d/90-%{name}-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/90-%{name}-issuegen.rules
 
 install -DpZm 0755 usr/lib/%{name}/issuegen %{buildroot}%{_prefix}/lib/%{name}/issuegen
 install -DpZm 0755 usr/lib/%{name}/motdgen %{buildroot}%{_prefix}/lib/%{name}/motdgen
@@ -88,6 +88,7 @@ ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.is
 ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %pre
+# TODO: use %tmpfiles_create_package for issuegen and profile tmpfiles
 
 %post
 %systemd_post %{name}-issuegen.path
@@ -121,7 +122,7 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_unitdir}/%{name}-issuegen.path
 %{_unitdir}/%{name}-issuegen.service
 %{_tmpfilesdir}/%{name}-issuegen.conf
-%{_prefix}/lib/udev/rules.d/91-%{name}-issuegen.rules
+%{_prefix}/lib/udev/rules.d/90-%{name}-issuegen.rules
 %{_prefix}/lib/%{name}/issuegen
 %dir %{_prefix}/lib/%{name}/issue.d
 %dir /run/%{name}/issue.d
@@ -142,6 +143,9 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Wed Jan 09 2019 Robert Fairley <rfairley@redhat.com> - 0.1-10
+- Add license
+
 * Tue Dec 04 2018 Robert Fairley <rfairley@redhat.com> - 0.1-2
 - Major changes
 
