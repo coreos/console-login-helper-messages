@@ -1,5 +1,7 @@
 # /usr/share/console-login-helper-messages/profile.sh
 
+# Originally from https://github.com/coreos/baselayout/blob/master/baselayout/coreos-profile.sh
+
 # Only print for interactive shells.
 if [[ $- == *i* ]]; then
 	FAILED=$(systemctl list-units --state=failed --no-legend)
