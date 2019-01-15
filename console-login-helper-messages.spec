@@ -21,9 +21,11 @@ Requires:       bash systemd
 %package motdgen
 Summary:        Message of the day generator
 Requires:       console-login-helper-messages
-Requires:       bash systemd
+Requires:       bash systemd setup
+# Permission for sshd to display /run/motd and /run/motd.d
+Requires:       selinux-policy >= 3.14.3-14
 # Needed to display motds under /run and /usr/lib
-Recommends:     pam >= 1.3.1-12 if sshd
+Recommends:       pam >= 1.3.1-15 if openssh
 
 %description motdgen
 %{summary}.
@@ -31,10 +33,10 @@ Recommends:     pam >= 1.3.1-12 if sshd
 %package issuegen
 Summary:        Issue generator
 Requires:       console-login-helper-messages
-Requires:       bash systemd
+Requires:       bash systemd setup
 # agetty is included in util-linux, which searches /etc/issue.d.
 # Needed to display issues symlinked from /etc/issue.d.
-Requires:       util-linux
+Requires:       util-linux >= 2.32-1
 
 %description issuegen
 %{summary}.
@@ -42,7 +44,7 @@ Requires:       util-linux
 %package profile
 Summary:        Profile script
 Requires:       console-login-helper-messages
-Requires:       bash systemd
+Requires:       bash systemd setup
 
 %description profile
 %{summary}.
