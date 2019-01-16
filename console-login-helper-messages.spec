@@ -3,9 +3,8 @@
 
 Name:           console-login-helper-messages
 Version:        0.1
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Combines motd, issue, profile features to show system information to the user before/on login
-# TODO: finalize URLs below
 License:        BSD
 URL:            https://github.com/%{github_owner}/%{github_project}
 Source0:        https://github.com/%{github_owner}/%{github_project}/archive/%{name}-%{version}.tar.gz
@@ -19,30 +18,45 @@ Requires:       bash systemd
 %{summary}.
 
 %package motdgen
-Summary:        Message of the day generator
+Summary:        Message of the day generator script showing system information
 Requires:       console-login-helper-messages
+
+# bash - bash scripts are included in this package
+# systemd - systemd service and path units, and querying for failed units
+# setup - filesystem paths need setting up
+#   * https://pagure.io/setup/pull-request/14
+#   * https://pagure.io/setup/pull-request/15
+# (the above applies to the issuegen and profile subpackages too)
 Requires:       bash systemd setup
 # Permission for sshd to display /run/motd and /run/motd.d
+#   * https://github.com/fedora-selinux/selinux-policy/pull/230
+#   * https://github.com/fedora-selinux/selinux-policy/pull/232
 Requires:       selinux-policy >= 3.14.3-14
-# Needed to display motds under /run and /usr/lib
-Recommends:       pam >= 1.3.1-15 if openssh
+# Needed for sshd (which uses pam_motd.so) to display motds under /run and /usr/lib
+#   * https://github.com/linux-pam/linux-pam/pull/69
+Requires:       pam >= 1.3.1-15
+# Recommend openssh so sshd is available to view MOTD directories
+# (assuming pam_motd.so is used in /etc/pam.d/sshd)
+Recommends:     openssh
 
 %description motdgen
 %{summary}.
 
 %package issuegen
-Summary:        Issue generator
+Summary:        Issue generator script showing SSH keys and IP address
 Requires:       console-login-helper-messages
 Requires:       bash systemd setup
 # agetty is included in util-linux, which searches /etc/issue.d.
 # Needed to display issues symlinked from /etc/issue.d.
+#   * https://github.com/karelzak/util-linux/commit/37ae6191f7c5686f1f9a2c3984e2cd9a62764029#diff-15eca7082c3cb16e5ac467f4acceb9d0R54
+#   * https://github.com/karelzak/util-linux/commit/1fc82a1360305f696dc1be6105c9c56a9ea03f52#diff-d7efd2b3dbb10e54185f001dc21d43db
 Requires:       util-linux >= 2.32-1
 
 %description issuegen
 %{summary}.
 
 %package profile
-Summary:        Profile script
+Summary:        Profile script showing systemd failed units
 Requires:       console-login-helper-messages
 Requires:       bash systemd setup
 
@@ -73,23 +87,30 @@ mkdir -p %{buildroot}%{_unitdir}
 mkdir -p %{buildroot}%{_tmpfilesdir}
 mkdir -p %{buildroot}%{_prefix}/lib/udev/rules.d
 
+# issuegen files
 install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.path %{buildroot}%{_unitdir}/%{name}-issuegen.path
 install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.service %{buildroot}%{_unitdir}/%{name}-issuegen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-issuegen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-issuegen.conf
+install -DpZm 0644 usr/lib/udev/rules.d/90-%{name}-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/90-%{name}-issuegen.rules
+install -DpZm 0755 usr/lib/%{name}/issuegen %{buildroot}%{_prefix}/lib/%{name}/issuegen
+
+# motdgen files
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.path %{buildroot}%{_unitdir}/%{name}-motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.service %{buildroot}%{_unitdir}/%{name}-motdgen.service
-install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
-install -DpZm 0644 usr/lib/udev/rules.d/90-%{name}-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/90-%{name}-issuegen.rules
-
-install -DpZm 0755 usr/lib/%{name}/issuegen %{buildroot}%{_prefix}/lib/%{name}/issuegen
 install -DpZm 0755 usr/lib/%{name}/motdgen %{buildroot}%{_prefix}/lib/%{name}/motdgen
+
+# profile files
+install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
 install -DpZm 0755 usr/share/%{name}/profile.sh %{buildroot}%{_prefix}/share/%{name}/profile.sh
 
+# symlinks
 ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
 ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
+# Note: no symlink for /run/motd.d/console-login-helper-messages.motd as
+#       this path should be displayed using pam_motd.so
 
 %pre
-# TODO: use %tmpfiles_create_package for issuegen and profile tmpfiles
+# TODO: use tmpfiles_create_package macro for issuegen and profile tmpfiles
 
 %post
 %systemd_post %{name}-issuegen.path
@@ -144,6 +165,9 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Wed Jan 16 2019 Robert Fairley <rfairley@redhat.com> - 0.1-12
+- add move README.md sections out into a manual, update specfile
+
 * Wed Jan 09 2019 Robert Fairley <rfairley@redhat.com> - 0.1-11
 - specfile cleanup, go through git commit history to write changelog
 

@@ -17,5 +17,5 @@ Vagrant.configure("2") do |config|
     mkdir -p /run/motd.d
     systemctl enable motdgen.service motdgen.path issuegen.service issuegen.path
     systemctl start motdgen.service issuegen.service
-      SHELL
+    SHELL
 end

@@ -40,4 +40,9 @@ The motd/issue messages are defaults and can be disabled following the [manual](
 
 Messages can be appended to the motd or issue, by placing
 files in the directories sourced by motdgen/issuegen to generate
-the message (see [manual](#Appending-messages)).
+the message (see [manual](manual.md#Appending-messages)).
+
+## Package Reviewers
+
+If reviewing this package, please see [the reviewers doc](reviewers.md) for steps to verify that the
+package works.
