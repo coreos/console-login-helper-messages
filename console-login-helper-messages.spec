@@ -2,12 +2,12 @@
 %global github_project  console-login-helper-messages
 
 Name:           console-login-helper-messages
-Version:        0.11
+Version:        0.12
 Release:        1%{?dist}
 Summary:        Combines motd, issue, profile features to show system information to the user before/on login
 License:        BSD
 URL:            https://github.com/%{github_owner}/%{github_project}
-Source0:        https://github.com/%{github_owner}/%{github_project}/download/v%{version}/%{name}-%{version}.tar.gz
+Source0:        https://github.com/%{github_owner}/%{github_project}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  systemd
@@ -165,8 +165,11 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Wed Jan 16 2019 Robert Fairley <rfairley@redhat.com> - 0.12-1
+- fix specfile Source0 to correct github URL
+
 * Wed Jan 16 2019 Robert Fairley <rfairley@redhat.com> - 0.11-1
-- add move README.md sections out into a manual, update specfile
+- add reviewers.md, specfile fixes
 
 * Wed Jan 16 2019 Robert Fairley <rfairley@redhat.com> - 0.1-12
 - add move README.md sections out into a manual, update specfile
