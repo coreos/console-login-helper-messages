@@ -43,8 +43,8 @@ There is also functionality provided already in Fedora 28 and 29 by pam_motd.so 
 which can accomplish displaying an additional message without needing to use the `console-login-helper-messages`
 directories mentioned above.
 
-[0] https://www.mankier.com/8/pam_motd#Description
-[1] https://www.mankier.com/8/agetty#Issue_Files
+- [0] https://www.mankier.com/8/pam_motd#Description
+- [1] https://www.mankier.com/8/agetty#Issue_Files
 
 ### Disabling messages
 
@@ -76,6 +76,6 @@ systemd-tmpfiles --create
 To manually regenerate the `motd` or `issue`, the following commands can be used respectively:
 
 ```
-systemctl start motdgen.service
-systemctl start issuegen.service
+systemctl restart motdgen.service
+systemctl restart issuegen.service
 ```
