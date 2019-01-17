@@ -28,7 +28,7 @@ eth0: 192.168.122.36 fe80::5054:ff:fe85:43a6
 At login:
 
 ```
-Fedora CoreOS (preview)
+Fedora (29 (Cloud Edition))
 [systemd]
 Failed Units: 1
     var-srv.mount

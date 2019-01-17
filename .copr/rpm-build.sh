@@ -3,7 +3,7 @@
 set -euo pipefail
 
 PKG_NAME="console-login-helper-messages"
-PKG_VER="0.1"
+PKG_VER="0.11"
 
 out_dir="${1}"
 top_dir="$(dirname ${2})"
