@@ -3,6 +3,9 @@
 set -euo pipefail
 
 PKG_NAME="console-login-helper-messages"
+# Change this to match the version in the specfile
+# (the need to do this will be eliminated once
+# Automake is added, https://github.com/rfairley/console-login-helper-messages/issues/2).
 PKG_VER="0.12"
 
 out_dir="${1}"

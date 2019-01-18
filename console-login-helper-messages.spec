@@ -3,7 +3,7 @@
 
 Name:           console-login-helper-messages
 Version:        0.12
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Combines motd, issue, profile features to show system information to the user before/on login
 License:        BSD
 URL:            https://github.com/%{github_owner}/%{github_project}
@@ -20,24 +20,35 @@ Requires:       bash systemd
 %package motdgen
 Summary:        Message of the day generator script showing system information
 Requires:       console-login-helper-messages
-
-# bash - bash scripts are included in this package
-# systemd - systemd service and path units, and querying for failed units
-# setup - filesystem paths need setting up
+# bash: bash scripts are included in this package
+# systemd: systemd service and path units, and querying for failed units
+# setup: filesystem paths need setting up
 #   * https://pagure.io/setup/pull-request/14
 #   * https://pagure.io/setup/pull-request/15
 # (the above applies to the issuegen and profile subpackages too)
 Requires:       bash systemd setup
-# Permission for sshd to display /run/motd and /run/motd.d
-#   * https://github.com/fedora-selinux/selinux-policy/pull/230
-#   * https://github.com/fedora-selinux/selinux-policy/pull/232
-Requires:       selinux-policy >= 3.14.3-14
-# Needed for sshd (which uses pam_motd.so) to display motds under /run and /usr/lib
+# Needed for anything using pam_motd.so (e.g. sshd) to display motds
+# under /run and /usr/lib
 #   * https://github.com/linux-pam/linux-pam/pull/69
 Requires:       pam >= 1.3.1-15
+
 # Recommend openssh so sshd is available to view MOTD directories
 # (assuming pam_motd.so is used in /etc/pam.d/sshd)
 Recommends:     openssh
+# selinux-policy: permission for sshd to display /run/motd and /run/motd.d
+#   * https://github.com/fedora-selinux/selinux-policy/pull/230
+#   * https://github.com/fedora-selinux/selinux-policy/pull/232
+# TODO: version numbers will need updating once policy is fixed, https://github.com/fedora-selinux/selinux-policy/issues/242
+%if "%{fc28}" == "1"
+Requires:       ((selinux-policy >= 3.14.1-50) if openssh)
+%else
+%if "%{fc29}" == "1"
+Requires:       ((selinux-policy >= 3.14.2-44) if openssh)
+# Fall through to require the version Rawhide needs, if not 28 or 29.
+%else
+Requires:       ((selinux-policy >= 3.14.3-14) if openssh)
+%endif
+%endif
 
 %description motdgen
 %{summary}.
@@ -46,6 +57,11 @@ Recommends:     openssh
 Summary:        Issue generator script showing SSH keys and IP address
 Requires:       console-login-helper-messages
 Requires:       bash systemd setup
+# systemd-udev: for udev rules
+Requires:       systemd-udev
+# fedora-release: for /etc/issue.d path
+# TODO: add in version number on the fedora-release Requires once /etc/issue.d is owned
+Requires:       fedora-release
 # agetty is included in util-linux, which searches /etc/issue.d.
 # Needed to display issues symlinked from /etc/issue.d.
 #   * https://github.com/karelzak/util-linux/commit/37ae6191f7c5686f1f9a2c3984e2cd9a62764029#diff-15eca7082c3cb16e5ac467f4acceb9d0R54
@@ -165,6 +181,9 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Fri Jan 18 2019 Robert Fairley <rfairley@redhat.com> - 0.12-2
+- fix Requires for selinux-policy, add missing Requires for systemd-udev and fedora-release
+
 * Wed Jan 16 2019 Robert Fairley <rfairley@redhat.com> - 0.12-1
 - fix specfile Source0 to correct github URL
 
