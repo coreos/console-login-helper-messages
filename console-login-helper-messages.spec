@@ -27,30 +27,9 @@ Requires:       console-login-helper-messages
 #   * https://pagure.io/setup/pull-request/15
 # (the above applies to the issuegen and profile subpackages too)
 Requires:       bash systemd setup
-# TODO(rfairley): uncomment the below block once upstream changes for PAM
-# propagate
-# # Needed for anything using pam_motd.so (e.g. sshd) to display motds
-# # under /run and /usr/lib
-# #   * https://github.com/linux-pam/linux-pam/pull/69
-# Requires:       pam >= 1.3.1-15
-
-# # Recommend openssh so sshd is available to view MOTD directories
-# # (assuming pam_motd.so is used in /etc/pam.d/sshd)
-# Recommends:     openssh
-# # selinux-policy: permission for sshd to display /run/motd and /run/motd.d
-# #   * https://github.com/fedora-selinux/selinux-policy/pull/230
-# #   * https://github.com/fedora-selinux/selinux-policy/pull/232
-# # TODO(rfairley): version numbers will need updating once policy is fixed, https://github.com/fedora-selinux/selinux-policy/issues/242
-# %if "%{fc28}" == "1"
-# Requires:       ((selinux-policy >= 3.14.1-50) if openssh)
-# %else
-# %if "%{fc29}" == "1"
-# Requires:       ((selinux-policy >= 3.14.2-44) if openssh)
-# # Fall through to require the version Rawhide needs, if not 28 or 29.
-# %else
-# Requires:       ((selinux-policy >= 3.14.3-14) if openssh)
-# %endif
-# %endif
+# pam: Needed to display issues symlinked from /etc/motd.d.
+#   * https://github.com/linux-pam/linux-pam/issues/47
+Requires:       pam >= 1.3.1-1
 
 %description motdgen
 %{summary}.
@@ -127,7 +106,7 @@ ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.is
 # TODO(rfairley): symlink for /run/motd.d/console-login-helper-messages.motd needs to be
 # removed once upstream changes to have pam_motd.so display MOTD directly in /run
 # land
-ln -snf /run/motd.d/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
+ln -snf /run/%{name}/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
 ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %pre
@@ -188,7 +167,10 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
-* Wed Jan 23 2019 Robert Fairle <rfairley@redhat.com> - 0.13-1
+* Wed Jan 23 2019 Robert Fairley <rfairley@redhat.com> - 0.13-2
+- change generated motd to be scoped in private directory
+
+* Wed Jan 23 2019 Robert Fairley <rfairley@redhat.com> - 0.13-1
 - add a symlink for motdgen (quick solution until upstream pam_motd.so changes propagate)
 
 * Fri Jan 18 2019 Robert Fairley <rfairley@redhat.com> - 0.12-2

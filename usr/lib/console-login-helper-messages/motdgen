@@ -17,7 +17,9 @@ set -e
 PKG_NAME=console-login-helper-messages
 MOTD_DIR_PUBLIC=motd.d
 MOTD_DIR_PRIVATE=${PKG_NAME}/motd.d
-GENERATED_MOTD=/run/${MOTD_DIR_PUBLIC}/${PKG_NAME}.motd
+# TODO(rfairley): use MOTD_DIR_PUBLIC and uncomment the below line, once upstream changes are merged
+#GENERATED_MOTD=/run/${MOTD_DIR_PUBLIC}/${PKG_NAME}.motd
+GENERATED_MOTD=/run/${PKG_NAME}/${PKG_NAME}.motd
 
 mkdir -p /run/${MOTD_DIR_PRIVATE}
 mkdir -p /run/${MOTD_DIR_PUBLIC}
