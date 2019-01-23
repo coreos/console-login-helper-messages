@@ -2,8 +2,8 @@
 %global github_project  console-login-helper-messages
 
 Name:           console-login-helper-messages
-Version:        0.12
-Release:        2%{?dist}
+Version:        0.13
+Release:        1%{?dist}
 Summary:        Combines motd, issue, profile features to show system information to the user before/on login
 License:        BSD
 URL:            https://github.com/%{github_owner}/%{github_project}
@@ -27,28 +27,30 @@ Requires:       console-login-helper-messages
 #   * https://pagure.io/setup/pull-request/15
 # (the above applies to the issuegen and profile subpackages too)
 Requires:       bash systemd setup
-# Needed for anything using pam_motd.so (e.g. sshd) to display motds
-# under /run and /usr/lib
-#   * https://github.com/linux-pam/linux-pam/pull/69
-Requires:       pam >= 1.3.1-15
+# TODO(rfairley): uncomment the below block once upstream changes for PAM
+# propagate
+# # Needed for anything using pam_motd.so (e.g. sshd) to display motds
+# # under /run and /usr/lib
+# #   * https://github.com/linux-pam/linux-pam/pull/69
+# Requires:       pam >= 1.3.1-15
 
-# Recommend openssh so sshd is available to view MOTD directories
-# (assuming pam_motd.so is used in /etc/pam.d/sshd)
-Recommends:     openssh
-# selinux-policy: permission for sshd to display /run/motd and /run/motd.d
-#   * https://github.com/fedora-selinux/selinux-policy/pull/230
-#   * https://github.com/fedora-selinux/selinux-policy/pull/232
-# TODO: version numbers will need updating once policy is fixed, https://github.com/fedora-selinux/selinux-policy/issues/242
-%if "%{fc28}" == "1"
-Requires:       ((selinux-policy >= 3.14.1-50) if openssh)
-%else
-%if "%{fc29}" == "1"
-Requires:       ((selinux-policy >= 3.14.2-44) if openssh)
-# Fall through to require the version Rawhide needs, if not 28 or 29.
-%else
-Requires:       ((selinux-policy >= 3.14.3-14) if openssh)
-%endif
-%endif
+# # Recommend openssh so sshd is available to view MOTD directories
+# # (assuming pam_motd.so is used in /etc/pam.d/sshd)
+# Recommends:     openssh
+# # selinux-policy: permission for sshd to display /run/motd and /run/motd.d
+# #   * https://github.com/fedora-selinux/selinux-policy/pull/230
+# #   * https://github.com/fedora-selinux/selinux-policy/pull/232
+# # TODO(rfairley): version numbers will need updating once policy is fixed, https://github.com/fedora-selinux/selinux-policy/issues/242
+# %if "%{fc28}" == "1"
+# Requires:       ((selinux-policy >= 3.14.1-50) if openssh)
+# %else
+# %if "%{fc29}" == "1"
+# Requires:       ((selinux-policy >= 3.14.2-44) if openssh)
+# # Fall through to require the version Rawhide needs, if not 28 or 29.
+# %else
+# Requires:       ((selinux-policy >= 3.14.3-14) if openssh)
+# %endif
+# %endif
 
 %description motdgen
 %{summary}.
@@ -113,6 +115,7 @@ install -DpZm 0755 usr/lib/%{name}/issuegen %{buildroot}%{_prefix}/lib/%{name}/i
 # motdgen files
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.path %{buildroot}%{_unitdir}/%{name}-motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.service %{buildroot}%{_unitdir}/%{name}-motdgen.service
+install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-motdgen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-motdgen.conf
 install -DpZm 0755 usr/lib/%{name}/motdgen %{buildroot}%{_prefix}/lib/%{name}/motdgen
 
 # profile files
@@ -121,12 +124,14 @@ install -DpZm 0755 usr/share/%{name}/profile.sh %{buildroot}%{_prefix}/share/%{n
 
 # symlinks
 ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
+# TODO(rfairley): symlink for /run/motd.d/console-login-helper-messages.motd needs to be
+# removed once upstream changes to have pam_motd.so display MOTD directly in /run
+# land
+ln -snf /run/motd.d/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
 ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
-# Note: no symlink for /run/motd.d/console-login-helper-messages.motd as
-#       this path should be displayed using pam_motd.so
 
 %pre
-# TODO: use tmpfiles_create_package macro for issuegen and profile tmpfiles
+# TODO: use tmpfiles_create_package macro for tmpfiles
 
 %post
 %systemd_post %{name}-issuegen.path
@@ -170,9 +175,11 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %files motdgen
 %{_unitdir}/%{name}-motdgen.path
 %{_unitdir}/%{name}-motdgen.service
+%{_tmpfilesdir}/%{name}-motdgen.conf
 %{_prefix}/lib/%{name}/motdgen
 %dir %{_prefix}/lib/%{name}/motd.d
 %dir /run/%{name}/motd.d
+%{_sysconfdir}/motd.d/%{name}.motd
 %dir %{_sysconfdir}/%{name}/motd.d
 
 %files profile
@@ -181,6 +188,9 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Wed Jan 23 2019 Robert Fairle <rfairley@redhat.com> - 0.13-1
+- add a symlink for motdgen (quick solution until upstream pam_motd.so changes propagate)
+
 * Fri Jan 18 2019 Robert Fairley <rfairley@redhat.com> - 0.12-2
 - fix Requires for selinux-policy, add missing Requires for systemd-udev and fedora-release
 
