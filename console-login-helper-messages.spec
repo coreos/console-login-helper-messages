@@ -41,8 +41,11 @@ Requires:       bash systemd setup
 # systemd-udev: for udev rules
 Requires:       systemd-udev
 # fedora-release: for /etc/issue.d path
-# TODO: add in version number on the fedora-release Requires once /etc/issue.d is owned
+#   * https://src.fedoraproject.org/rpms/fedora-release/pull-request/64#
 Requires:       fedora-release
+# TODO: add a requires for redhat-release-coreos once merged
+#   * https://github.com/openshift/redhat-release-coreos/pull/18
+# Requires:       redhat-release-coreos
 # agetty is included in util-linux, which searches /etc/issue.d.
 # Needed to display issues symlinked from /etc/issue.d.
 #   * https://github.com/karelzak/util-linux/commit/37ae6191f7c5686f1f9a2c3984e2cd9a62764029#diff-15eca7082c3cb16e5ac467f4acceb9d0R54
@@ -102,7 +105,7 @@ install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf %{buildroot}
 install -DpZm 0755 usr/share/%{name}/profile.sh %{buildroot}%{_prefix}/share/%{name}/profile.sh
 
 # symlinks
-ln -snf /run/issue.d/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
+ln -snf /run/%{name}/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
 # TODO(rfairley): symlink for /run/motd.d/console-login-helper-messages.motd needs to be
 # removed once upstream changes to have pam_motd.so display MOTD directly in /run
 # land
@@ -167,6 +170,9 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Wed Jan 23 2019 Robert Fairley <rfairley@redhat.com> - 0.13-3
+- change generated issue to be scoped in private directory
+
 * Wed Jan 23 2019 Robert Fairley <rfairley@redhat.com> - 0.13-2
 - change generated motd to be scoped in private directory
 

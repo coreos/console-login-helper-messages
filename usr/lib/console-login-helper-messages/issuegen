@@ -16,7 +16,10 @@ set -e
 PKG_NAME=console-login-helper-messages
 ISSUE_DIR_PUBLIC=issue.d
 ISSUE_DIR_PRIVATE=${PKG_NAME}/issue.d
-GENERATED_ISSUE=/run/${ISSUE_DIR_PUBLIC}/${PKG_NAME}.issue
+# TODO: it would be nice to have /run/issue.d be an official directory,
+#       see https://github.com/karelzak/util-linux/commit/1fc82a1360305f696dc1be6105c9c56a9ea03f52#commitcomment-27949895
+#       until then, $GENERATED_ISSUE writes to the privately scoped directory (not in /run/issue.d)
+GENERATED_ISSUE=/run/${PKG_NAME}/${PKG_NAME}.issue
 SSH_DIR=/etc/ssh
 
 # The public directories are to be read by higher-level programs to display
