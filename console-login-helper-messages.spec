@@ -3,7 +3,7 @@
 
 Name:           console-login-helper-messages
 Version:        0.13
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Combines motd, issue, profile features to show system information to the user before/on login
 License:        BSD
 URL:            https://github.com/%{github_owner}/%{github_project}
@@ -170,6 +170,9 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Thu Jan 24 2019 Robert Fairley <rfairley@redhat.com> - 0.13-4
+- update reviewers.md and manual.md with correct paths
+
 * Wed Jan 23 2019 Robert Fairley <rfairley@redhat.com> - 0.13-3
 - change generated issue to be scoped in private directory
 
