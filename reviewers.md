@@ -3,6 +3,8 @@
 Please see the following steps as ways to verify the `console-login-helper-messages` functionality
 is working.
 
+To see the full instructions available to the user, please see the [manual](manual.md).
+
 ## Testing
 
 After installing the `console-login-helper-messages-*` rpms, the items on the following
