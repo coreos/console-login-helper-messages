@@ -31,8 +31,6 @@ mkdir -p /run/${ISSUE_DIR_PRIVATE}
 rm -f ${GENERATED_ISSUE}
 touch ${GENERATED_ISSUE}
 
-echo "This is \n (\s \m \r) \t" > ${GENERATED_ISSUE}
-
 # Provide key fingerprints via issue
 for KEY_FILE in $(find ${SSH_DIR} -name 'ssh_host_*_key') ; do
 	ssh-keygen -l -f ${KEY_FILE}
