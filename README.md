@@ -46,3 +46,12 @@ the message (see [manual](manual.md#Appending-messages)).
 
 If reviewing this package, please see [the reviewers doc](reviewers.md) for steps to verify that the
 package works.
+
+## To Build
+
+Use the existing COPR infrastructure:
+
+```
+make -f .copr/Makefile srpm outdir=. spec=console-login-helper-messages.spec
+```
+
