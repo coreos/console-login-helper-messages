@@ -2,8 +2,8 @@
 %global github_project  console-login-helper-messages
 
 Name:           console-login-helper-messages
-Version:        0.13
-Release:        4%{?dist}
+Version:        0.15
+Release:        1%{?dist}
 Summary:        Combines motd, issue, profile features to show system information to the user before/on login
 License:        BSD
 URL:            https://github.com/%{github_owner}/%{github_project}
@@ -29,7 +29,15 @@ Requires:       console-login-helper-messages
 Requires:       bash systemd setup
 # pam: Needed to display issues symlinked from /etc/motd.d.
 #   * https://github.com/linux-pam/linux-pam/issues/47
-Requires:       pam >= 1.3.1-1
+Requires:       pam >= 1.3.1-15
+# selinux-policy: to apply pam_var_run_t contexts:
+#   * https://github.com/fedora-selinux/selinux-policy/pull/244
+%if 0%{?fc29}
+Requires:       selinux-policy >= 3.14.2-50
+%endif
+%if 0%{?fc30}
+Requires:       selinux-policy >= 3.14.3-23
+%endif
 
 %description motdgen
 %{summary}.
@@ -106,10 +114,6 @@ install -DpZm 0755 usr/share/%{name}/profile.sh %{buildroot}%{_prefix}/share/%{n
 
 # symlinks
 ln -snf /run/%{name}/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
-# TODO(rfairley): symlink for /run/motd.d/console-login-helper-messages.motd needs to be
-# removed once upstream changes to have pam_motd.so display MOTD directly in /run
-# land
-ln -snf /run/%{name}/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
 ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %pre
@@ -161,7 +165,6 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_prefix}/lib/%{name}/motdgen
 %dir %{_prefix}/lib/%{name}/motd.d
 %dir /run/%{name}/motd.d
-%{_sysconfdir}/motd.d/%{name}.motd
 %dir %{_sysconfdir}/%{name}/motd.d
 
 %files profile
@@ -170,6 +173,13 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Fri Mar 15 2019 Robert Fairley <rfairley@redhat.com> - 0.15-1
+- make motdgen generate motd in /run with no symlink
+
+* Fri Mar 15 2019 Robert Fairley <rfairley@redhat.com> - 0.14-1
+- issuegen.service: rely on sshd-keygen.target
+- issuegen: don't show kernel version
+
 * Thu Jan 24 2019 Robert Fairley <rfairley@redhat.com> - 0.13-4
 - update reviewers.md and manual.md with correct paths
 
