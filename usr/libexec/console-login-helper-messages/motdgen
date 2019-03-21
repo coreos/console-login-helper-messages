@@ -25,7 +25,7 @@ mkdir -p "/run/${MOTD_DIR_PUBLIC}"
 rm -f "${generated}"
 
 source /usr/lib/os-release
-staged+=$"\e[${ANSI_COLOR}m${NAME}\e[39m ${VERSION}\n"
+echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m ${VERSION}\n" > "/run/${MOTD_DIR_PRIVATE}/21_os_release.motd"
 
 # Generate a motd from files found in the private (package-specific) directories,
 # and place the motd in a public directory.
@@ -39,4 +39,4 @@ if [[ -d /usr/lib/"${MOTD_DIR_PRIVATE}" ]]; then
 	staged+=$(cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null) || true
 fi
 
-echo -e "${staged}" > "${generated}"
+echo "${staged}" > "${generated}"

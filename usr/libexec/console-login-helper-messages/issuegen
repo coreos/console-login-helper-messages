@@ -59,4 +59,4 @@ if [[ -d "/usr/lib/${ISSUE_DIR_PRIVATE}" ]]; then
 	staged+=$(cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null) || true
 fi
 
-echo -e "${staged}" > "${generated}"
+echo "${staged}" > "${generated}"
