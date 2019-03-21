@@ -1,5 +1,5 @@
 [Unit]
-Description=Watch for files droped into /{etc,run,usr/lib}/console-login-helper-messages/issue.d
+Description=Watch for files dropped into /{etc,run,usr/lib}/console-login-helper-messages/issue.d
 
 [Path]
 PathExistsGlob=/etc/console-login-helper-messages/issue.d/*
