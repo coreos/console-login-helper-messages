@@ -110,13 +110,13 @@ install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.path %{buildroot}%{_u
 install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.service %{buildroot}%{_unitdir}/%{name}-issuegen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-issuegen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-issuegen.conf
 install -DpZm 0644 usr/lib/udev/rules.d/90-%{name}-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/90-%{name}-issuegen.rules
-install -DpZm 0755 usr/lib/%{name}/issuegen %{buildroot}%{_libexecdir}/%{name}/issuegen
+install -DpZm 0755 usr/libexec/%{name}/issuegen %{buildroot}%{_libexecdir}/%{name}/issuegen
 
 # motdgen files
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.path %{buildroot}%{_unitdir}/%{name}-motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.service %{buildroot}%{_unitdir}/%{name}-motdgen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-motdgen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-motdgen.conf
-install -DpZm 0755 usr/lib/%{name}/motdgen %{buildroot}%{_libexecdir}/%{name}/motdgen
+install -DpZm 0755 usr/libexec/%{name}/motdgen %{buildroot}%{_libexecdir}/%{name}/motdgen
 
 # profile files
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
