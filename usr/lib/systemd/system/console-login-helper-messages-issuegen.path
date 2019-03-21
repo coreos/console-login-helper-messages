@@ -1,8 +1,10 @@
 [Unit]
-Description=Watch for /etc/console-login-helper-messages/issue.d changes
+Description=Watch for files droped into /{etc,run,usr/lib}/console-login-helper-messages/issue.d
 
 [Path]
-PathChanged=/etc/console-login-helper-messages/issue.d
+PathExistsGlob=/etc/console-login-helper-messages/issue.d/*
+PathExistsGlob=/run/console-login-helper-messages/issue.d/*
+PathExistsGlob=/usr/lib/console-login-helper-messages/issue.d/*
 
 [Install]
 WantedBy=multi-user.target
