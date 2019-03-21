@@ -18,7 +18,7 @@ ISSUE_DIR_PUBLIC=issue.d
 ISSUE_DIR_PRIVATE="${PKG_NAME}/issue.d"
 SSH_DIR=/etc/ssh
 
-staged=""
+staged="/run/${PKG_NAME}/40_${PKG_NAME}.issue.staged"
 # TODO: it would be nice to have /run/issue.d be an official directory,
 #       see https://github.com/karelzak/util-linux/commit/1fc82a1360305f696dc1be6105c9c56a9ea03f52#commitcomment-27949895
 #       until then, $GENERATED_ISSUE writes to the privately scoped directory (not in /run/issue.d)
@@ -50,13 +50,15 @@ case "$1" in
 esac
 
 if [[ -d "/etc/${ISSUE_DIR_PRIVATE}" ]]; then
-	staged+=$(cat /etc/${ISSUE_DIR_PRIVATE}/* 2>/dev/null) || true
+	cat /etc/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
 fi
 if [[ -d "/run/${ISSUE_DIR_PRIVATE}" ]]; then
-	staged+=$(cat /run/${ISSUE_DIR_PRIVATE}/* 2>/dev/null) || true
+	cat /run/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
+
 fi
 if [[ -d "/usr/lib/${ISSUE_DIR_PRIVATE}" ]]; then
-	staged+=$(cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null) || true
+	cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
 fi
 
-echo "${staged}" > "${generated}"
+cat "${staged}" > "${generated}"
+rm -rf "${staged}"

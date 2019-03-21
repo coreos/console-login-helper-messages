@@ -16,7 +16,7 @@ MOTD_DIR_PUBLIC=motd.d
 # Should only be read by this script.
 MOTD_DIR_PRIVATE="${PKG_NAME}/motd.d"
 
-staged=""
+staged="/run/${PKG_NAME}/40_${PKG_NAME}.motd.staged"
 # Pick 40 as an index as other files can order around it easily.
 generated="/run/motd.d/40_${PKG_NAME}.motd"
 
@@ -25,18 +25,19 @@ mkdir -p "/run/${MOTD_DIR_PUBLIC}"
 rm -f "${generated}"
 
 source /usr/lib/os-release
-echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m ${VERSION}\n" > "/run/${MOTD_DIR_PRIVATE}/21_os_release.motd"
+echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m ${VERSION}" > "/run/${MOTD_DIR_PRIVATE}/21_os_release.motd"
 
 # Generate a motd from files found in the private (package-specific) directories,
 # and place the motd in a public directory.
 if [[ -d "/etc/${MOTD_DIR_PRIVATE}" ]]; then
-	staged+=$(cat /etc/${MOTD_DIR_PRIVATE}/* 2>/dev/null) || true
+	cat /etc/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
 fi
 if [[ -d /run/"${MOTD_DIR_PRIVATE}" ]]; then
-	staged+=$(cat /run/${MOTD_DIR_PRIVATE}/* 2>/dev/null) || true
+	cat /run/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
 fi
 if [[ -d /usr/lib/"${MOTD_DIR_PRIVATE}" ]]; then
-	staged+=$(cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null) || true
+	cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
 fi
 
-echo "${staged}" > "${generated}"
+cat "${staged}" > "${generated}"
+rm -rf "${staged}"
