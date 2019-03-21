@@ -11,32 +11,32 @@
 
 set -e
 
-# The public directories are to be read by higher-level programs to display
-# the motd on login, e.g. sshd and login.
-# The private directories are to be read only by this script.
 PKG_NAME=console-login-helper-messages
 MOTD_DIR_PUBLIC=motd.d
-MOTD_DIR_PRIVATE=${PKG_NAME}/motd.d
-GENERATED_MOTD=/run/${MOTD_DIR_PUBLIC}/${PKG_NAME}.motd
+# Should only be read by this script.
+MOTD_DIR_PRIVATE="${PKG_NAME}/motd.d"
 
-mkdir -p /run/${MOTD_DIR_PRIVATE}
-mkdir -p /run/${MOTD_DIR_PUBLIC}
-rm -f ${GENERATED_MOTD}
-touch ${GENERATED_MOTD}
+staged=""
+# Pick 40 as an index as other files can order around it easily.
+generated="/run/${PKG_NAME}/40_${PKG_NAME}.motd"
+
+mkdir -p "/run/${MOTD_DIR_PRIVATE}"
+mkdir -p "/run/${MOTD_DIR_PUBLIC}"
+rm -f "${generated}"
 
 source /usr/lib/os-release
-echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})" > ${GENERATED_MOTD}
+staged+=$"\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})"
 
 # Generate a motd from files found in the private (package-specific) directories,
 # and place the motd in a public directory.
 if [[ -d "/etc/${MOTD_DIR_PRIVATE}" ]]; then
-	cat /etc/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
+	staged+=$(cat "/etc/${MOTD_DIR_PRIVATE}/*" 2>/dev/null) || true
 fi
-if [[ -d "/run/${MOTD_DIR_PRIVATE}" ]]; then
-	cat /run/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
+if [[ -d /run/"${MOTD_DIR_PRIVATE}" ]]; then
+	staged+=$(cat "/run/${MOTD_DIR_PRIVATE}/*" 2>/dev/null) || true
 fi
-if [[ -d "/usr/lib/${MOTD_DIR_PRIVATE}" ]]; then
-	cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> ${GENERATED_MOTD} || true
+if [[ -d /usr/lib/"${MOTD_DIR_PRIVATE}" ]]; then
+	staged+=$(cat "/usr/lib/${MOTD_DIR_PRIVATE}/*" 2>/dev/null) || true
 fi
 
-echo >> ${GENERATED_MOTD}
+echo -e "${staged}" > "${generated}"
