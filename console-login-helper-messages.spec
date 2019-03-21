@@ -110,13 +110,13 @@ install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.path %{buildroot}%{_u
 install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.service %{buildroot}%{_unitdir}/%{name}-issuegen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-issuegen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-issuegen.conf
 install -DpZm 0644 usr/lib/udev/rules.d/90-%{name}-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/90-%{name}-issuegen.rules
-install -DpZm 0755 usr/lib/%{name}/issuegen %{buildroot}%{_prefix}/lib/%{name}/issuegen
+install -DpZm 0755 usr/lib/%{name}/issuegen %{buildroot}%{_libexecdir}/%{name}/issuegen
 
 # motdgen files
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.path %{buildroot}%{_unitdir}/%{name}-motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.service %{buildroot}%{_unitdir}/%{name}-motdgen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-motdgen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-motdgen.conf
-install -DpZm 0755 usr/lib/%{name}/motdgen %{buildroot}%{_prefix}/lib/%{name}/motdgen
+install -DpZm 0755 usr/lib/%{name}/motdgen %{buildroot}%{_libexecdir}/%{name}/motdgen
 
 # profile files
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-profile.conf
@@ -125,6 +125,7 @@ install -DpZm 0755 usr/share/%{name}/profile.sh %{buildroot}%{_prefix}/share/%{n
 # symlinks
 ln -snf /run/%{name}/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
 ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
+ln -snf /run/%{name}/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
 
 %pre
 # TODO: use tmpfiles_create_package macro for tmpfiles
@@ -152,6 +153,7 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %files
 %doc README.md
 %license LICENSE
+%dir %{_libexecdir}/%{name}
 %dir %{_prefix}/lib/%{name}
 %dir /run/%{name}
 %dir %{_prefix}/share/%{name}
@@ -162,7 +164,7 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_unitdir}/%{name}-issuegen.service
 %{_tmpfilesdir}/%{name}-issuegen.conf
 %{_prefix}/lib/udev/rules.d/90-%{name}-issuegen.rules
-%{_prefix}/lib/%{name}/issuegen
+%{_libexecdir}/%{name}/issuegen
 %dir %{_prefix}/lib/%{name}/issue.d
 %dir /run/%{name}/issue.d
 %{_sysconfdir}/issue.d/%{name}.issue
@@ -172,9 +174,10 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_unitdir}/%{name}-motdgen.path
 %{_unitdir}/%{name}-motdgen.service
 %{_tmpfilesdir}/%{name}-motdgen.conf
-%{_prefix}/lib/%{name}/motdgen
+%{_libexecdir}/%{name}/motdgen
 %dir %{_prefix}/lib/%{name}/motd.d
 %dir /run/%{name}/motd.d
+%{_sysconfdir}/motd.d/%{name}.motd
 %dir %{_sysconfdir}/%{name}/motd.d
 
 %files profile
