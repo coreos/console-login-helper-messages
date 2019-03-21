@@ -7,7 +7,7 @@ Release:        1%{?dist}
 Summary:        Combines motd, issue, profile features to show system information to the user before/on login
 License:        BSD
 URL:            https://github.com/%{github_owner}/%{github_project}
-Source0:        https://github.com/%{github_owner}/%{github_project}/releases/download/v%{version}/%{name}-%{version}.tar.gz
+Source0:        https://github.com/%{github_owner}/%{github_project}/archive/v%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  systemd
@@ -186,8 +186,12 @@ ln -snf /run/%{name}/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
-* Mon Mar 18 2019 Robert Fairley <rfairley@redhat.com> - 0.16-1
+* Thu Mar 21 2019 Robert Fairley <rfairley@redhat.com> - 0.16-1
 - relax setup dependency for f29
+- upstream source improvements
+- house executable scripts in /usr/libexec
+- go back to using symlink for motdgen
+- change Source0 to use GitHub-generated archive link
 
 * Fri Mar 15 2019 Robert Fairley <rfairley@redhat.com> - 0.15-1
 - make motdgen generate motd in /run with no symlink
