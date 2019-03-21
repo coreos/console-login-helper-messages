@@ -2,7 +2,7 @@
 %global github_project  console-login-helper-messages
 
 Name:           console-login-helper-messages
-Version:        0.15
+Version:        0.16
 Release:        1%{?dist}
 Summary:        Combines motd, issue, profile features to show system information to the user before/on login
 License:        BSD
@@ -20,23 +20,33 @@ Requires:       bash systemd
 %package motdgen
 Summary:        Message of the day generator script showing system information
 Requires:       console-login-helper-messages
+# sshd reads /run/motd.d, where the generated MOTD message is written.
+Recommends:     openssh
 # bash: bash scripts are included in this package
 # systemd: systemd service and path units, and querying for failed units
+# (the above applies to the issuegen and profile subpackages too)
+Requires:       bash systemd
 # setup: filesystem paths need setting up
 #   * https://pagure.io/setup/pull-request/14
 #   * https://pagure.io/setup/pull-request/15
-# (the above applies to the issuegen and profile subpackages too)
-Requires:       bash systemd setup
+# Make exception for fc29 - soft requires as we will create /run/motd.d
+# ourselves using tmpfiles if it doesn't already exist.
+%if 0%{?fc29}
+Requires:       setup
+%else
+Requires:       setup >= 2.12.7-1
+%endif
 # pam: Needed to display issues symlinked from /etc/motd.d.
 #   * https://github.com/linux-pam/linux-pam/issues/47
-Requires:       pam >= 1.3.1-15
+Requires:       ((pam >= 1.3.1-15) if openssh)
 # selinux-policy: to apply pam_var_run_t contexts:
 #   * https://github.com/fedora-selinux/selinux-policy/pull/244
+# Make exception for fc29, as PAM will create the tmpfiles. (In Fedora 30 and
+# above, setup is responsible for this).
 %if 0%{?fc29}
-Requires:       selinux-policy >= 3.14.2-50
-%endif
-%if 0%{?fc30}
-Requires:       selinux-policy >= 3.14.3-23
+Requires:       ((selinux-policy >= 3.14.2-50) if openssh)
+%else
+Requires:       ((selinux-policy >= 3.14.3-23) if openssh)
 %endif
 
 %description motdgen
@@ -173,6 +183,9 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %{_sysconfdir}/profile.d/%{name}-profile.sh
 
 %changelog
+* Mon Mar 18 2019 Robert Fairley <rfairley@redhat.com> - 0.16-1
+- relax setup dependency for f29
+
 * Fri Mar 15 2019 Robert Fairley <rfairley@redhat.com> - 0.15-1
 - make motdgen generate motd in /run with no symlink
 
