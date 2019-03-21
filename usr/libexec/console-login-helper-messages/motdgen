@@ -18,7 +18,7 @@ MOTD_DIR_PRIVATE="${PKG_NAME}/motd.d"
 
 staged=""
 # Pick 40 as an index as other files can order around it easily.
-generated="/run/${PKG_NAME}/40_${PKG_NAME}.motd"
+generated="/run/motd.d/40_${PKG_NAME}.motd"
 
 mkdir -p "/run/${MOTD_DIR_PRIVATE}"
 mkdir -p "/run/${MOTD_DIR_PUBLIC}"

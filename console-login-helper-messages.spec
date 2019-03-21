@@ -123,9 +123,8 @@ install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-profile-tmpfiles.conf %{buildroot}
 install -DpZm 0755 usr/share/%{name}/profile.sh %{buildroot}%{_prefix}/share/%{name}/profile.sh
 
 # symlinks
-ln -snf /run/%{name}/%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/%{name}.issue
+ln -snf /run/%{name}/40_%{name}.issue %{buildroot}%{_sysconfdir}/issue.d/40_%{name}.issue
 ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}-profile.sh
-ln -snf /run/%{name}/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
 
 %pre
 # TODO: use tmpfiles_create_package macro for tmpfiles
@@ -167,7 +166,7 @@ ln -snf /run/%{name}/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
 %{_libexecdir}/%{name}/issuegen
 %dir %{_prefix}/lib/%{name}/issue.d
 %dir /run/%{name}/issue.d
-%{_sysconfdir}/issue.d/%{name}.issue
+%{_sysconfdir}/issue.d/40_%{name}.issue
 %dir %{_sysconfdir}/%{name}/issue.d
 
 %files motdgen
@@ -177,7 +176,6 @@ ln -snf /run/%{name}/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
 %{_libexecdir}/%{name}/motdgen
 %dir %{_prefix}/lib/%{name}/motd.d
 %dir /run/%{name}/motd.d
-%{_sysconfdir}/motd.d/%{name}.motd
 %dir %{_sysconfdir}/%{name}/motd.d
 
 %files profile
@@ -190,7 +188,6 @@ ln -snf /run/%{name}/%{name}.motd %{buildroot}%{_sysconfdir}/motd.d/%{name}.motd
 - relax setup dependency for f29
 - upstream source improvements
 - house executable scripts in /usr/libexec
-- go back to using symlink for motdgen
 - change Source0 to use GitHub-generated archive link
 
 * Fri Mar 15 2019 Robert Fairley <rfairley@redhat.com> - 0.15-1
