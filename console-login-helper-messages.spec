@@ -106,14 +106,12 @@ mkdir -p %{buildroot}%{_tmpfilesdir}
 mkdir -p %{buildroot}%{_prefix}/lib/udev/rules.d
 
 # issuegen files
-install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.path %{buildroot}%{_unitdir}/%{name}-issuegen.path
 install -DpZm 0644 usr/lib/systemd/system/%{name}-issuegen.service %{buildroot}%{_unitdir}/%{name}-issuegen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-issuegen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-issuegen.conf
 install -DpZm 0644 usr/lib/udev/rules.d/90-%{name}-issuegen.rules %{buildroot}%{_prefix}/lib/udev/rules.d/90-%{name}-issuegen.rules
 install -DpZm 0755 usr/libexec/%{name}/issuegen %{buildroot}%{_libexecdir}/%{name}/issuegen
 
 # motdgen files
-install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.path %{buildroot}%{_unitdir}/%{name}-motdgen.path
 install -DpZm 0644 usr/lib/systemd/system/%{name}-motdgen.service %{buildroot}%{_unitdir}/%{name}-motdgen.service
 install -DpZm 0644 usr/lib/tmpfiles.d/%{name}-motdgen-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/%{name}-motdgen.conf
 install -DpZm 0755 usr/libexec/%{name}/motdgen %{buildroot}%{_libexecdir}/%{name}/motdgen
@@ -130,21 +128,15 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 # TODO: use tmpfiles_create_package macro for tmpfiles
 
 %post
-%systemd_post %{name}-issuegen.path
 %systemd_post %{name}-issuegen.service
-%systemd_post %{name}-motdgen.path
 %systemd_post %{name}-motdgen.service
 
 %preun
-%systemd_preun %{name}-issuegen.path
 %systemd_preun %{name}-issuegen.service
-%systemd_preun %{name}-motdgen.path
 %systemd_preun %{name}-motdgen.service
 
 %postun
-%systemd_postun_with_restart %{name}-issuegen.path
 %systemd_postun_with_restart %{name}-issuegen.service
-%systemd_postun_with_restart %{name}-motdgen.path
 %systemd_postun_with_restart %{name}-motdgen.service
 
 # TODO: %check
@@ -159,7 +151,6 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %dir %{_sysconfdir}/%{name}
 
 %files issuegen
-%{_unitdir}/%{name}-issuegen.path
 %{_unitdir}/%{name}-issuegen.service
 %{_tmpfilesdir}/%{name}-issuegen.conf
 %{_prefix}/lib/udev/rules.d/90-%{name}-issuegen.rules
@@ -170,7 +161,6 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %dir %{_sysconfdir}/%{name}/issue.d
 
 %files motdgen
-%{_unitdir}/%{name}-motdgen.path
 %{_unitdir}/%{name}-motdgen.service
 %{_tmpfilesdir}/%{name}-motdgen.conf
 %{_libexecdir}/%{name}/motdgen
@@ -186,9 +176,10 @@ ln -snf %{_prefix}/share/%{name}/profile.sh %{buildroot}%{_sysconfdir}/profile.d
 %changelog
 * Thu Mar 21 2019 Robert Fairley <rfairley@redhat.com> - 0.16-1
 - relax setup dependency for f29
-- upstream source improvements
+- general upstream source/tidiness improvements
 - house executable scripts in /usr/libexec
 - change Source0 to use GitHub-generated archive link
+- drop .path units for motdgen and issuegen
 
 * Fri Mar 15 2019 Robert Fairley <rfairley@redhat.com> - 0.15-1
 - make motdgen generate motd in /run with no symlink
