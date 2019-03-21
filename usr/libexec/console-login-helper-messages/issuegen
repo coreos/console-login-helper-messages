@@ -50,13 +50,13 @@ case "$1" in
 esac
 
 if [[ -d "/etc/${ISSUE_DIR_PRIVATE}" ]]; then
-	staged+=$(cat "/etc/${ISSUE_DIR_PRIVATE}/*" 2>/dev/null) || true
+	staged+=$(cat /etc/${ISSUE_DIR_PRIVATE}/* 2>/dev/null) || true
 fi
 if [[ -d "/run/${ISSUE_DIR_PRIVATE}" ]]; then
-	staged+=$(cat "/run/${ISSUE_DIR_PRIVATE}/*" 2>/dev/null) || true
+	staged+=$(cat /run/${ISSUE_DIR_PRIVATE}/* 2>/dev/null) || true
 fi
 if [[ -d "/usr/lib/${ISSUE_DIR_PRIVATE}" ]]; then
-	staged+=$(cat "/usr/lib/${ISSUE_DIR_PRIVATE}/*" 2>/dev/null) || true
+	staged+=$(cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null) || true
 fi
 
 echo -e "${staged}" > "${generated}"

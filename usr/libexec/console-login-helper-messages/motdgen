@@ -30,13 +30,13 @@ staged+=$"\e[${ANSI_COLOR}m${NAME}\e[39m (${VERSION})"
 # Generate a motd from files found in the private (package-specific) directories,
 # and place the motd in a public directory.
 if [[ -d "/etc/${MOTD_DIR_PRIVATE}" ]]; then
-	staged+=$(cat "/etc/${MOTD_DIR_PRIVATE}/*" 2>/dev/null) || true
+	staged+=$(cat /etc/${MOTD_DIR_PRIVATE}/* 2>/dev/null) || true
 fi
 if [[ -d /run/"${MOTD_DIR_PRIVATE}" ]]; then
-	staged+=$(cat "/run/${MOTD_DIR_PRIVATE}/*" 2>/dev/null) || true
+	staged+=$(cat /run/${MOTD_DIR_PRIVATE}/* 2>/dev/null) || true
 fi
 if [[ -d /usr/lib/"${MOTD_DIR_PRIVATE}" ]]; then
-	staged+=$(cat "/usr/lib/${MOTD_DIR_PRIVATE}/*" 2>/dev/null) || true
+	staged+=$(cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null) || true
 fi
 
 echo -e "${staged}" > "${generated}"
