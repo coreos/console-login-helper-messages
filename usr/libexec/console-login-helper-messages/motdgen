@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Copyright (c) 2019 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2014 The CoreOS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# Modified from the CoreOS repository: https://github.com/coreos/init/blob/master/scripts/motdgen
+
+# Get updated system information and generate a motd
+# to display this at login.
+
+set -e
+
+PKG_NAME=console-login-helper-messages
+MOTD_DIR_PUBLIC=motd.d
+# Should only be read by this script.
+MOTD_DIR_PRIVATE="${PKG_NAME}/motd.d"
+
+staged="/run/${PKG_NAME}/40_${PKG_NAME}.motd.staged"
+# Pick 40 as an index as other files can order around it easily.
+generated="/run/motd.d/40_${PKG_NAME}.motd"
+
+mkdir -p "/run/${MOTD_DIR_PRIVATE}"
+mkdir -p "/run/${MOTD_DIR_PUBLIC}"
+rm -f "${generated}"
+
+source /usr/lib/os-release
+echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m ${VERSION}" > "/run/${MOTD_DIR_PRIVATE}/21_os_release.motd"
+
+# Generate a motd from files found in the private (package-specific) directories,
+# and place the motd in a public directory.
+if [[ -d "/etc/${MOTD_DIR_PRIVATE}" ]]; then
+	cat /etc/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
+fi
+if [[ -d /run/"${MOTD_DIR_PRIVATE}" ]]; then
+	cat /run/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
+fi
+if [[ -d /usr/lib/"${MOTD_DIR_PRIVATE}" ]]; then
+	cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
+fi
+
+cat "${staged}" > "${generated}"
+rm -rf "${staged}"

@@ -1,2 +1,2 @@
-ACTION=="add", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/console-login-helper-messages/issuegen add $env{INTERFACE}"
-ACTION=="remove", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/lib/console-login-helper-messages/issuegen remove $env{INTERFACE}"
+ACTION=="add", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/libexec/console-login-helper-messages/issuegen add $env{INTERFACE}"
+ACTION=="remove", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/libexec/console-login-helper-messages/issuegen remove $env{INTERFACE}"

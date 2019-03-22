@@ -7,7 +7,7 @@ After=network-online.target sshd-keygen.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/lib/console-login-helper-messages/issuegen
+ExecStart=/usr/libexec/console-login-helper-messages/issuegen
 
 [Install]
 WantedBy=multi-user.target

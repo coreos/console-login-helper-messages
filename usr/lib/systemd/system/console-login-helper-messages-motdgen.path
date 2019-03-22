@@ -1,8 +1,0 @@
-[Unit]
-Description=Watch for /etc/console-login-helper-messages/motd.d changes
-
-[Path]
-PathChanged=/etc/console-login-helper-messages/motd.d
-
-[Install]
-WantedBy=multi-user.target

@@ -7,7 +7,7 @@ After=network-online.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/lib/console-login-helper-messages/motdgen
+ExecStart=/usr/libexec/console-login-helper-messages/motdgen
 
 [Install]
 WantedBy=multi-user.target
