@@ -9,20 +9,14 @@ Vagrant.configure("2") do |config|
   end
   config.vm.provision "shell", inline: <<-SHELL
     sudo su
-    dnf copr enable -y rfairley/console-login-helper-messages 
+    dnf update -y
     dnf install -y console-login-helper-messages \
         console-login-helper-messages-motdgen \
         console-login-helper-messages-issuegen \
-        console-login-helper-messages-profile \
-        selinux-policy \
-        pam --enablerepo=updates-testing
-    echo "placeholder" > /run/motd
-    mkdir -p /run/motd.d
+        console-login-helper-messages-profile
     systemctl enable \
         console-login-helper-messages-motdgen.service \
-        console-login-helper-messages-motdgen.path \
-        console-login-helper-messages-issuegen.service \
-        console-login-helper-messages-issuegen.path
+        console-login-helper-messages-issuegen.service
     systemctl start \
         console-login-helper-messages-motdgen.service \
         console-login-helper-messages-issuegen.service
