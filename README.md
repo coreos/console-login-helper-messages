@@ -49,9 +49,12 @@ package works.
 
 ## To Build
 
-Use the existing COPR infrastructure:
+Build the RPM packages by cloning the downstream Fedora SCM repo and executing `fedpkg local`:
 
 ```
-make -f .copr/Makefile srpm outdir=. spec=console-login-helper-messages.spec
+git clone https://src.fedoraproject.org/rpms/console-login-helper-messages
+cd console-login-helper-messages
+dnf builddep -y console-login-helper-messages.spec
+fedpkg local
 ```
 
