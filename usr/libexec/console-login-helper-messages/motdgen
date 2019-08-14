@@ -25,7 +25,7 @@ mkdir -p "/run/${MOTD_DIR_PUBLIC}"
 rm -f "${generated}"
 
 source /usr/lib/os-release
-echo -e "\e[${ANSI_COLOR}m${NAME}\e[39m ${VERSION}" > "/run/${MOTD_DIR_PRIVATE}/21_os_release.motd"
+echo -e "\e[${ANSI_COLOR}m${PRETTY_NAME}\e[39m" > "/run/${MOTD_DIR_PRIVATE}/21_os_release.motd"
 
 # Generate a motd from files found in the private (package-specific) directories,
 # and place the motd in a public directory.
