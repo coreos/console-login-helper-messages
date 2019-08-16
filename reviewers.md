@@ -21,8 +21,8 @@ may be used to automatically enable the COPR repo and install the packages.
 - [x] The issue symlink was created and issue generated
 
         $ ls -l /etc/issue.d/40_console-login-helper-messages.issue
-        lrwxrwxrwx. 1 root root 48 Dec 10 20:12 /etc/issue.d/40_console-login-helper-messages.issue -> /run/40_console-login-helper-messages/console-login-helper-messages.issue
-        $ cat /run/console-login-helper-messages/console-login-helper-messages.issue
+        lrwxrwxrwx. 1 root root 48 Dec 10 20:12 /etc/issue.d/40_console-login-helper-messages.issue -> /run/console-login-helper-messages/40_console-login-helper-messages.issue
+        $ cat /run/console-login-helper-messages/40_console-login-helper-messages.issue
         SSH host key: SHA256:0n7Zlbmhnjr7P+pNA2hYM0MPmdmPBNnGQ+I90Q1Dwgk (ECDSA)
         SSH host key: SHA256:FUpLCL6eYYCT5s2izSxGvwaE6lEqjp3GO34UEa7G/UQ (ED25519)
         SSH host key: SHA256:nApsM6b6l2peh/+X5iYInMFcAeEm4T6irRp/VTeSvDM (RSA)
@@ -58,6 +58,6 @@ may be used to automatically enable the COPR repo and install the packages.
 
         # echo "hello" > /run/console-login-helper-messages/motd.d/00_hello
         # systemctl restart console-login-helper-messages-motdgen.service
-        # cat /run/console-login-helper-messages/40_console-login-helper-messages.motd 
+        # cat /run/motd.d/40_console-login-helper-messages.motd 
         hello
         Fedora 29 (Cloud Edition)
