@@ -15,13 +15,13 @@ may be used to automatically enable the COPR repo and install the packages.
 
 - [x] The MOTD was generated
 
-        $ cat /run/motd.d/console-login-helper-messages.motd
+        $ cat /run/motd.d/40_console-login-helper-messages.motd
         Fedora 29 (Cloud Edition)
 
 - [x] The issue symlink was created and issue generated
 
-        $ ls -l /etc/issue.d/console-login-helper-messages.issue
-        lrwxrwxrwx. 1 root root 48 Dec 10 20:12 /etc/issue.d/console-login-helper-messages.issue -> /run/console-login-helper-messages/console-login-helper-messages.issue
+        $ ls -l /etc/issue.d/40_console-login-helper-messages.issue
+        lrwxrwxrwx. 1 root root 48 Dec 10 20:12 /etc/issue.d/40_console-login-helper-messages.issue -> /run/40_console-login-helper-messages/console-login-helper-messages.issue
         $ cat /run/console-login-helper-messages/console-login-helper-messages.issue
         SSH host key: SHA256:0n7Zlbmhnjr7P+pNA2hYM0MPmdmPBNnGQ+I90Q1Dwgk (ECDSA)
         SSH host key: SHA256:FUpLCL6eYYCT5s2izSxGvwaE6lEqjp3GO34UEa7G/UQ (ED25519)
@@ -58,30 +58,6 @@ may be used to automatically enable the COPR repo and install the packages.
 
         # echo "hello" > /run/console-login-helper-messages/motd.d/00_hello
         # systemctl restart console-login-helper-messages-motdgen.service
-        # cat /run/console-login-helper-messages/console-login-helper-messages.motd 
+        # cat /run/console-login-helper-messages/40_console-login-helper-messages.motd 
         hello
         Fedora 29 (Cloud Edition)
-
-
-### Testing - Vagrantfile
-
-The [Vagrantfile](Vagrantfile) can also be used to install the packages and
-verify the package functionality on Fedora 29 Cloud Base as follows:
-
-```
-# dnf install vagrant-libvirt # The Vagrantfile specifically uses libvirt, but others like VirtualBox would work
-$ git clone https://github.com/rfairley/console-login-helper-messages && cd console-login-helper-messages
-$ vagrant up
-$ vagrant ssh
-# Check the items in the checklist in the Testing section above.
-```
-
-## Build locally
-
-To build an srpm locally, use the command
-
-```
-make -f .copr/Makefile srpm outdir="$PWD" spec="./console-login-helper-messages.spec"
-```
-
-from the top level directory of this repository.
