@@ -8,10 +8,13 @@ Useful in situations where a desktop environment is not available and informatio
 
 The following messages will show before or upon login after installing `console-login-helper-messages` and enabling the needed units (see [manual](manual.md)).
 
-- [x] available ssh keys from `/etc/ssh`
-- [x] ip addresses of network interfaces to SSH into
-- [x] system information from `/etc/os-release`
-- [x] failed systemd units
+- issuegen:
+    - [x] available ssh keys from `/etc/ssh`
+    - [x] ip addresses of network interfaces to SSH into
+- motdgen:
+    - [x] system information from `/etc/os-release`
+- profile:
+    - [x] failed systemd units
 
 ### Example
 
