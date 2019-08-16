@@ -45,11 +45,6 @@ Messages can be appended to the motd or issue, by placing
 files in the directories sourced by motdgen/issuegen to generate
 the message (see [manual](manual.md#Appending-messages)).
 
-## Package Reviewers
-
-If reviewing this package, please see [the reviewers doc](reviewers.md) for steps to verify that the
-package works.
-
 ## To Build
 
 Build the RPM packages by cloning the downstream Fedora SCM repo and executing `fedpkg local`:
