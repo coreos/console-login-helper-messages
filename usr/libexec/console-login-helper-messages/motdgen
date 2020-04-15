@@ -12,32 +12,33 @@
 set -e
 
 PKG_NAME=console-login-helper-messages
-MOTD_DIR_PUBLIC=motd.d
-# Should only be read by this script.
-MOTD_DIR_PRIVATE="${PKG_NAME}/motd.d"
+MOTD_SNIPPETS_PATH="${PKG_NAME}/motd.d"
+ETC_SNIPPETS="/etc/${MOTD_SNIPPETS_PATH}"
+RUN_SNIPPETS="/run/${MOTD_SNIPPETS_PATH}"
+USR_LIB_SNIPPETS="/usr/lib/${MOTD_SNIPPETS_PATH}"
 
-staged="/run/${PKG_NAME}/40_${PKG_NAME}.motd.staged"
-# Pick 40 as an index as other files can order around it easily.
-generated="/run/motd.d/40_${PKG_NAME}.motd"
+# Parts of this script write to the `${RUN_SNIPPETS}` directory,
+# make sure it is created upfront.
+mkdir -p "${RUN_SNIPPETS}"
 
-mkdir -p "/run/${MOTD_DIR_PRIVATE}"
-mkdir -p "/run/${MOTD_DIR_PUBLIC}"
-rm -f "${generated}"
 
+# Write distro release information to MOTD, in distro-specific color.
 source /usr/lib/os-release
-echo -e "\e[${ANSI_COLOR}m${PRETTY_NAME}\e[39m" > "/run/${MOTD_DIR_PRIVATE}/21_os_release.motd"
+echo -e "\e[${ANSI_COLOR}m${PRETTY_NAME}\e[39m" > "${RUN_SNIPPETS}/21_os_release.motd"
 
-# Generate a motd from files found in the private (package-specific) directories,
-# and place the motd in a public directory.
-if [[ -d "/etc/${MOTD_DIR_PRIVATE}" ]]; then
-	cat /etc/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
-fi
-if [[ -d /run/"${MOTD_DIR_PRIVATE}" ]]; then
-	cat /run/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
-fi
-if [[ -d /usr/lib/"${MOTD_DIR_PRIVATE}" ]]; then
-	cat /usr/lib/${MOTD_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
-fi
 
-cat "${staged}" > "${generated}"
-rm -rf "${staged}"
+# Generate a final motd from compiling the snippets.
+# Pick 40 as a prefix as other files can order around it easily.
+generated="/run/motd.d/40_${PKG_NAME}.motd"
+# Remove `${generated}` before writing, so that it is not forever
+# appended to.
+rm -f "${generated}"
+if [[ -d "${ETC_SNIPPETS}" ]]; then
+	cat ${ETC_SNIPPETS}/* 2>/dev/null >> "${generated}" || true
+fi
+if [[ -d "${RUN_SNIPPETS}" ]]; then
+	cat ${RUN_SNIPPETS}/* 2>/dev/null >> "${generated}" || true
+fi
+if [[ -d "${USR_LIB_SNIPPETS}" ]]; then
+	cat ${USR_LIB_SNIPPETS}/* 2>/dev/null >> "${generated}" || true
+fi
