@@ -18,21 +18,12 @@ ISSUE_DIR_PUBLIC=issue.d
 ISSUE_DIR_PRIVATE="${PKG_NAME}/issue.d"
 SSH_DIR=/etc/ssh
 
-staged="/run/${PKG_NAME}/40_${PKG_NAME}.issue.staged"
-# TODO: it would be nice to have /run/issue.d be an official directory,
-#       see https://github.com/karelzak/util-linux/commit/1fc82a1360305f696dc1be6105c9c56a9ea03f52#commitcomment-27949895
-#       until then, $GENERATED_ISSUE writes to the privately scoped directory (not in /run/issue.d)
-#
-# Pick 40 as an index as other files can order around it easily.
-generated="/run/${PKG_NAME}/40_${PKG_NAME}.issue"
-
 # The public directories are to be read by higher-level programs to display
 # the issue on login, e.g. agetty.
 # The private directories are to be read only by this script.
 mkdir -p "${SSH_DIR}"
 mkdir -p "/run/${ISSUE_DIR_PUBLIC}"
 mkdir -p "/run/${ISSUE_DIR_PRIVATE}"
-rm -f "${generated}"
 
 # Provide key fingerprints via issue
 for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
@@ -49,16 +40,20 @@ case "$1" in
 		;;
 esac
 
+# TODO: it would be nice to have /run/issue.d be an official directory,
+#       see https://github.com/karelzak/util-linux/commit/1fc82a1360305f696dc1be6105c9c56a9ea03f52#commitcomment-27949895
+#       until then, $GENERATED_ISSUE writes to the privately scoped directory (not in /run/issue.d)
+#
+# Pick 40 as an index as other files can order around it easily.
+generated="/run/${PKG_NAME}/40_${PKG_NAME}.issue"
+rm -f "${generated}"
 if [[ -d "/etc/${ISSUE_DIR_PRIVATE}" ]]; then
-	cat /etc/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
+	cat /etc/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${generated}" || true
 fi
 if [[ -d "/run/${ISSUE_DIR_PRIVATE}" ]]; then
-	cat /run/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
+	cat /run/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${generated}" || true
 
 fi
 if [[ -d "/usr/lib/${ISSUE_DIR_PRIVATE}" ]]; then
-	cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${staged}" || true
+	cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${generated}" || true
 fi
-
-cat "${staged}" > "${generated}"
-rm -rf "${staged}"
