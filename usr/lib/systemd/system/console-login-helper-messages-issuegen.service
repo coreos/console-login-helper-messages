@@ -1,5 +1,5 @@
 [Unit]
-Description=Generate /run/issue.d/console-login-helper-messages.issue
+Description=Generate console-login-helper-messages issue snippet
 Before=systemd-user-sessions.service
 Wants=network-online.target
 After=network-online.target sshd-keygen.target
