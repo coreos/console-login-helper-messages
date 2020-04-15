@@ -45,7 +45,7 @@ case "$1" in
 		echo "${2}: \\4{${2}} \\6{${2}}" > "/run/${ISSUE_DIR_PRIVATE}/22_${2}.issue"
 		;;
 	remove)
-		rm -f "/run/${ISSUE_DIR_PRIVATE}/${2}"
+		rm -f "/run/${ISSUE_DIR_PRIVATE}/22_${2}.issue"
 		;;
 esac
 
