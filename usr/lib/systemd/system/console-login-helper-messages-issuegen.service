@@ -1,5 +1,5 @@
 [Unit]
-Description=Generate /run/issue.d/console-login-helper-messages.issue
+Description=Generate console-login-helper-messages issue snippet
 Documentation=https://github.com/coreos/console-login-helper-messages
 Before=systemd-user-sessions.service
 After=sshd-keygen.target
