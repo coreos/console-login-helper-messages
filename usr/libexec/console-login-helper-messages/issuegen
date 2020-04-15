@@ -14,46 +14,49 @@
 set -e
 
 PKG_NAME=console-login-helper-messages
-ISSUE_DIR_PUBLIC=issue.d
-ISSUE_DIR_PRIVATE="${PKG_NAME}/issue.d"
+ISSUE_SNIPPETS_PATH=${PKG_NAME}/issue.d
+ETC_SNIPPETS="/etc/${ISSUE_SNIPPETS_PATH}"
+RUN_SNIPPETS="/run/${ISSUE_SNIPPETS_PATH}"
+USR_LIB_SNIPPETS="/usr/lib/${ISSUE_SNIPPETS_PATH}"
+
+# Parts of this script write to the `${RUN_SNIPPETS}` directory,
+# make sure it is created upfront.
+mkdir -p "${RUN_SNIPPETS}"
+
+
+# Provide key fingerprints via issue.
 SSH_DIR=/etc/ssh
-
-# The public directories are to be read by higher-level programs to display
-# the issue on login, e.g. agetty.
-# The private directories are to be read only by this script.
+# Ensure `${SSH_DIR}` is created and can be searched without error.
 mkdir -p "${SSH_DIR}"
-mkdir -p "/run/${ISSUE_DIR_PUBLIC}"
-mkdir -p "/run/${ISSUE_DIR_PRIVATE}"
-
-# Provide key fingerprints via issue
 for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
 	ssh-keygen -l -f "${KEY_FILE}"
-done | awk '{print "SSH host key: " $2 " " $4}' > "/run/${ISSUE_DIR_PRIVATE}/21_ssh_host_keys.issue"
+done | awk '{print "SSH host key: " $2 " " $4}' > "${RUN_SNIPPETS}/21_ssh_host_keys.issue"
 
-# Data from udev rules
+
+# Add/remove data from udev rules.
 case "$1" in
 	add)
-		echo "${2}: \\4{${2}} \\6{${2}}" > "/run/${ISSUE_DIR_PRIVATE}/22_${2}.issue"
+		echo "${2}: \\4{${2}} \\6{${2}}" > "${RUN_SNIPPETS}/22_${2}.issue"
 		;;
 	remove)
-		rm -f "/run/${ISSUE_DIR_PRIVATE}/22_${2}.issue"
+		rm -f "${RUN_SNIPPETS}/22_${2}.issue"
 		;;
 esac
 
-# TODO: it would be nice to have /run/issue.d be an official directory,
-#       see https://github.com/karelzak/util-linux/commit/1fc82a1360305f696dc1be6105c9c56a9ea03f52#commitcomment-27949895
-#       until then, $GENERATED_ISSUE writes to the privately scoped directory (not in /run/issue.d)
-#
-# Pick 40 as an index as other files can order around it easily.
+
+# Generate a final issue message from compiling the snippets.
+# Pick 40 as a prefix as other files can order around it easily.
 generated="/run/${PKG_NAME}/40_${PKG_NAME}.issue"
+# Remove `${generated}` before writing, so that it is not forever
+# appended to.
 rm -f "${generated}"
-if [[ -d "/etc/${ISSUE_DIR_PRIVATE}" ]]; then
-	cat /etc/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${generated}" || true
+if [[ -d "${ETC_SNIPPETS}" ]]; then
+	cat ${ETC_SNIPPETS}/* 2>/dev/null >> "${generated}" || true
 fi
-if [[ -d "/run/${ISSUE_DIR_PRIVATE}" ]]; then
-	cat /run/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${generated}" || true
+if [[ -d "${RUN_SNIPPETS}" ]]; then
+	cat ${RUN_SNIPPETS}/* 2>/dev/null >> "${generated}" || true
 
 fi
-if [[ -d "/usr/lib/${ISSUE_DIR_PRIVATE}" ]]; then
-	cat /usr/lib/${ISSUE_DIR_PRIVATE}/* 2>/dev/null >> "${generated}" || true
+if [[ -d "${USR_LIB_SNIPPETS}" ]]; then
+	cat ${USR_LIB_SNIPPETS}/* 2>/dev/null >> "${generated}" || true
 fi
