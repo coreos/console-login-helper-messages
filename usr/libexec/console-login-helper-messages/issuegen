@@ -15,27 +15,49 @@ set -e
 
 PKG_NAME=console-login-helper-messages
 ISSUE_SNIPPETS_PATH=${PKG_NAME}/issue.d
+
+# Snippet locations that are read by issuegen to generate combined snippet
+# data, which is outputted in ${generated_file} (below).
 ETC_SNIPPETS="/etc/${ISSUE_SNIPPETS_PATH}"
 RUN_SNIPPETS="/run/${ISSUE_SNIPPETS_PATH}"
 USR_LIB_SNIPPETS="/usr/lib/${ISSUE_SNIPPETS_PATH}"
 
-# Parts of this script write to the `${RUN_SNIPPETS}` directory,
-# make sure it is created upfront.
-mkdir -p "${RUN_SNIPPETS}"
+# Output locations for snippets produced by issuegen.
+SNIPPETS_OUTDIR="${RUN_SNIPPETS}"
+GENERATED_FILE_OUTDIR="/run/${PKG_NAME}"
+
+# Check util-linux version, and set output directories accordingly.
+# If not on an RPM-based system, then just continue keeping the output
+# directories at their defaults.
+if command -v rpm >/dev/null; then
+	UTIL_LINUX_VERSION=$(rpm -q --queryformat="%{version}" util-linux)
+	UTIL_LINUX_MAJOR_VERSION=$(echo ${UTIL_LINUX_VERSION} | awk -F '.' '{print $1}')
+	UTIL_LINUX_MINOR_VERSION=$(echo ${UTIL_LINUX_VERSION} | awk -F '.' '{print $2}')
+	# Check that util-linux-2.35 or higher is installed, which includes necessary
+	# support for /run/issue.d: https://github.com/karelzak/util-linux/commit/456bcbca6b55fbed33d9f86e69a51abd0e1b8f0b
+	if [[ ${UTIL_LINUX_MAJOR_VERSION} -gt 2 ]] || [[ ${UTIL_LINUX_MAJOR_VERSION} -eq 2 && ${UTIL_LINUX_MINOR_VERSION} -ge 35 ]]; then
+		SNIPPETS_OUTDIR=/run/issue.d
+		GENERATED_FILE_OUTDIR=/run/issue.d
+	fi
+fi
+
+# Make sure the output directories are created upfront, so there is no error
+# writing to them.
+mkdir -p ${SNIPPETS_OUTDIR} ${GENERATED_FILE_OUTDIR}
 
 
 # Provide key fingerprints via issue.
 SSH_DIR=/etc/ssh
 # Ensure `${SSH_DIR}` is created and can be searched without error.
 mkdir -p "${SSH_DIR}"
-SSH_KEY_OUTDIR="${RUN_SNIPPETS}"
+SSH_KEY_OUTDIR="${SNIPPETS_OUTDIR}"
 for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
 	ssh-keygen -l -f "${KEY_FILE}"
 done | awk '{print "SSH host key: " $2 " " $4}' > "${SSH_KEY_OUTDIR}/21_ssh_host_keys.issue"
 
 
 # Add/remove data from udev rules.
-UDEV_IF_OUTDIR="${RUN_SNIPPETS}"
+UDEV_IF_OUTDIR="${SNIPPETS_OUTDIR}"
 case "${ACTION}" in
 	add)
 		echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" > "${UDEV_IF_OUTDIR}/22_${INTERFACE}.issue"
@@ -48,7 +70,7 @@ esac
 
 # Generate a final issue message from compiling the snippets.
 # Pick 40 as a prefix as other files can order around it easily.
-generated_file="/run/${PKG_NAME}/40_${PKG_NAME}.issue"
+generated_file="${GENERATED_FILE_OUTDIR}/40_${PKG_NAME}.issue"
 generated_string=''
 # Hack around files potentially not existing in the below paths with `|| true`.
 generated_string+=$(cat ${ETC_SNIPPETS}/* 2>/dev/null || true)
