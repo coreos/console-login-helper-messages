@@ -31,12 +31,12 @@ for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
 done | awk '{print "SSH host key: " $2 " " $4}' > "/run/${ISSUE_DIR_PRIVATE}/21_ssh_host_keys.issue"
 
 # Data from udev rules
-case "$1" in
+case "${ACTION}" in
 	add)
-		echo "${2}: \\4{${2}} \\6{${2}}" > "/run/${ISSUE_DIR_PRIVATE}/22_${2}.issue"
+		echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" > "/run/${ISSUE_DIR_PRIVATE}/22_${INTERFACE}.issue"
 		;;
 	remove)
-		rm -f "/run/${ISSUE_DIR_PRIVATE}/22_${2}.issue"
+		rm -f "/run/${ISSUE_DIR_PRIVATE}/22_${INTERFACE}.issue"
 		;;
 esac
 
