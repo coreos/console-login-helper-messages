@@ -1,0 +1,10 @@
+[Unit]
+Description=Monitor console-login-helper-messages runtime motd snippets directory for changes
+Documentation=https://github.com/coreos/console-login-helper-messages
+
+[Path]
+PathChanged=/run/console-login-helper-messages/motd.d
+Unit=console-login-helper-messages-motdgen.service
+
+[Install]
+WantedBy=multi-user.target
