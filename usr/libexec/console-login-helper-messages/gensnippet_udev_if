@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Generate snippets for network devices, invoked by a udev rule.
+
+# Copyright (c) 2019 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2013 The CoreOS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# Modified from the CoreOS repository:
+#  * https://github.com/coreos/init/blob/master/scripts/issuegen
+
+set -e
+
+. /usr/libexec/console-login-helper-messages/issuegen.defs
+
+# Add/remove data from udev rules.
+outfile="${RUN_SNIPPETS}/22_${INTERFACE}.issue"
+case "${ACTION}" in
+	add)
+		echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" > ${outfile}
+		;;
+	remove)
+		rm -f ${outfile}
+		;;
+esac

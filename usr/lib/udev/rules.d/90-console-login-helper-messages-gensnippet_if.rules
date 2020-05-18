@@ -1,0 +1,2 @@
+ACTION=="add", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/libexec/console-login-helper-messages/gensnippet_udev_if"
+ACTION=="remove", SUBSYSTEM=="net", ENV{INTERFACE}=="e*", RUN+="/usr/libexec/console-login-helper-messages/gensnippet_udev_if"

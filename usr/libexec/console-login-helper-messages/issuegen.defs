@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+PKG_NAME=console-login-helper-messages
+ISSUE_SNIPPETS_PATH=${PKG_NAME}/issue.d
+ETC_SNIPPETS="/etc/${ISSUE_SNIPPETS_PATH}"
+RUN_SNIPPETS="/run/${ISSUE_SNIPPETS_PATH}"
+USR_LIB_SNIPPETS="/usr/lib/${ISSUE_SNIPPETS_PATH}"
+
+# Make sure the `${RUN_SNIPPETS}` directory is created upfront,
+# as it may be written to by callers of this script.
+mkdir -p "${RUN_SNIPPETS}"
