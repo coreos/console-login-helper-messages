@@ -13,16 +13,7 @@
 
 set -e
 
-PKG_NAME=console-login-helper-messages
-ISSUE_SNIPPETS_PATH=${PKG_NAME}/issue.d
-ETC_SNIPPETS="/etc/${ISSUE_SNIPPETS_PATH}"
-RUN_SNIPPETS="/run/${ISSUE_SNIPPETS_PATH}"
-USR_LIB_SNIPPETS="/usr/lib/${ISSUE_SNIPPETS_PATH}"
-
-# Parts of this script write to the `${RUN_SNIPPETS}` directory,
-# make sure it is created upfront.
-mkdir -p "${RUN_SNIPPETS}"
-
+. /usr/libexec/console-login-helper-messages/issuegen.defs
 
 # Provide key fingerprints via issue.
 SSH_DIR=/etc/ssh
@@ -32,18 +23,6 @@ SSH_KEY_OUTDIR="${RUN_SNIPPETS}"
 for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
 	ssh-keygen -l -f "${KEY_FILE}"
 done | awk '{print "SSH host key: " $2 " " $4}' > "${SSH_KEY_OUTDIR}/21_ssh_host_keys.issue"
-
-
-# Add/remove data from udev rules.
-UDEV_IF_OUTDIR="${RUN_SNIPPETS}"
-case "${ACTION}" in
-	add)
-		echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" > "${UDEV_IF_OUTDIR}/22_${INTERFACE}.issue"
-		;;
-	remove)
-		rm -f "${UDEV_IF_OUTDIR}/22_${INTERFACE}.issue"
-		;;
-esac
 
 
 # Generate a final issue message from compiling the snippets.
