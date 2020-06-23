@@ -27,3 +27,7 @@ rpm:
 		--define "_rpmdir $(PACKAGE_DIR)/rpms" \
 		--define "_buildrootdir $(PACKAGE_DIR)/.buildroot" $(PACKAGE).spec; \
 	rm -rf "$(PACKAGE_DIR)/.build";))
+
+# Remove contents of directory of RPM artifacts from previous builds.
+clean_rpm:
+	rm -rf $(TOPSRCDIR)/$(PACKAGE)/rpms/*

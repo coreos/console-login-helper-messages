@@ -66,6 +66,12 @@ podman build . -t console-login-helper-messages
 ./build_rpm.sh
 ```
 
+To remove the previous RPMs and build a fresh set, do:
+
+```
+./clean_rpm.sh && ./build_rpm.sh
+```
+
 ### Building (without container)
 
 To build without using a container, execute:
