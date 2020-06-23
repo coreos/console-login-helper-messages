@@ -45,14 +45,31 @@ Messages can be appended to the motd or issue, by placing
 files in the directories sourced by motdgen/issuegen to generate
 the message (see [manual](manual.md#Appending-messages)).
 
-## To Build
+## Building
 
-Build the RPM packages by cloning the downstream Fedora SCM repo and executing `fedpkg local`:
+The included `build_rpm.sh` script will archive the current checked out
+commit in the upstream repo, clone the downstream Fedora SCM repo,
+and build the RPM with the archived source, within a container.
+Built RPM artifacts can be found in `./build/console-login-helper-messages/rpms`.
+The built RPMs can then be installed into an RPM-based distribution,
+to test, e.g. Fedora Cloud.
+
+Note if the `make` command gives `Permission denied`, it may be
+due to SELinux. TO fix this, the type `container_file_t` should be
+given on this repository if using the build workflow below, which
+can be done with `chcon -R -t container_file_t ./`.
 
 ```
-git clone https://src.fedoraproject.org/rpms/console-login-helper-messages
-cd console-login-helper-messages
-dnf builddep -y console-login-helper-messages.spec
-fedpkg local
+# First build the container image used to build console-login-helper-messages
+podman build . -t console-login-helper-messages
+
+./build_rpm.sh
 ```
 
+### Building (without container)
+
+To build without using a container, execute:
+
+```
+make rpm
+```
