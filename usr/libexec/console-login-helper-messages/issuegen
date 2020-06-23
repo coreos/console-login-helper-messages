@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 # Get updated system information, including SSH keys and network devices,
 # and generate an issue to display before login.
