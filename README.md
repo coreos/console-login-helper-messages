@@ -79,3 +79,26 @@ To build without using a container, execute:
 ```
 make rpm
 ```
+
+## Testing in a VM
+
+This requires `libguestfs-tools-c` and `qemu-kvm` installed.
+
+`./run_vm.sh` will provision a VM image (`.qcow2` or `.raw`) passed as
+the first argument, and start up a VM which you can SSH into. After
+running `./run_vm.sh`, run `./install_vm_rpms.sh` to install the last
+built RPMs from `./build_rpm.sh` in the VM. You can then SSH into the
+machine using the details that `./install_vm_rpms.sh` outputs to the
+terminal.
+
+```
+./clean_rpm.sh && ./build_rpm.sh
+./run_vm.sh path/to/image.qcow2
+./install_vm_rpms.sh
+```
+
+To iterate while the VM is running, after committing changes locally:
+
+```
+./clean_rpm.sh && ./build_rpm.sh && ./install_vm_rpms.sh
+```
