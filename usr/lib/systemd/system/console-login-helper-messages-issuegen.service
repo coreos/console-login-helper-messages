@@ -2,8 +2,7 @@
 Description=Generate /run/issue.d/console-login-helper-messages.issue
 Documentation=https://github.com/coreos/console-login-helper-messages
 Before=systemd-user-sessions.service
-Wants=network-online.target
-After=network-online.target sshd-keygen.target
+After=sshd-keygen.target
 
 [Service]
 Type=oneshot
