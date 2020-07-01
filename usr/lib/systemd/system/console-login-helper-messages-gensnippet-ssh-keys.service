@@ -1,0 +1,13 @@
+[Unit]
+Description=Generate SSH keys snippet for display via console-login-helper-messages
+Documentation=https://github.com/coreos/console-login-helper-messages
+After=sshd-keygen.target
+
+[Service]
+Type=oneshot
+# Service should only run once at boot - set RemainAfterExit=yes.
+RemainAfterExit=yes
+ExecStart=/usr/libexec/console-login-helper-messages/gensnippet_ssh_keys
+
+[Install]
+WantedBy=multi-user.target

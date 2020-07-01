@@ -7,26 +7,12 @@
 # Copyright (c) 2013 The CoreOS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
-# Modified from the CoreOS repository:
-#  * https://github.com/coreos/init/blob/master/scripts/issuegen
-#  * https://github.com/coreos/init/blob/master/scripts/sshd_keygen
+# Modified from the CoreOS repository: https://github.com/coreos/init/blob/master/scripts/issuegen
 
 set -e
 
 . /usr/lib/console-login-helper-messages/libutil.sh
 . /usr/lib/console-login-helper-messages/issuegen.defs
-
-# Provide key fingerprints via issue.
-SSH_DIR=/etc/ssh
-# Ensure `${SSH_DIR}` is created and can be searched without error.
-mkdir -p "${SSH_DIR}"
-SSH_KEY_OUTDIR="${RUN_SNIPPETS}"
-for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
-	ssh-keygen -l -f "${KEY_FILE}"
-done \
-    | awk '{print "SSH host key: " $2 " " $4}' \
-    | write_via_tempfile "${SSH_KEY_OUTDIR}/21_ssh_host_keys.issue"
-
 
 # Generate a final issue message from compiling the snippets.
 # Pick 40 as a prefix as other files can order around it easily.
