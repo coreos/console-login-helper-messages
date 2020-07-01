@@ -10,19 +10,9 @@
 # to display this at login.
 
 . /usr/lib/console-login-helper-messages/libutil.sh
+. /usr/lib/console-login-helper-messages/motdgen.defs
 
 set -e
-
-PKG_NAME=console-login-helper-messages
-MOTD_SNIPPETS_PATH="${PKG_NAME}/motd.d"
-ETC_SNIPPETS="/etc/${MOTD_SNIPPETS_PATH}"
-RUN_SNIPPETS="/run/${MOTD_SNIPPETS_PATH}"
-USR_LIB_SNIPPETS="/usr/lib/${MOTD_SNIPPETS_PATH}"
-
-# Parts of this script write to the `${RUN_SNIPPETS}` directory,
-# make sure it is created upfront.
-mkdir -p "${RUN_SNIPPETS}"
-
 
 # Write distro release information to MOTD, in distro-specific color.
 source /usr/lib/os-release
