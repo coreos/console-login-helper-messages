@@ -24,6 +24,8 @@ ssh $ssh_opts -i $sshkey_path -p $ssh_port root@localhost "rpm -i /root/${pkg}-*
 # if installed already.
 ssh $ssh_opts -i $sshkey_path -p $ssh_port root@localhost "systemctl enable console-login-helper-messages-issuegen.path"
 ssh $ssh_opts -i $sshkey_path -p $ssh_port root@localhost "systemctl enable console-login-helper-messages-motdgen.path"
+ssh $ssh_opts -i $sshkey_path -p $ssh_port root@localhost "systemctl enable console-login-helper-messages-gensnippet-ssh-keys.service"
+ssh $ssh_opts -i $sshkey_path -p $ssh_port root@localhost "systemctl enable console-login-helper-messages-gensnippet-os-release.service"
 ssh $ssh_opts -i $sshkey_path -p $ssh_port root@localhost "systemctl reboot"
 
 echo SSH into the VM with: ssh -i $sshkey_path -p $ssh_port root@localhost
