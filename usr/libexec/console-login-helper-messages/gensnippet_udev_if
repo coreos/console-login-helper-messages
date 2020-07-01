@@ -11,13 +11,15 @@
 
 set -e
 
+. /usr/lib/console-login-helper-messages/libutil.sh
 . /usr/libexec/console-login-helper-messages/issuegen.defs
 
 # Add/remove data from udev rules.
 outfile="${RUN_SNIPPETS}/22_${INTERFACE}.issue"
 case "${ACTION}" in
 	add)
-		echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" > ${outfile}
+		echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" \
+			| write_via_tempfile ${outfile}
 		;;
 	remove)
 		rm -f ${outfile}
