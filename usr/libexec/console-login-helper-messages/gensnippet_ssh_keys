@@ -1,5 +1,7 @@
 #!/usr/bin/bash
-
+#
+# Provide key fingerprints via issue.
+#
 # Copyright (c) 2020 Fedora CoreOS Authors. All rights reserved.
 # Copyright (c) 2013 The CoreOS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -11,13 +13,13 @@ set -e
 . /usr/lib/console-login-helper-messages/libutil.sh
 . /usr/lib/console-login-helper-messages/issuegen.defs
 
-# Provide key fingerprints via issue.
-SSH_DIR=/etc/ssh
-# Ensure `${SSH_DIR}` is created and can be searched without error.
-mkdir -p "${SSH_DIR}"
-SSH_KEY_OUTDIR="${RUN_SNIPPETS}"
-for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
-	ssh-keygen -l -f "${KEY_FILE}"
+ssh_dir=/etc/ssh
+# Ensure SSH directory is created and can be searched without error.
+mkdir -p "${ssh_dir}"
+outfile="${RUN_SNIPPETS}/21_ssh_host_keys.issue"
+
+for key_file in $(find "${ssh_dir}" -name "ssh_host_*_key"); do
+	ssh-keygen -l -f "${key_file}"
 done \
     | awk '{print "SSH host key: " $2 " " $4}' \
-    | write_via_tempfile "${SSH_KEY_OUTDIR}/21_ssh_host_keys.issue"
+    | write_via_tempfile "${outfile}"

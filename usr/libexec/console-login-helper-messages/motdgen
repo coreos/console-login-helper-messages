@@ -1,18 +1,18 @@
 #!/usr/bin/bash
-
+#
+# Get updated system information and generate a MOTD to display at
+# login.
+#
 # Copyright (c) 2019 Fedora CoreOS Authors. All rights reserved.
 # Copyright (c) 2014 The CoreOS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 # Modified from the CoreOS repository: https://github.com/coreos/init/blob/master/scripts/motdgen
 
-# Get updated system information and generate a motd
-# to display this at login.
+set -e
 
 . /usr/lib/console-login-helper-messages/libutil.sh
 . /usr/lib/console-login-helper-messages/motdgen.defs
-
-set -e
 
 # Generate a final motd from compiling the snippets.
 # Pick 40 as a prefix as other files can order around it easily.

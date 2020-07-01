@@ -4,12 +4,12 @@ Documentation=https://github.com/coreos/console-login-helper-messages
 
 [Service]
 Type=oneshot
-# This service expects to be started repeatedly after exiting (whenever a new
-# runtime motd snippet is dropped into the directory watched by
-# `console-login-helper-messages-motdgen.path`). `RemainAfterExit` is thus
-# explicitly set to `no`, so that the service can re-execute (otherwise,
-# `start` on this service after it has exited once before does not have any
-# effect).
+# This service expects to be started repeatedly after exiting (whenever
+# a new runtime motd snippet is dropped into the directory watched by
+# `console-login-helper-messages-motdgen.path`). `RemainAfterExit` is
+# thus explicitly set to `no`, so that the service can re-execute
+# (otherwise, `start` on this service after it has exited once before
+# does not have any effect).
 RemainAfterExit=no
 ExecStart=/usr/libexec/console-login-helper-messages/motdgen
 
