@@ -12,7 +12,7 @@
 set -e
 
 . /usr/lib/console-login-helper-messages/libutil.sh
-. /usr/libexec/console-login-helper-messages/issuegen.defs
+. /usr/lib/console-login-helper-messages/issuegen.defs
 
 # Add/remove data from udev rules.
 outfile="${RUN_SNIPPETS}/22_${INTERFACE}.issue"

@@ -14,7 +14,7 @@
 set -e
 
 . /usr/lib/console-login-helper-messages/libutil.sh
-. /usr/libexec/console-login-helper-messages/issuegen.defs
+. /usr/lib/console-login-helper-messages/issuegen.defs
 
 # Provide key fingerprints via issue.
 SSH_DIR=/etc/ssh
