@@ -14,13 +14,6 @@
 
 set -e
 
-# Write distro release information to MOTD, in distro-specific color.
-source /usr/lib/os-release
-OS_RELEASE_OUTDIR="${RUN_SNIPPETS}"
-echo -e "\e[${ANSI_COLOR}m${PRETTY_NAME}\e[39m" \
-    | write_via_tempfile "${OS_RELEASE_OUTDIR}/21_os_release.motd"
-
-
 # Generate a final motd from compiling the snippets.
 # Pick 40 as a prefix as other files can order around it easily.
 generated_file="/run/motd.d/40_${PKG_NAME}.motd"

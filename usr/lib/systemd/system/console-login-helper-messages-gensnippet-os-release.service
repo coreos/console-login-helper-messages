@@ -1,0 +1,12 @@
+[Unit]
+Description=Generate os release snippet for display via console-login-helper-messages
+Documentation=https://github.com/coreos/console-login-helper-messages
+
+[Service]
+Type=oneshot
+# Service should only run once at boot - set RemainAfterExit=yes.
+RemainAfterExit=yes
+ExecStart=/usr/libexec/console-login-helper-messages/gensnippet_os_release
+
+[Install]
+WantedBy=multi-user.target
