@@ -1,6 +1,4 @@
-#!/bin/bash
-
-set -e
+#!/usr/bin/bash
 
 PKG_NAME=console-login-helper-messages
 ISSUE_SNIPPETS_PATH=${PKG_NAME}/issue.d
