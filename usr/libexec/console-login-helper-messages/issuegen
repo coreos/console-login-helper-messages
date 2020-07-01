@@ -13,6 +13,7 @@
 
 set -e
 
+. /usr/lib/console-login-helper-messages/libutil.sh
 . /usr/libexec/console-login-helper-messages/issuegen.defs
 
 # Provide key fingerprints via issue.
@@ -22,16 +23,14 @@ mkdir -p "${SSH_DIR}"
 SSH_KEY_OUTDIR="${RUN_SNIPPETS}"
 for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
 	ssh-keygen -l -f "${KEY_FILE}"
-done | awk '{print "SSH host key: " $2 " " $4}' > "${SSH_KEY_OUTDIR}/21_ssh_host_keys.issue"
+done \
+    | awk '{print "SSH host key: " $2 " " $4}' \
+    | write_via_tempfile "${SSH_KEY_OUTDIR}/21_ssh_host_keys.issue"
 
 
 # Generate a final issue message from compiling the snippets.
 # Pick 40 as a prefix as other files can order around it easily.
 generated_file="/run/${PKG_NAME}/40_${PKG_NAME}.issue"
-generated_string=''
-# Hack around files potentially not existing in the below paths with `|| true`.
-generated_string+=$(cat ${ETC_SNIPPETS}/* 2>/dev/null || true)
-generated_string+=$(cat ${RUN_SNIPPETS}/* 2>/dev/null || true)
-generated_string+=$(cat ${USR_LIB_SNIPPETS}/* 2>/dev/null || true)
+source_dirs=("${ETC_SNIPPETS}" "${RUN_SNIPPETS}" "${USR_LIB_SNIPPETS}")
 
-echo "${generated_string}" > "${generated_file}"
+cat_via_tempfile "${generated_file}" ".issue" "${source_dirs[@]}"
