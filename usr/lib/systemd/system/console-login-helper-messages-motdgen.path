@@ -1,6 +1,7 @@
 [Unit]
 Description=Monitor console-login-helper-messages runtime motd snippets directory for changes
 Documentation=https://github.com/coreos/console-login-helper-messages
+Before=systemd-user-sessions.service
 
 [Path]
 # Activate motdgen if new snippets are dropped into the runtime
