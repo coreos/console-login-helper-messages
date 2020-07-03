@@ -6,8 +6,46 @@ PACKAGE = console-login-helper-messages
 PACKAGE_DIR = $(TOPSRCDIR)/$(PACKAGE)
 PACKAGESRC_URL = "https://src.fedoraproject.org/rpms/$(PACKAGE)"
 
+DESTDIR ?= /
+PREFIX ?= /usr
+SYSCONFDIR ?= /etc
+libexecdir ?= $(PREFIX)/libexec
+
 # A starter Makefile which may be useful in a developer workflow for testing
 # and iteration.
+
+.PHONY: all
+all:
+	@echo "(Nothing to build)"
+
+.PHONY: install
+install: all
+	(set -euo pipefail; \
+	# package-specific directories \
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/$(PACKAGE)/issue.d; \
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/$(PACKAGE)/motd.d; \
+	mkdir -p $(DESTDIR)$(SYSCONFDIR)/$(PACKAGE)/issue.d; \
+	mkdir -p $(DESTDIR)$(SYSCONFDIR)/$(PACKAGE)/motd.d; \
+	mkdir -p $(DESTDIR)$(PREFIX)/share/$(PACKAGE); \
+	# external directories \
+	mkdir -p $(DESTDIR)$(SYSCONFDIR)/issue.d; \
+	mkdir -p $(DESTDIR)$(SYSCONFDIR)/motd.d; \
+	mkdir -p $(DESTDIR)$(SYSCONFDIR)/profile.d; \
+	# install \
+	install -DZ -m 0644 usr/lib/systemd/system/* \
+		-t $(DESTDIR)$(PREFIX)/lib/systemd/system/; \
+	install -DZ -m 0644 usr/lib/tmpfiles.d/* \
+		-t $(DESTDIR)$(PREFIX)/lib/tmpfiles.d/; \
+	install -DZ -m 0644 usr/lib/udev/rules.d/* \
+		-t $(DESTDIR)$(PREFIX)/lib/udev/rules.d/; \
+	install -DZ -m 0755 usr/libexec/$(PACKAGE)/* \
+		-t $(DESTDIR)$(libexecdir)/$(PACKAGE)/; \
+	install -DZ -m 0644 usr/share/$(PACKAGE)/* \
+		-t $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/; \
+	# symlinks \
+	ln -sf $(PREFIX)/share/$(PACKAGE)/profile.sh \
+		$(DESTDIR)$(SYSCONFDIR)/profile.d/$(PACKAGE)-profile.sh)
+
 
 # Generate rpms including the content committed at the current git checked-out
 # HEAD. The built RPM files are named as
