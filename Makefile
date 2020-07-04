@@ -66,6 +66,7 @@ rpm:
 		--define "_buildrootdir $(PACKAGE_DIR)/.buildroot" $(PACKAGE).spec; \
 	rm -rf "$(PACKAGE_DIR)/.build";))
 
-# Remove contents of directory of RPM artifacts from previous builds.
+# Remove archives and RPM artifacts from previous builds.
 clean_rpm:
-	rm -rf $(TOPSRCDIR)/$(PACKAGE)/rpms/*
+	rm -rf $(TOPSRCDIR)/$(PACKAGE)/rpms/*; \
+	rm -f $(TOPSRCDIR)/$(PACKAGE)/*.tar
