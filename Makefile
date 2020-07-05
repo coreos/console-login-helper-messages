@@ -32,6 +32,8 @@ install: all
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/motd.d; \
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/profile.d; \
 	# install \
+	install -DZ -m 0644 usr/lib/$(PACKAGE)/* \
+		-t $(DESTDIR)$(PREFIX)/lib/$(PACKAGE)/; \
 	install -DZ -m 0644 usr/lib/systemd/system/* \
 		-t $(DESTDIR)$(PREFIX)/lib/systemd/system/; \
 	install -DZ -m 0644 usr/lib/tmpfiles.d/* \
