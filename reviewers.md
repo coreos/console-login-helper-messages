@@ -1,14 +1,12 @@
-# Reviewers
+# Manual testing
 
-Please see the following steps as ways to verify the `console-login-helper-messages` functionality
-is working.
+Use the following steps to verify the `console-login-helper-messages` package
+works. Install RPMs to test in a machine following [manual](manual.md#installation),
+**or** install from source following [development instructions](README-devel.md).
 
 To see the full instructions available to the user, please see the [manual](manual.md).
 
-## Testing
-
-After installing the `console-login-helper-messages-*` rpms, the items on the following
-checklist should work.
+## Manual testing
 
 Alternatively to manually installing, the Vagrantfile (see section below)
 may be used to automatically enable the COPR repo and install the packages.
@@ -17,6 +15,9 @@ may be used to automatically enable the COPR repo and install the packages.
 
         $ cat /run/motd.d/40_console-login-helper-messages.motd
         Fedora 29 (Cloud Edition)
+
+        `ssh localhost` from within the machine should display this
+        information.
 
 - [x] The issue symlink was created and issue generated
 
@@ -27,6 +28,8 @@ may be used to automatically enable the COPR repo and install the packages.
         SSH host key: SHA256:FUpLCL6eYYCT5s2izSxGvwaE6lEqjp3GO34UEa7G/UQ (ED25519)
         SSH host key: SHA256:nApsM6b6l2peh/+X5iYInMFcAeEm4T6irRp/VTeSvDM (RSA)
         eth0: 10.0.2.15 fec0::5054:ff:fe12:3456
+
+        Running `agetty --show-issue` should display this information.
 
 - [x] The profile script reports a failed unit
 
@@ -56,8 +59,14 @@ may be used to automatically enable the COPR repo and install the packages.
 
 - [x] A motd message can be appended and displayed
 
-        # echo "hello" > /run/console-login-helper-messages/motd.d/00_hello
-        # systemctl restart console-login-helper-messages-motdgen.service
+        # echo "hello" > /run/console-login-helper-messages/motd.d/00_hello.motd
         # cat /run/motd.d/40_console-login-helper-messages.motd 
+        hello
+        Fedora 29 (Cloud Edition)
+
+- [x] An issue message can be appended and displayed
+
+        # echo "hello" > /run/console-login-helper-messages/issue.d/00_hello.issue
+        # cat /run/console-login-helper-messages/40_console-login-helper-messages.issue
         hello
         Fedora 29 (Cloud Edition)
