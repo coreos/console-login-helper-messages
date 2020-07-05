@@ -37,6 +37,10 @@ Failed Units: 1
     var-srv.mount
 ```
 
+## Installation
+
+See the [manual](manual.md#Installation).
+
 ## Customizing
 
 The motd/issue messages are defaults and can be disabled following the [manual](manual.md#Disabling-messages).
