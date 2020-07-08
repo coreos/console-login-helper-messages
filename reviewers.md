@@ -1,4 +1,4 @@
-# Manual testing
+# Reviewing and verifying package functionality
 
 Use the following steps to verify the `console-login-helper-messages` package
 works. Install RPMs to test in a machine following [manual](manual.md#installation),
@@ -6,10 +6,7 @@ works. Install RPMs to test in a machine following [manual](manual.md#installati
 
 To see the full instructions available to the user, please see the [manual](manual.md).
 
-## Manual testing
-
-Alternatively to manually installing, the Vagrantfile (see section below)
-may be used to automatically enable the COPR repo and install the packages.
+## Manual tests
 
 - [x] The MOTD was generated
 
