@@ -41,6 +41,9 @@ Failed Units: 1
 
 See the [manual](manual.md#Installation).
 
+To verify working package functionality manually (for now), see the
+[reviewers](reviewers.md) doc.
+
 ## Customizing
 
 The motd/issue messages are defaults and can be disabled following the [manual](manual.md#Disabling-messages).
