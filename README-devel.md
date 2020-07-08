@@ -1,7 +1,7 @@
 # console-login-helper-messages - development
 
 The below sections include information on editing the
-cosnole-login-helper-messages source files and testing changes. To get
+console-login-helper-messages source files and testing changes. To get
 started, the suggested workflow is first to
 [build the development container](README.md#building-a-development-container)
 and then to iterate following [Testing changes in a virtual machine](README.md#testing-changes-in-a-virtual-machine).
