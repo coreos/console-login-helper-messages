@@ -1,11 +1,23 @@
 # console-login-helper-messages - development
 
 The below sections include information on editing the
-console-login-helper-messages source files and testing changes. To get
-started, the suggested workflow is first to
-[build the development container](README.md#building-a-development-container)
-and then to iterate following [Testing changes in a virtual machine](README.md#testing-changes-in-a-virtual-machine).
+console-login-helper-messages source files and testing changes. 
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Building a development container](#building-a-development-container)
+- [Installing executables and systemd units](#installing-executables-and-systemd-units)
+- [Testing changes in a virtual machine](#testing-changes-in-a-virtual-machine)
+- [Building RPMs from Fedora SCM](#building-rpms-from-fedora-scm)
+  - [Building RPMs (without container)](#building-rpms-without-container)
+- [Testing RPM builds in a VM](#testing-rpm-builds-in-a-vm)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+To get started, the suggested workflow is first to [build the development container](#building-a-development-container)
+and then to iterate following [Testing changes in a virtual machine](#testing-changes-in-a-virtual-machine).
 Running the VM with the provided scripts requires `libguestfs-tools-c`
 and `qemu-kvm` installed.
 
@@ -23,7 +35,7 @@ podman build . -t console-login-helper-messages
 
 To install `console-login-helper-messages` and associated systemd units,
 run `make install DESTDIR=<write destination directory here>`. This can
-also be done in a container, see [sync_to_vm.sh](sync_to_vm.sh).
+also be done in a container, see [sync_to_vm.sh](../hack/sync_to_vm.sh).
 
 ## Testing changes in a virtual machine
 
@@ -31,8 +43,13 @@ First, start a VM with (after downloading a `.qcow2`, `.img`, or `.raw`
 image suitable for testing):
 
 ```
-./run_vm.sh path/to/image.qcow2
+./hack/run_vm.sh path/to/image.qcow2
 ```
+
+Note if the `make` command gives `Permission denied`, it may be
+due to SELinux. TO fix this, the type `container_file_t` should be
+given on this repository if using the build workflow below, which
+can be done with `chcon -R -t container_file_t ./`.
 
 A suggested image for iteration is the [Fedora Cloud Base](https://alt.fedoraproject.org/cloud/)
 image.
@@ -43,7 +60,7 @@ outputted by the script. To iterate with new changes, the script can be
 run repeatedly.
 
 ```
-./sync_to_vm.sh
+./hack/sync_to_vm.sh
 ```
 
 ## Building RPMs from Fedora SCM
@@ -60,18 +77,15 @@ Built RPM artifacts can be found in `./build/console-login-helper-messages/rpms`
 The built RPMs can then be installed into an RPM-based distribution,
 to test, e.g. Fedora Cloud.
 
-Note if the `make` command gives `Permission denied`, it may be
-due to SELinux. TO fix this, the type `container_file_t` should be
-given on this repository if using the build workflow below, which
-can be done with `chcon -R -t container_file_t ./`.
 
 ```
-./build_rpm.sh
+./hack/build_rpm.sh
 ```
 
 To remove the previous RPMs and build a fresh set, do:
 
 ```
+cd hack/
 ./clean_rpm.sh && ./build_rpm.sh
 ```
 
@@ -93,6 +107,7 @@ machine using the details that `./install_vm_rpms.sh` outputs to the
 terminal.
 
 ```
+cd hack/
 ./clean_rpm.sh && ./build_rpm.sh
 ./run_vm.sh path/to/image.qcow2
 ./install_vm_rpms.sh
@@ -101,5 +116,6 @@ terminal.
 To iterate while the VM is running, after committing changes locally:
 
 ```
+cd hack/
 ./clean_rpm.sh && ./build_rpm.sh && ./install_vm_rpms.sh
 ```

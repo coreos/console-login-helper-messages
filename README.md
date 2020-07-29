@@ -4,9 +4,21 @@ Shows helper messages at or before login using `motd`, `issue`, and `profile`.
 
 Useful in situations where a desktop environment is not available and information is communicated through the terminal.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Messages shown](#messages-shown)
+  - [Example](#example)
+- [Installation](#installation)
+- [Customizing](#customizing)
+- [Development](#development)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Messages shown
 
-The following messages will show before or upon login after installing `console-login-helper-messages` and enabling the needed units (see [manual](manual.md)).
+The following messages will show before or upon login after installing `console-login-helper-messages` and enabling the needed units (see [manual](doc/manual.md)).
 
 - issuegen:
     - [x] available ssh keys from `/etc/ssh`
@@ -39,20 +51,20 @@ Failed Units: 1
 
 ## Installation
 
-See the [manual](manual.md#Installation).
+See the [manual](doc/manual.md#Installation).
 
 To verify working package functionality manually (for now), see the
-[reviewers](reviewers.md) doc.
+[reviewers](doc/reviewers.md) doc.
 
 ## Customizing
 
-The motd/issue messages are defaults and can be disabled following the [manual](manual.md#Disabling-messages).
+The motd/issue messages are defaults and can be disabled following the [manual](doc/manual.md#Disabling-messages).
 
 Messages can be appended to the motd or issue, by placing
 files in the directories sourced by motdgen/issuegen to generate
-the message (see [manual](manual.md#Appending-messages)).
+the message (see [manual](doc/manual.md#Appending-messages)).
 
 ## Development
 
 For information on contributing and testing changes in a virtual
-machine, see the [development README](README-devel.md).
+machine, see the [development README](doc/development.md).

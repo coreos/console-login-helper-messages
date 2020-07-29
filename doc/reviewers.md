@@ -1,8 +1,18 @@
 # Reviewing and verifying package functionality
 
 Use the following steps to verify the `console-login-helper-messages` package
-works. Install RPMs to test in a machine following [manual](manual.md#installation),
-**or** install from source following [development instructions](README-devel.md).
+works.
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Manual tests](#manual-tests)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+Install RPMs to test in a machine following [manual](manual.md#installation),
+**or** install from source following [development instructions](development.md).
 
 To see the full instructions available to the user, please see the [manual](manual.md).
 
