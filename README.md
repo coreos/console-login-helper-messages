@@ -1,3 +1,6 @@
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![GitHub Release](https://img.shields.io/github/release/coreos/console-login-helper-messages/all.svg)](https://github.com/coreos/console-login-helper-messages/releases/) 
+
 # console-login-helper-messages
 
 Shows helper messages at or before login using `motd`, `issue`, and `profile`.
