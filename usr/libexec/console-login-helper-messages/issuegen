@@ -34,3 +34,6 @@ generated_file="/run/${PKG_NAME}/40_${PKG_NAME}.issue"
 source_dirs=("${ETC_SNIPPETS}" "${RUN_SNIPPETS}" "${USR_LIB_SNIPPETS}")
 
 cat_via_tempfile "${generated_file}" ".issue" "${source_dirs[@]}"
+
+# Reload the agetty console upon generation of new issue snippet 
+/usr/sbin/agetty --reload
