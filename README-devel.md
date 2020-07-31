@@ -3,8 +3,8 @@
 The below sections include information on editing the
 console-login-helper-messages source files and testing changes. To get
 started, the suggested workflow is first to
-[build the development container](README.md#building-a-development-container)
-and then to iterate following [Testing changes in a virtual machine](README.md#testing-changes-in-a-virtual-machine).
+[build a development container](README-devel.md#building-a-development-container)
+and then to iterate following [Testing changes in a virtual machine](README-devel.md#testing-changes-in-a-virtual-machine).
 
 Running the VM with the provided scripts requires `libguestfs-tools-c`
 and `qemu-kvm` installed.
@@ -46,6 +46,11 @@ run repeatedly.
 ./sync_to_vm.sh
 ```
 
+Note if the `make` command gives `Permission denied`, it may be
+due to SELinux. To fix this, the type `container_file_t` should be
+given on this repository if using the build workflow below, which
+can be done with `chcon -R -t container_file_t ./`.
+
 ## Building RPMs from Fedora SCM
 
 **Note**: the recommended development flow for faster iteration is using
@@ -59,11 +64,6 @@ and build the RPM with the archived source, within a container.
 Built RPM artifacts can be found in `./build/console-login-helper-messages/rpms`.
 The built RPMs can then be installed into an RPM-based distribution,
 to test, e.g. Fedora Cloud.
-
-Note if the `make` command gives `Permission denied`, it may be
-due to SELinux. TO fix this, the type `container_file_t` should be
-given on this repository if using the build workflow below, which
-can be done with `chcon -R -t container_file_t ./`.
 
 ```
 ./build_rpm.sh
