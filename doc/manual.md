@@ -1,5 +1,25 @@
 # Manual - console-login-helper-messages
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Architecture overview - issuegen/motgen](#architecture-overview---issuegenmotgen)
+- [Installation](#installation)
+  - [Packaging](#packaging)
+  - [Integrating into a distribution](#integrating-into-a-distribution)
+- [Common operations](#common-operations)
+  - [Enabling messages](#enabling-messages)
+  - [Appending messages](#appending-messages)
+  - [Disabling messages](#disabling-messages)
+    - [Silencing a generated message without disabling](#silencing-a-generated-message-without-disabling)
+    - [Finer-grained disabling](#finer-grained-disabling)
+- [Troubleshooting](#troubleshooting)
+  - [Recreating the symlinks](#recreating-the-symlinks)
+  - [Regenerating the messages](#regenerating-the-messages)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Architecture overview - issuegen/motgen
 
 Two units, `console-login-helper-messages-issuegen.path` and
@@ -68,7 +88,7 @@ subpackages in the following way:
 | console-login-helper-messages-motdgen  | messages shown using the motd paths after SSH in (OS release information) |
 | console-login-helper-messages-profile  | messages shown using /etc/profile.d script, shown on login to bash terminal (failed systemd units) |
 
-The `install` target of the [Makefile](Makefile) is the source of truth
+The `install` target of the [Makefile](../Makefile) is the source of truth
 on where files should be placed, and which symlinks should be created.
 
 ### Integrating into a distribution
