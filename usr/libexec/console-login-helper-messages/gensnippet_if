@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Generate snippets for network devices, invoked by a NetworkManager dispatcher 
+# script.
+
+# Copyright (c) 2020 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2013 The CoreOS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# Modified from the CoreOS repository:
+#  * https://github.com/coreos/init/blob/master/scripts/issuegen
+
+set -e
+
+. /usr/lib/console-login-helper-messages/libutil.sh
+. /usr/lib/console-login-helper-messages/issuegen.defs
+
+# If using udev, exit to avoid printing duplicate information.
+if [ USE_UDEV_FOR_NETWORK_SNIPPETS == "true" ]; then
+    return 0
+fi
+
+interface=$1
+action=$2
+
+# We say that a device is backed by a real device if it is a real device or it 
+# has any subordinate devices that are backed by a real device.
+# We assume that a device is real if there exists a `device` symlink in the 
+# `/sys/class/net/{interface}` directory of that device. 
+# We assume that a device's subordinate devices (if any), are identified under 
+# the `/sys/class/net/${interface}/lower_` directory.
+# Takes in the full path of the device in question as an argument. 
+is_iface_backed_by_real_device() {
+    iface=$1
+
+    # Check if device is real.
+    if [ -e ${iface}/device ]; then
+        return 0
+    fi
+
+    # Check if device has any subordinate devices that are backed by a real 
+    # device, recursively.
+    for subifacedir in ${iface}/lower_*; do
+        subiface=$(readlink -f ${subifacedir})
+        if is_iface_backed_by_real_device ${subiface}; then
+            return 0
+        fi
+    done
+
+    # If we made it here, then iface is not backed by a real device.
+    return 1
+}
+
+# Display IP of devices that are backed by a real device.
+outfile="${RUN_SNIPPETS}/22_${interface}.issue"
+case "${action}" in
+    up)
+        iface_full_path="/sys/class/net/${interface}"
+        if is_iface_backed_by_real_device ${iface_full_path}; then
+            echo "${interface}: \\4{${interface}} \\6{${interface}}" \
+                | write_via_tempfile ${outfile}
+        fi
+        ;;
+    down)
+        rm -f ${outfile}
+        ;;
+esac

@@ -1,0 +1,15 @@
+#!/usr/bin/sh
+# This is a NetworkManager dispatcher script for generating issue snippets when
+# networking interfaces that are either physical devices OR virtual devices 
+# backed by physical devices are activated.
+
+interface=$1
+action=$2
+
+if [ "$action" = "up" ]; then
+    /usr/libexec/console-login-helper-messages/gensnippet_if "${interface}" "${action}"
+elif [ "$action" = "down" ]; then
+    /usr/libexec/console-login-helper-messages/gensnippet_if "${interface}" "${action}"
+fi
+
+exit 0
