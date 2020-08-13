@@ -2,12 +2,14 @@
 
 set -xeuo pipefail
 
-vmdir=./vm
+top_src_dir=$(git rev-parse --show-toplevel)
+vmdir=$top_src_dir/vm
 ssh_port=2226
 mkdir -p $vmdir
 
 image_path="$1"
 
+rm $vmdir/*
 sshkey_path="$vmdir/id_rsa"
 ssh-keygen -t rsa -f "$sshkey_path" -q -N ""
 ssh_pubkey=$(cat "${sshkey_path}.pub")
