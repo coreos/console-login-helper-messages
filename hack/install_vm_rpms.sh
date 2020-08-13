@@ -2,12 +2,13 @@
 
 set -xeuo pipefail
 
+top_src_dir=$(git rev-parse --show-toplevel)
 pkg=console-login-helper-messages
-vmdir=./vm
+vmdir=$top_src_dir/vm
 sshkey_path="${vmdir}/id_rsa"
 ssh_port=2226
 
-rpms_paths="$(ls "./build/${pkg}/rpms/noarch/${pkg}-"*.noarch.rpm | tr "\n" " ")"
+rpms_paths="$(ls "$top_src_dir/build/${pkg}/rpms/noarch/${pkg}-"*.noarch.rpm | tr "\n" " ")"
 ssh_opts="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
 # Remove old RPMs in VM image.
