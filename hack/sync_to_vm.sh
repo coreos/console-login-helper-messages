@@ -3,7 +3,8 @@
 set -xeuo pipefail
 
 pkg=console-login-helper-messages
-vmdir=./vm
+top_src_dir=$(git rev-parse --show-toplevel)
+vmdir=$top_src_dir/vm
 sshkey_path="$vmdir/id_rsa"
 ssh_port="2226"
 ssh_opts="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
@@ -11,7 +12,7 @@ ssh_opts="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 # rootfs to install to, mounted in the container
 mkdir -p "./build/rootfs"
 
-podman run --rm --name $pkg -v ./:/$pkg $pkg make install DESTDIR=/$pkg/build/rootfs
+podman run --rm --name $pkg -v $top_src_dir:/$pkg $pkg make install DESTDIR=/$pkg/build/rootfs
 
 # Note: don't use the -a (archive) option for rsync - don't preserve
 # file owner (-o) and groups (-g) (these should all be root), otherwise
