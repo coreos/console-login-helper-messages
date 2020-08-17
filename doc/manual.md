@@ -111,7 +111,7 @@ requested**, e.g. to install all of `issuegen`, `motdgen`, and
 
 Second, add a systemd preset to enable the issue/motd path units, as
 well as units for specific pieces of information (see
-[all available units](usr/lib/systemd/system)). E.g.:
+[all available units](/usr/lib/systemd/system)). E.g.:
 
 ```
 # /usr/lib/systemd/system-preset/40-console-login-helper-messages.preset
@@ -149,7 +149,7 @@ systemctl enable console-login-helper-messages-gensnippet-os-release.service
 systemctl enable console-login-helper-messages-gensnippet-ssh-keys.service
 ```
 
-Network interface information is shown via a [udev rule](usr/lib/rules/90-console-login-helper-messages-gensnippet_if.rules),
+Network interface information is shown via a [udev rule](/usr/lib/udev/rules.d/90-console-login-helper-messages-gensnippet_if.rules),
 and will display in `issue` by default as long as the `-issuegen`
 subpackage is installed and `-issuegen.path` shown above is enabled.
 
