@@ -6,7 +6,6 @@ PACKAGE = console-login-helper-messages
 PACKAGE_DIR = $(TOPSRCDIR)/$(PACKAGE)
 PACKAGESRC_URL = "https://src.fedoraproject.org/rpms/$(PACKAGE)"
 
-DESTDIR ?= /
 PREFIX ?= /usr
 SYSCONFDIR ?= /etc
 libexecdir ?= $(PREFIX)/libexec
@@ -26,7 +25,6 @@ install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/$(PACKAGE)/motd.d; \
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/$(PACKAGE)/issue.d; \
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/$(PACKAGE)/motd.d; \
-	mkdir -p $(DESTDIR)$(PREFIX)/share/$(PACKAGE); \
 	# external directories \
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/issue.d; \
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/motd.d; \
@@ -49,7 +47,9 @@ install: all
 	# 	  -t $(DESTDIR)$(PREFIX)/lib/udev/rules.d/; \
 	# symlinks \
 	ln -sf $(PREFIX)/share/$(PACKAGE)/profile.sh \
-		$(DESTDIR)$(SYSCONFDIR)/profile.d/$(PACKAGE)-profile.sh)
+		$(DESTDIR)$(SYSCONFDIR)/profile.d/$(PACKAGE)-profile.sh; \
+	ln -sf /run/$(PACKAGE)/40_$(PACKAGE).issue \
+		$(DESTDIR)$(SYSCONFDIR)/issue.d/40_$(PACKAGE).issue)
 
 # Generate rpms including the content committed at the current git checked-out
 # HEAD. The built RPM files are named as
