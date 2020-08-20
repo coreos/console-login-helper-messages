@@ -8,6 +8,7 @@ issue_snippets_path=${PKG_NAME}/issue.d
 ETC_SNIPPETS="/etc/${issue_snippets_path}"
 RUN_SNIPPETS="/run/${issue_snippets_path}"
 USR_LIB_SNIPPETS="/usr/lib/${issue_snippets_path}"
+STATIC_SNIPPET="/run/${PKG_NAME}/static.issue" # generated at startup
 
 # Make sure the `${RUN_SNIPPETS}` directory is created upfront,
 # as it may be written to by callers of this script.

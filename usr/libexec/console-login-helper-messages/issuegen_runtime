@@ -1,24 +1,24 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2019 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2020 Fedora CoreOS Authors. All rights reserved.
 # Copyright (c) 2013 The CoreOS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 # Modified from the CoreOS repository: https://github.com/coreos/init/blob/master/scripts/issuegen
 
-# Generate an issue to display before login at startup.
+# Generate an issue to display before login dynamically.
 
 set -e
 
 . /usr/lib/console-login-helper-messages/libutil.sh
 . /usr/lib/console-login-helper-messages/issuegen.defs
 
-# Generate an issue message from compiling the snippets in `/etc` and `/usr/lib`.
-# The generated issue messages will be appended to snippets generated during 
-# runtime.
-source_dirs=("${ETC_SNIPPETS}" "${USR_LIB_SNIPPETS}")
+# Generate a final issue message from compiling the snippets in the runtime directory.
+# Pick 40 as a prefix as other files can order around it easily.
+generated_file="/run/${PKG_NAME}/40_${PKG_NAME}.issue"
+source_dirs=("${RUN_SNIPPETS}")
 
-cat_via_tempfile "${STATIC_SNIPPET}" ".issue" "" "${source_dirs[@]}"
+cat_via_tempfile "${generated_file}" ".issue" "${STATIC_SNIPPET}" "${source_dirs[@]}"
 
 # Reload the agetty console upon generation of new issue snippet 
 /usr/sbin/agetty --reload

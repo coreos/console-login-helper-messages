@@ -8,6 +8,7 @@ motd_snippets_path="${PKG_NAME}/motd.d"
 ETC_SNIPPETS="/etc/${motd_snippets_path}"
 RUN_SNIPPETS="/run/${motd_snippets_path}"
 USR_LIB_SNIPPETS="/usr/lib/${motd_snippets_path}"
+STATIC_SNIPPET="/run/${PKG_NAME}/static.motd" # generated at startup
 
 # Parts of this script write to the `${RUN_SNIPPETS}` directory,
 # make sure it is created upfront.

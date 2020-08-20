@@ -6,17 +6,15 @@
 # found in the LICENSE file.
 # Modified from the CoreOS repository: https://github.com/coreos/init/blob/master/scripts/motdgen
 
-# Get updated system information and generate a motd
-# to display this at login.
+# Generate a motd to display before login at startup.
+
+set -e
 
 . /usr/lib/console-login-helper-messages/libutil.sh
 . /usr/lib/console-login-helper-messages/motdgen.defs
 
-set -e
+# Generate a motd from compiling the snippets in `/etc` and `/usr/lib`.
+# The generated motd will be appended to snippets generated during runtime.
+source_dirs=("${ETC_SNIPPETS}" "${USR_LIB_SNIPPETS}")
 
-# Generate a final motd from compiling the snippets.
-# Pick 40 as a prefix as other files can order around it easily.
-generated_file="/run/motd.d/40_${PKG_NAME}.motd"
-source_dirs=("${ETC_SNIPPETS}" "${RUN_SNIPPETS}" "${USR_LIB_SNIPPETS}")
-
-cat_via_tempfile "${generated_file}" ".motd" "${source_dirs[@]}"
+cat_via_tempfile "${STATIC_SNIPPET}" ".motd" "" "${source_dirs[@]}"

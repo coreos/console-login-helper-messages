@@ -10,10 +10,8 @@ PathChanged=/run/console-login-helper-messages/motd.d
 # Activate motdgen if snippets were dropped in the runtime directory
 # already before the path started.
 PathExistsGlob=/run/console-login-helper-messages/motd.d/*.motd
-# Activate motdgen if snippets exist in the host config directory.
-PathExistsGlob=/etc/console-login-helper-messages/motd.d/*.motd
 
-Unit=console-login-helper-messages-motdgen.service
+Unit=console-login-helper-messages-motdgen-runtime.service
 
 [Install]
 WantedBy=multi-user.target

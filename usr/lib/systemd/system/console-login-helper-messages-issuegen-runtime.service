@@ -1,0 +1,18 @@
+[Unit]
+Description=Generate console-login-helper-messages issue snippet dynamically
+Documentation=https://github.com/coreos/console-login-helper-messages
+After=console-login-helper-messages-issuegen.service
+
+[Service]
+Type=oneshot
+# This service expects to be started repeatedly after exiting (whenever a new
+# runtime issue snippet is dropped into the directory watched by
+# `console-login-helper-messages-issuegen.path`). `RemainAfterExit` is thus
+# explicitly set to `no`, so that the service can re-execute (otherwise,
+# `start` on this service after it has exited once before does not have any
+# effect).
+RemainAfterExit=no
+ExecStart=/usr/libexec/console-login-helper-messages/issuegen_runtime
+
+[Install]
+WantedBy=multi-user.target

@@ -25,16 +25,17 @@ write_via_tempfile() {
     ${mv_Z} "${staged_file}" "${generated_file}"
 }
 
-# Write concatenation of all files with a given suffix from a list of
-# source directories to a target file. The target file is the first
-# argument; suffix the second; and source directories the remaining,
-# searched in the given order in the list. Atomicity of the write to 
-# the target file is given by appending file contents to a tempfile
-# before moving to the target file.
+# Write concatenation of all files with a given suffix from a list of source 
+# directories to a target file and append another file. The target file is the 
+# first argument; suffix the second; file to append the third; and source 
+# directories the remaining, searched in the given order in the list. 
+# Atomicity of the write to the target file is given by appending file contents 
+# to a tempfile before moving to the target file.
 cat_via_tempfile() {
     local generated_file="$1"
     local filter_suffix="$2"
-    shift 2
+    local file_to_append="$3"
+    shift 3
     local source_dirs="$@"
     local staged_file="$(mktemp --tmpdir="${tempfile_dir}" "${tempfile_template}")"
     for source_dir in ${source_dirs[@]}; do
@@ -42,5 +43,6 @@ cat_via_tempfile() {
         # found in the source directory.
         cat "${source_dir}"/*"$filter_suffix" 2>/dev/null >> "${staged_file}" || :
     done
+    cat "${file_to_append}" 2>/dev/null >> "${staged_file}" || :
     ${mv_Z} "${staged_file}" "${generated_file}"
 }

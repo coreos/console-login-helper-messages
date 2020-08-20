@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2020 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2014 The CoreOS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# Modified from the CoreOS repository: https://github.com/coreos/init/blob/master/scripts/motdgen
+
+# Generate a motd to display at login dynamically.
+
+set -e
+
+. /usr/lib/console-login-helper-messages/libutil.sh
+. /usr/lib/console-login-helper-messages/motdgen.defs
+
+# Generate a final motd from compiling the snippets in the runtime directory.
+# Pick 40 as a prefix as other files can order around it easily.
+generated_file="/run/motd.d/40_${PKG_NAME}.motd"
+source_dirs=("${RUN_SNIPPETS}")
+
+cat_via_tempfile "${generated_file}" ".motd" "${STATIC_SNIPPET}" "${source_dirs[@]}"

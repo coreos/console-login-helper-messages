@@ -5,13 +5,7 @@ Before=systemd-user-sessions.service
 
 [Service]
 Type=oneshot
-# This service expects to be started repeatedly after exiting (whenever a new
-# runtime issue snippet is dropped into the directory watched by
-# `console-login-helper-messages-issuegen.path`). `RemainAfterExit` is thus
-# explicitly set to `no`, so that the service can re-execute (otherwise,
-# `start` on this service after it has exited once before does not have any
-# effect).
-RemainAfterExit=no
+# This service expects to be started only on startup.
 ExecStart=/usr/libexec/console-login-helper-messages/issuegen
 
 [Install]
