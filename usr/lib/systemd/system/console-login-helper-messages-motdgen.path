@@ -4,8 +4,8 @@ Documentation=https://github.com/coreos/console-login-helper-messages
 Before=systemd-user-sessions.service
 
 [Path]
-# Activate motdgen if new snippets are dropped into the runtime
-# directory.
+# Activate motdgen if new snippets are dropped into the private runtime
+# directory (if applicable).
 PathChanged=/run/console-login-helper-messages/motd.d
 
 Unit=console-login-helper-messages-motdgen.service

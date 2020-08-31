@@ -15,9 +15,12 @@ set -e
 SSH_DIR=/etc/ssh
 # Ensure `${SSH_DIR}` is created and can be searched without error.
 mkdir -p "${SSH_DIR}"
-SSH_KEY_OUTDIR="${RUN_SNIPPETS}"
+SSH_KEY_OUTDIR=${RUN_SNIPPETS}
 for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
-	ssh-keygen -l -f "${KEY_FILE}"
+    ssh-keygen -l -f "${KEY_FILE}"
 done \
     | awk '{print "SSH host key: " $2 " " $4}' \
     | write_via_tempfile "${SSH_KEY_OUTDIR}/21_ssh_host_keys.issue"
+
+# Reload the agetty console upon generation of new issue
+/usr/sbin/agetty --reload

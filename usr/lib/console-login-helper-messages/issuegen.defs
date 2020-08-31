@@ -4,11 +4,16 @@
 
 . /usr/lib/console-login-helper-messages/libutil.sh
 
-issue_snippets_path=${PKG_NAME}/issue.d
-ETC_SNIPPETS="/etc/${issue_snippets_path}"
-RUN_SNIPPETS="/run/${issue_snippets_path}"
-USR_LIB_SNIPPETS="/usr/lib/${issue_snippets_path}"
+private_issue_snippets_path=${PKG_NAME}/issue.d
+ETC_SNIPPETS="/etc/${private_issue_snippets_path}"
+USR_LIB_SNIPPETS="/usr/lib/${private_issue_snippets_path}"
+# Set correct runtime directory.
+if [ ${USE_PUBLIC_RUN_DIR} == "false" ]; then
+    RUN_SNIPPETS="/run/${private_issue_snippets_path}"
+else
+    RUN_SNIPPETS="/run/issue.d"
+fi
 
-# Make sure the `${RUN_SNIPPETS}` directory is created upfront,
-# as it may be written to by callers of this script.
+# Make sure the runtime directory is created upfront, as it may be written to 
+# by callers of this script.
 mkdir -p "${RUN_SNIPPETS}"

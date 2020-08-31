@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2019 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2020 Fedora CoreOS Authors. All rights reserved.
 # Copyright (c) 2014 The CoreOS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -17,6 +17,12 @@ set -e
 # Generate a final motd from compiling the snippets.
 # Pick 40 as a prefix as other files can order around it easily.
 generated_file="/run/motd.d/40_${PKG_NAME}.motd"
-source_dirs=("${ETC_SNIPPETS}" "${RUN_SNIPPETS}" "${USR_LIB_SNIPPETS}")
+if [ ${USE_PUBLIC_RUN_DIR} == "false" ]; then
+    source_dirs=("${ETC_SNIPPETS}" "${RUN_SNIPPETS}" "${USR_LIB_SNIPPETS}")
+else
+    # If using public runtime directories, motdgen may still be triggered by
+    # users placing files in the /etc or /usr/lib directories.
+    source_dirs=("${ETC_SNIPPETS}" "${USR_LIB_SNIPPETS}")
+fi
 
 cat_via_tempfile "${generated_file}" ".motd" "${source_dirs[@]}"

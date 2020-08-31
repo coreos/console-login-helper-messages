@@ -65,8 +65,10 @@ case "${action}" in
             echo "${interface}: \\4{${interface}} \\6{${interface}}" \
                 | write_via_tempfile ${outfile}
         fi
+        /usr/sbin/agetty --reload
         ;;
     down)
         rm -f ${outfile}
+        /usr/sbin/agetty --reload
         ;;
 esac

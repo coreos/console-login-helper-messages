@@ -4,11 +4,16 @@
 
 . /usr/lib/console-login-helper-messages/libutil.sh
 
-motd_snippets_path="${PKG_NAME}/motd.d"
-ETC_SNIPPETS="/etc/${motd_snippets_path}"
-RUN_SNIPPETS="/run/${motd_snippets_path}"
-USR_LIB_SNIPPETS="/usr/lib/${motd_snippets_path}"
+private_motd_snippets_path="${PKG_NAME}/motd.d"
+ETC_SNIPPETS="/etc/${private_motd_snippets_path}"
+USR_LIB_SNIPPETS="/usr/lib/${private_motd_snippets_path}"
+# Set correct runtime directory.
+if [ ${USE_PUBLIC_RUN_DIR} == "false" ]; then
+    RUN_SNIPPETS="/run/${private_motd_snippets_path}"
+else
+    RUN_SNIPPETS="/run/motd.d"
+fi
 
-# Parts of this script write to the `${RUN_SNIPPETS}` directory,
-# make sure it is created upfront.
+# Make sure the runtime directory is created upfront, as it may be written to 
+# by callers of this script.
 mkdir -p "${RUN_SNIPPETS}"

@@ -3,7 +3,7 @@
 # Get updated system information, including SSH keys and network devices,
 # and generate an issue to display before login.
 
-# Copyright (c) 2019 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2020 Fedora CoreOS Authors. All rights reserved.
 # Copyright (c) 2013 The CoreOS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -14,12 +14,16 @@ set -e
 . /usr/lib/console-login-helper-messages/libutil.sh
 . /usr/lib/console-login-helper-messages/issuegen.defs
 
+if [ ${USE_PUBLIC_RUN_DIR} == "false" ]; then
+    generated_file="/run/${PKG_NAME}/40_${PKG_NAME}.issue"
+    source_dirs=("${ETC_SNIPPETS}" "${RUN_SNIPPETS}" "${USR_LIB_SNIPPETS}")
+else
+    # If using public runtime directories, issuegen may still be triggered by
+    # users placing files in the /etc or /usr/lib directories.
+    generated_file="/run/issue.d/40_${PKG_NAME}.issue"
+    source_dirs=("${ETC_SNIPPETS}" "${USR_LIB_SNIPPETS}")
+fi
+
 # Generate a final issue message from compiling the snippets.
 # Pick 40 as a prefix as other files can order around it easily.
-generated_file="/run/${PKG_NAME}/40_${PKG_NAME}.issue"
-source_dirs=("${ETC_SNIPPETS}" "${RUN_SNIPPETS}" "${USR_LIB_SNIPPETS}")
-
 cat_via_tempfile "${generated_file}" ".issue" "${source_dirs[@]}"
-
-# Reload the agetty console upon generation of new issue snippet 
-/usr/sbin/agetty --reload

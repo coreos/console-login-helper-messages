@@ -11,6 +11,22 @@ PKG_NAME="console-login-helper-messages"
 # devices or network interfaces with custom names.
 USE_UDEV_FOR_NETWORK_SNIPPETS=false
 
+# Check util-linux version, and set whether or not to use public output directories.
+# If not on an RPM-based system, then just continue keeping the output
+# directories at their defaults (private).
+USE_PUBLIC_RUN_DIR=false
+if command -v rpm >/dev/null; then
+    UTIL_LINUX_VERSION=$(rpm -q --queryformat="%{version}" util-linux)
+    UTIL_LINUX_MAJOR_VERSION=$(echo ${UTIL_LINUX_VERSION} | awk -F '.' '{print $1}')
+    UTIL_LINUX_MINOR_VERSION=$(echo ${UTIL_LINUX_VERSION} | awk -F '.' '{print $2}')
+    # Check that util-linux-2.36 or higher is installed, which includes necessary
+    # support for /run/issue.d: https://github.com/karelzak/util-linux/commit/e327a7acd60c736c9628264bea844ddac1802a4a
+    # and /run/motd.d: https://github.com/karelzak/util-linux/commit/5a528e2c6ff9735266fc2607c359e925b074bf2c
+    if [[ ${UTIL_LINUX_MAJOR_VERSION} -gt 2 ]] || [[ ${UTIL_LINUX_MAJOR_VERSION} -eq 2 && ${UTIL_LINUX_MINOR_VERSION} -ge 36 ]]; then
+        USE_PUBLIC_RUN_DIR=true
+    fi
+fi
+
 tempfile_template="${PKG_NAME}.XXXXXXXXXX.tmp"
 # Use same filesystem, under /run, as where snippets are generated, so
 # that rename operations through `mv` are atomic.
