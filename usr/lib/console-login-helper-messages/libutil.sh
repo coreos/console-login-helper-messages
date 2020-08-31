@@ -11,6 +11,11 @@ PKG_NAME="console-login-helper-messages"
 # devices or network interfaces with custom names.
 USE_UDEV_FOR_NETWORK_SNIPPETS=false
 
+# On distributions that have util-linux >= 2.36, public runtime directories
+# (e.g. `/run/motd.d`) can be used. Use this hardcoded variable so we can
+# keep the test files the same across the two branches of c-l-h-m. 
+USE_PUBLIC_RUN_DIR=true
+
 tempfile_template="${PKG_NAME}.XXXXXXXXXX.tmp"
 # Use same filesystem, under /run, as where snippets are generated, so
 # that rename operations through `mv` are atomic.

@@ -11,7 +11,7 @@ set -e
 # Write distro release information to MOTD, in distro-specific color.
 
 . /usr/lib/console-login-helper-messages/libutil.sh
-. /usr/lib/console-login-helper-messages/motdgen.defs
+. /usr/lib/console-login-helper-messages/motd.defs
 
 source /usr/lib/os-release
 OS_RELEASE_OUTDIR="${RUN_SNIPPETS}"

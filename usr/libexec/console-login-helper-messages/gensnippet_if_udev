@@ -20,13 +20,15 @@ if [ "$USE_UDEV_FOR_NETWORK_SNIPPETS" == "false" ]; then
 fi
 
 # Add/remove data from udev rules.	
-outfile="${RUN_SNIPPETS}/22_${INTERFACE}.issue"	
+outfile="${RUN_SNIPPETS}/22_${CLHM_FILE_MARKER}_${INTERFACE}.issue"	
 case "${ACTION}" in	
     add)	
-        echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" \
-            | write_via_tempfile ${outfile}	
+        echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" \	
+            | write_via_tempfile ${outfile}
+        /usr/sbin/agetty --reload
         ;;	
     remove)	
-        rm -f ${outfile}	
+        rm -f ${outfile}
+        /usr/sbin/agetty --reload
         ;;	
 esac
