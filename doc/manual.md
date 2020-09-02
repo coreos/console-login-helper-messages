@@ -4,66 +4,36 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Architecture overview - issuegen/motgen](#architecture-overview---issuegenmotgen)
+- [Architecture overview](#architecture-overview)
 - [Installation](#installation)
   - [Packaging](#packaging)
   - [Integrating into a distribution](#integrating-into-a-distribution)
+    - [Upstream tools' requirements](#upstream-tools-requirements)
 - [Common operations](#common-operations)
   - [Enabling messages](#enabling-messages)
   - [Appending messages](#appending-messages)
   - [Disabling messages](#disabling-messages)
-    - [Silencing a generated message without disabling](#silencing-a-generated-message-without-disabling)
-    - [Finer-grained disabling](#finer-grained-disabling)
 - [Troubleshooting](#troubleshooting)
   - [Recreating the symlinks](#recreating-the-symlinks)
-  - [Regenerating the messages](#regenerating-the-messages)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Architecture overview - issuegen/motgen
+## Architecture overview
 
-Two units, `console-login-helper-messages-issuegen.path` and
-`console-login-helper-messages-motdgen.path`, when enabled, start on
-boot and monitor the directories
-`/run/console-login-helper-messages/issue.d` and
-`/run/console-login-helper-messages/motd.d` for changes. If a file
-(snippet) with extension `.issue`/`.motd` is written in the respective
-directory, `-issuegen.path` or `-motdgen.path` triggers and runs
-`-issuegen.service` or `-motdgen.service`, which concatenates all
-snippets in the directories
-`/{etc,run,usr/lib}/console-login-helper-messages/issue.d` or
-`/{etc,run,usr/lib}/console-login-helper-messages/motd.d`, and writes
-the compiled ("generated") output to a file that either the serial
-console `agetty` (for issue) or the SSH login message (motd) will read.
+By default, `console-login-helper-messages` provides several units and scripts
+for displaying helpful messages before or at login. Currently, the following 
+messages are displayed:
+  - SSH keys (before login)
+  - Network interface information (before login)
+  - OS release information (after login)
+  - Failed systemd units (after login)
 
-On systems where generated runtime information snippets are not natively
-supported in `agetty` or `sshd` (due to having lower versions of these
-programs available), external services may instead write the information
-to display to one of the
-`/run/console-login-helper-messages/{issue,motd}.d`, depending on if the
-information should be displayed before login (issue) or at login (motd).
-
-Some default units and rules that make use of `-motdgen.service` and
-`-issuegen.service` are included in `console-login-helper-messages`.
-These include the OS release information and SSH keys snippet
-generation services:
-
-- console-login-helper-messages-gensnippet-os-release.service (motdgen)
-- console-login-helper-messages-gensnippet-ssh-keys.service (issuegen)
-
-The "gensnippet" units do nothing more than source the information that
-needs to be displayed in a motd or issue, and write a file in one of the
-`/run/console-login-helper-messages/{issue,motd}.d` directories. Once
-a new file is written, console-login-helper-messages dynamically
-updates the generated motd or issue message shown at SSH login / on
-the serial console.
-
-Files may also be dropped into the runtime directories above through
-other means, such as udev rules; it need not be a systemd service
-doing this. The purpose of the issuegen/motdgen units themselves is only
-to regenerate a final compiled issue/MOTD in response to files being
-dropped into their source runtime directories
-`/run/console-login-helper-messages/{issue,motd}.d`.
+The following default units and scripts are in charge of generating the information
+that needs to be displayed in a MOTD or issue, and placing the sourced information to
+the public runtime directories `/run/{issue,motd}.d`:
+  - `console-login-helper-messages-gensnippet-ssh-keys.service` (SSH keys)
+  - `etc/NetworkManager/dispatcher.d/90-console-login-helper-messages-gensnippet-if` (Network interface info)
+  - `console-login-helper-messages-gensnippet-os-release.service` (OS release info)
 
 ## Installation
 
@@ -89,7 +59,7 @@ subpackages in the following way:
 | console-login-helper-messages-profile  | messages shown using /etc/profile.d script, shown on login to bash terminal (failed systemd units) |
 
 The `install` target of the [Makefile](../Makefile) is the source of truth
-on where files should be placed, and which symlinks should be created.
+on where files should be placed.
 
 ### Integrating into a distribution
 
@@ -109,39 +79,64 @@ requested**, e.g. to install all of `issuegen`, `motdgen`, and
 - console-login-helper-messages-profile
 ```
 
-Second, add a systemd preset to enable the issue/motd path and service 
-units, as well as units for specific pieces of information (see
-[all available units](/usr/lib/systemd/system)). E.g.:
+Second, add a systemd preset to enable units for specific pieces of information
+(see [all available units](/usr/lib/systemd/system)).
+E.g.:
 
 ```
 # /usr/lib/systemd/system-preset/40-console-login-helper-messages.preset
 
-enable console-login-helper-messages-issuegen.service
-enable console-login-helper-messages-motdgen.service
-enable console-login-helper-messages-issuegen.path
-enable console-login-helper-messages-motdgen.path
 enable console-login-helper-messages-gensnippet-os-release.service
 enable console-login-helper-messages-gensnippet-ssh-keys.service
+```
+
+#### Upstream tools' requirements
+The following conditions must be met for displaying the issue and motd files
+sourced by console-login-helper-messages:
+
+| package          | version      | reason |
+| ---------------- | ------------ | ------ |
+| `util-linux`     | >= 2.36      | `agetty` and `login` programs need to be able to read from `issue.d` and `motd.d` directories |
+| `pam`            | >= 1.3.1-15  | `pam_motd` PAM module needs to be able to read from `motd.d` directory |
+| `selinux-policy` | >= 3.14.3-23 | allow `/run/motd.d` location to be usable |
+
+To enable displaying issue snippets _before_ login (via the _console_),
+let `/etc/issue.d` be one of the directories that 
+[`agetty`](https://man7.org/linux/man-pages/man8/agetty.8.html)
+reads from. `agetty` reads from `/etc/issue.d` if `/etc/issue` exists. Thus, in
+order for issue files generated by `console-login-helper-messages` to be
+displayed properly, please ensure that `/etc/issue` exists.
+Note: As of `systemd-246.6`, it is virtually impossible to remove `/etc/issue`
+on systemd distros. https://github.com/systemd/systemd/commit/062666c7c452711f3e38efdec0c2b952ced64d06
+
+To enable displaying MOTD snippets _after_ login via the _console_, in
+`/etc/login.defs`, make sure that `/run/motd.d` is one of the directories that 
+[`login`](https://man7.org/linux/man-pages/man1/login.1.html)
+reads from. The default value is 
+`"/usr/share/misc/motd:/run/motd:/etc/motd"`.
+
+Example:
+```
+MOTD_FILE=/run/motd.d
+```
+
+To enable displaying MOTD snippets _after_ login via _ssh_, in `/etc/pam.d/login`,
+make sure that `/run/motd.d` is one of the directories that
+[pam_motd](https://man7.org/linux/man-pages/man8/pam_motd.8.html)
+reads from. The default is `/etc/motd.d:/run/motd.d:/usr/lib/motd.d`, so no further
+configuration is necessary if defaults have not been changed.
+
+Example:
+```
+session  optional  pam_motd.so motd_dir=/run/motd.d
 ```
 
 ## Common operations
 
 ### Enabling messages
 
-The following enables the `motd` and `issue` messages to regenerate at
-boot, and throughout the system runtime:
-
-```
-systemctl enable \
-  console-login-helper-messages-issuegen.path \
-  console-login-helper-messages-motdgen.path
-```
-
-One or the other may also be enabled at a time.
-
 Generation of individual information snippets, such as OS release
-information and SSH keys, can be individually as follows (provided
-`issuegen` and `motdgen` are enabled as needed):
+information and SSH keys, can be enabled individually as follows:
 
 ```
 # read by motdgen
@@ -153,8 +148,9 @@ systemctl enable console-login-helper-messages-gensnippet-ssh-keys.service
 
 Network interface information is shown via a 
 [NetworkManager Dispatcher script](/etc/NetworkManager/dispatcher.d/90-console-login-helper-messages-gensnippet_if),
-and will display in `issue` by default as long as the `-issuegen`
-subpackage is installed and `-issuegen.path` shown above is enabled.
+and will display in `issue` by default. If using private runtime directories, 
+the `-issuegen` subpackage must also be installed and `-issuegen.path` shown 
+above must be enabled.
 
 On systems where NetworkManager is unavailable, udev rules could be used to 
 detect new interfaces being added/removed. Udev rules are disabled by default and
@@ -165,58 +161,34 @@ The `profile` messages are enabled by default by a symlink from
 
 ### Appending messages
 
-- To have a message appended to the same `motd` file generated by 
-  `console-login-helper-messages-motdgen`, the files to append can be dropped in 
-  `/etc/console-login-helper-messages/motd.d/` or `/run/console-login-helper-messages/motd.d/`
-- Similarly, `issue` messages to append to the same `issue` file generated by 
-  `console-login-helper-messages-issuegen` can be dropped in 
-  `/etc/console-login-helper-messages/issue.d/` or `/run/console-login-helper-messages/issue.d/`
+Appending messages via console-login-helper-messages is no longer supported.
+However, provided that the configurations described in 
+[Integrating into a distribution](#integrating-into-a-distribution) are configured
+and the right versions of upstream tools are installed, then:
 
-Files dropped under the `/etc` location above are expected to be
-unchanged during system runtime and are read only during boot. Files
-dropped under the `/run` location above will trigger the
-issuegen/motdgen `.path` unit, and the issue/motd message will be
-updated.
+- To have a message appended to the MOTD, the files (ending in `.motd`) to append
+  can be dropped in `/etc/motd.d/`.
+- To have a message appended to the issue, the files (ending in `.issue`)
+  to append can be dropped in `/etc/issue.d/`.
 
 ### Disabling messages
-
-The following disables the `motd` and `issue`  messages from regenerating:
-
-```
-systemctl disable \
-  console-login-helper-messages-issuegen.path \
-  console-login-helper-messages-motdgen.path
-```
-
-The `profile` messages can be disabled only by uninstalling
-`console-login-helper-messages-profile`.
-
-#### Silencing a generated message without disabling
-
-If using `openssh` with `pam_motd` (default on Fedora) MOTD messages can
-be silenced without completely disabling.
-
-- Silence the `motd` generated by `console-login-helper-messages-motdgen.service`
-  using a null symlink as follows:
-
-    ```
-    ln -s /dev/null /etc/motd.d/40_console-login-helper-messages.motd
-    ```
-- Currently, the `issue` generated by `console-login-helper-messages-issuegen.service` 
-  can be silenced only by uninstalling `console-login-helper-messages-issuegen`.
-
-#### Finer-grained disabling
 
 The default OS release information and SSH keys may be individually
 disabled from showing in the motd/issue individually:
 
 ```
-# disable from motd
+# disable OS release information from motd
 systemctl disable console-login-helper-messages-gensnippet-os-release.service
 
-# disable from issue
+# disable SSH keys from issue
 systemctl disable console-login-helper-messages-gensnippet-ssh-keys.service
 ```
+
+The `profile` messages can be disabled only by uninstalling
+`console-login-helper-messages-profile`.
+
+The network interface information can only be disabled by uninstalling
+`console-login-helper-messages-issue`.
 
 ## Troubleshooting
 
@@ -228,16 +200,6 @@ command can be used:
 
 ```
 systemd-tmpfiles --create
-```
-
-### Regenerating the messages
-
-To manually regenerate the `motd` or `issue`, the following commands
-can be used respectively:
-
-```
-systemctl start console-login-helper-messages-motdgen.service
-systemctl start console-login-helper-messages-issuegen.service
 ```
 
 Otherwise, please [open an issue](https://github.com/coreos/console-login-helper-messages/issues/new)
