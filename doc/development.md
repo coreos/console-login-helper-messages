@@ -13,6 +13,11 @@ console-login-helper-messages source files and testing changes.
 - [Building RPMs from Fedora SCM](#building-rpms-from-fedora-scm)
   - [Building RPMs (without container)](#building-rpms-without-container)
 - [Testing RPM builds in a VM](#testing-rpm-builds-in-a-vm)
+- [Kola tests](#kola-tests)
+  - [Building a FCOS image with the new changes using CoreOS Assembler `build-fast`](#building-a-fcos-image-with-the-new-changes-using-coreos-assembler-build-fast)
+  - [Building a FCOS image with the new changes using CoreOS Assembler overrides](#building-a-fcos-image-with-the-new-changes-using-coreos-assembler-overrides)
+  - [Running the tests](#running-the-tests)
+  - [Adding Kola tests](#adding-kola-tests)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -119,3 +124,57 @@ To iterate while the VM is running, after committing changes locally:
 cd hack/
 ./clean_rpm.sh && ./build_rpm.sh && ./install_vm_rpms.sh
 ```
+
+## Kola tests
+
+#### Building a FCOS image with the new changes using CoreOS Assembler `build-fast`
+Please refer to the CoreOS Assembler's 
+[Kola external tests README](https://github.com/coreos/coreos-assembler/blob/master/mantle/kola/README-kola-ext.md#fast-build-and-iteration-on-your-projects-tests) 
+for instructions on fast-building a qemu image for testing.
+
+#### Building a FCOS image with the new changes using CoreOS Assembler overrides
+
+Please refer to the CoreOS Assembler 
+[README](https://github.com/coreos/coreos-assembler/blob/master/README.md#getting-started---prerequisites) 
+and [README-devel](https://github.com/coreos/coreos-assembler/blob/master/README-devel.md#using-overrides) 
+for the most up-to-date instructions on how to build a FCOS image and use 
+overrides, respectively.
+
+We can set `DESTDIR=` in `make install` to be the `overrides/rootfs` directory 
+in a FCOS configuration repository to build a FCOS image that contains the new 
+changes to console-login-helper-messages. 
+
+#### Enabling new systemd units (if necessary)
+
+Make sure that all of console-login-helper-messages' systemd units are enabled.
+
+For example, if the new changes involve adding a new systemd unit 
+`console-login-helper-messages-new-unit.service`, then add the line
+```
+enable console-login-helper-messages-new-unit.service
+```
+in the FCOS configuration repository's systemd system-preset files, specifically
+https://github.com/coreos/fedora-coreos-config/blob/testing-devel/overlay.d/05core/usr/lib/systemd/system-preset/40-coreos.preset.
+
+#### Running the tests
+
+It is possible to run external Kola tests by specifying the path to the tests' 
+location and which tests to run, using `kola run`'s `-E` option.
+
+Example (run all tests):
+```
+cosa kola run -p qemu --qemu-image path/to/qcow2 -E /path/to/console-login-helper-messages/ 'ext.console-login-helper-messages.*'
+```
+
+Example (run only the basic tests):
+```
+cosa kola run -p qemu --qemu-image path/to/qcow2 -E /path/to/console-login-helper-messages/ 'ext.console-login-helper-messages.basic.*'
+```
+
+More detailed and up-to-date information can be found in the 
+Kola external tests' [README](https://github.com/coreos/coreos-assembler/blob/master/mantle/kola/README-kola-ext.md).
+
+#### Adding Kola tests
+Please refer to the CoreOS Assembler's 
+[Kola external tests README](https://github.com/coreos/coreos-assembler/blob/master/mantle/kola/README-kola-ext.md#quick-start) 
+for instructions on adding additional tests.
