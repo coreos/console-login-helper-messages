@@ -12,7 +12,7 @@
 set -e
 
 . /usr/lib/console-login-helper-messages/libutil.sh
-. /usr/lib/console-login-helper-messages/issuegen.defs
+. /usr/lib/console-login-helper-messages/issue.defs
 
 if [ ${USE_PUBLIC_RUN_DIR} == "false" ]; then
     generated_file="/run/${PKG_NAME}/40_${PKG_NAME}.issue"

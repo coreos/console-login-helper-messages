@@ -13,7 +13,7 @@
 set -e
 
 . /usr/lib/console-login-helper-messages/libutil.sh
-. /usr/lib/console-login-helper-messages/issuegen.defs
+. /usr/lib/console-login-helper-messages/issue.defs
 
 # If using udev, exit to avoid printing duplicate information.
 if [ USE_UDEV_FOR_NETWORK_SNIPPETS == "true" ]; then

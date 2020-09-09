@@ -13,7 +13,3 @@ if [ ${USE_PUBLIC_RUN_DIR} == "false" ]; then
 else
     RUN_SNIPPETS="/run/issue.d"
 fi
-
-# Make sure the runtime directory is created upfront, as it may be written to 
-# by callers of this script.
-mkdir -p "${RUN_SNIPPETS}"

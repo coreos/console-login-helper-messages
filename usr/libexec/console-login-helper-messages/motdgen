@@ -10,7 +10,7 @@
 # to display this at login.
 
 . /usr/lib/console-login-helper-messages/libutil.sh
-. /usr/lib/console-login-helper-messages/motdgen.defs
+. /usr/lib/console-login-helper-messages/motd.defs
 
 set -e
 
