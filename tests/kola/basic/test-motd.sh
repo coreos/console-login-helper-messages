@@ -6,7 +6,7 @@ set -xeuo pipefail
 
 . ${KOLA_EXT_DATA}/test-util.sh
 
-for unit in motdgen.service motdgen.path gensnippet-os-release.service; do
+for unit in motdgen.path gensnippet-os-release.service; do
   if ! systemctl is-enabled ${PKG_NAME}-${unit}; then
     fatal "unit ${unit} not enabled"
   fi

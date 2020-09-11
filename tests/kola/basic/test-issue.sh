@@ -13,7 +13,7 @@ faketty () {
     script -c "$(printf "%q " "$@")" "${outfile}"
 }
 
-for unit in issuegen.service issuegen.path gensnippet-ssh-keys.service; do
+for unit in issuegen.path gensnippet-ssh-keys.service; do
   if ! systemctl is-enabled ${PKG_NAME}-${unit}; then
     fatal "unit ${unit} not enabled"
   fi
