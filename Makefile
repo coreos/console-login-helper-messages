@@ -30,6 +30,9 @@ install: all
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/motd.d; \
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/profile.d; \
 	# install \
+	# udev rules are not installed by default. \
+	# install -DZ -m 0644 usr/lib/udev/rules.d/* \
+	# 	  -t $(DESTDIR)$(PREFIX)/lib/udev/rules.d/; \
 	install -DZ -m 0644 usr/lib/$(PACKAGE)/* \
 		-t $(DESTDIR)$(PREFIX)/lib/$(PACKAGE)/; \
 	install -DZ -m 0644 usr/lib/systemd/system/* \
@@ -41,15 +44,7 @@ install: all
 	install -DZ -m 0644 usr/share/$(PACKAGE)/* \
 		-t $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/; \
 	install -DZ -m 0744 etc/NetworkManager/dispatcher.d/* \
-		-t $(DESTDIR)$(SYSCONFDIR)/NetworkManager/dispatcher.d; \
-	# udev rules are not installed by default. \
-	# install -DZ -m 0644 usr/lib/udev/rules.d/* \
-	# 	  -t $(DESTDIR)$(PREFIX)/lib/udev/rules.d/; \
-	# symlinks \
-	ln -sf $(PREFIX)/share/$(PACKAGE)/profile.sh \
-		$(DESTDIR)$(SYSCONFDIR)/profile.d/$(PACKAGE)-profile.sh; \
-	ln -sf /run/$(PACKAGE)/40_$(PACKAGE).issue \
-		$(DESTDIR)$(SYSCONFDIR)/issue.d/40_$(PACKAGE).issue)
+		-t $(DESTDIR)$(SYSCONFDIR)/NetworkManager/dispatcher.d)
 
 # Generate rpms including the content committed at the current git checked-out
 # HEAD. The built RPM files are named as
