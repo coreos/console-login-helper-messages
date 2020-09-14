@@ -1,0 +1,7 @@
+// Documentation: https://github.com/coreos/coreos-ci/blob/master/README-upstream-ci.md
+
+cosaPod {
+    checkout scm
+    fcosBuild(skipKola: true, make: true)
+    fcosKola(skipUpgrade: true, extraArgs: "ext.*")
+}
