@@ -109,13 +109,15 @@ requested**, e.g. to install all of `issuegen`, `motdgen`, and
 - console-login-helper-messages-profile
 ```
 
-Second, add a systemd preset to enable the issue/motd path units, as
-well as units for specific pieces of information (see
+Second, add a systemd preset to enable the issue/motd path and service 
+units, as well as units for specific pieces of information (see
 [all available units](/usr/lib/systemd/system)). E.g.:
 
 ```
 # /usr/lib/systemd/system-preset/40-console-login-helper-messages.preset
 
+enable console-login-helper-messages-issuegen.service
+enable console-login-helper-messages-motdgen.service
 enable console-login-helper-messages-issuegen.path
 enable console-login-helper-messages-motdgen.path
 enable console-login-helper-messages-gensnippet-os-release.service

@@ -7,11 +7,6 @@ Before=systemd-user-sessions.service
 # Activate issuegen if new snippets are dropped into the runtime
 # directory.
 PathChanged=/run/console-login-helper-messages/issue.d
-# Activate issuegen if snippets were dropped in the runtime directory
-# already before the path started.
-PathExistsGlob=/run/console-login-helper-messages/issue.d/*.issue
-# Activate issuegen if snippets exist in the host config directory.
-PathExistsGlob=/etc/console-login-helper-messages/issue.d/*.issue
 
 Unit=console-login-helper-messages-issuegen.service
 
