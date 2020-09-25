@@ -1,6 +1,10 @@
 [Unit]
 Description=Generate console-login-helper-messages motd snippet
 Documentation=https://github.com/coreos/console-login-helper-messages
+After=console-login-helper-messages-motdgen.path
+# Only run if source directories have `.motd` files.
+ConditionPathExistsGlob=|/run/console-login-helper-messages/motd.d/*.motd
+ConditionPathExistsGlob=|/etc/console-login-helper-messages/motd.d/*.motd
 
 [Service]
 Type=oneshot
