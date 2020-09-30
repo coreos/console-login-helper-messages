@@ -4,7 +4,7 @@
 
 # Only print for interactive shells.
 if [[ $- == *i* ]]; then
-	FAILED=$(systemctl list-units --state=failed --no-legend)
+	FAILED=$(systemctl list-units --state=failed --no-legend --plain)
 
 	if [[ ! -z "${FAILED}" ]]; then
 		COUNT=$(wc -l <<<"${FAILED}")
