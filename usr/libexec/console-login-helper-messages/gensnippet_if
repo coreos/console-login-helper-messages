@@ -41,6 +41,11 @@ is_iface_backed_by_real_device() {
     # Check if device has any subordinate devices that are backed by a real 
     # device, recursively.
     for subifacedir in ${iface}/lower_*; do
+        # Bash still runs the loop if the wildcard does not match anything.
+        # Skip non-existent directories.
+        if [ ! -e "$subifacedir" ]; then
+            break
+        fi
         subiface=$(readlink -f ${subifacedir})
         if is_iface_backed_by_real_device ${subiface}; then
             return 0
