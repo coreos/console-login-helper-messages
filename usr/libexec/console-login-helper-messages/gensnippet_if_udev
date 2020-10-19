@@ -15,7 +15,7 @@ set -e
 . /usr/lib/console-login-helper-messages/issuegen.defs
 
 # If not using udev, exit.
-if [ USE_UDEV_FOR_NETWORK_SNIPPETS == "false" ]; then
+if [ "$USE_UDEV_FOR_NETWORK_SNIPPETS" == "false" ]; then
     return 0
 fi
 
@@ -23,7 +23,7 @@ fi
 outfile="${RUN_SNIPPETS}/22_${INTERFACE}.issue"	
 case "${ACTION}" in	
     add)	
-        echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" \	
+        echo "${INTERFACE}: \\4{${INTERFACE}} \\6{${INTERFACE}}" \
             | write_via_tempfile ${outfile}	
         ;;	
     remove)	
