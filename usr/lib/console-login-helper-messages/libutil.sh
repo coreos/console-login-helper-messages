@@ -50,3 +50,11 @@ cat_via_tempfile() {
     done
     ${mv_Z} "${staged_file}" "${generated_file}"
 }
+
+# See https://github.com/coreos/console-login-helper-messages/issues/87
+# We want to avoid service start limits and throttle the rate at
+# which we regenerate.  This ensures the service starts at most once
+# per second.
+ratelimit() {
+    sleep 1
+}

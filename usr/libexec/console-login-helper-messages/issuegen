@@ -23,3 +23,5 @@ cat_via_tempfile "${generated_file}" ".issue" "${source_dirs[@]}"
 
 # Reload the agetty console upon generation of new issue snippet 
 /usr/sbin/agetty --reload
+
+ratelimit

@@ -20,3 +20,5 @@ generated_file="/run/motd.d/40_${PKG_NAME}.motd"
 source_dirs=("${ETC_SNIPPETS}" "${RUN_SNIPPETS}" "${USR_LIB_SNIPPETS}")
 
 cat_via_tempfile "${generated_file}" ".motd" "${source_dirs[@]}"
+
+ratelimit
