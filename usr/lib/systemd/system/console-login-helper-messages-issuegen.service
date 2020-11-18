@@ -6,6 +6,10 @@ After=console-login-helper-messages-issuegen.path
 # Only run if source directories have `.issue` files.
 ConditionPathExistsGlob=|/run/console-login-helper-messages/issue.d/*.issue
 ConditionPathExistsGlob=|/etc/console-login-helper-messages/issue.d/*.issue
+# Set rate limit to twice per second just in case. With `ExecStartPre=` below,
+# we should not have any systemd 'start-limit-hit' failures.
+StartLimitIntervalSec=1
+StartLimitBurst=2
 
 [Service]
 Type=oneshot
@@ -16,6 +20,11 @@ Type=oneshot
 # `start` on this service after it has exited once before does not have any
 # effect).
 RemainAfterExit=no
+# See https://github.com/coreos/console-login-helper-messages/issues/87
+# We want to avoid service start limits and throttle the rate at
+# which we regenerate.  This ensures the service starts at most once
+# per second.
+ExecStartPre=sleep 1
 ExecStart=/usr/libexec/console-login-helper-messages/issuegen
 
 [Install]
