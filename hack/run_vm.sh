@@ -9,7 +9,7 @@ mkdir -p $vmdir
 
 image_path="$1"
 
-rm $vmdir/*
+rm -f $vmdir/*
 sshkey_path="$vmdir/id_rsa"
 ssh-keygen -t rsa -f "$sshkey_path" -q -N ""
 ssh_pubkey=$(cat "${sshkey_path}.pub")
