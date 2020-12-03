@@ -14,6 +14,10 @@ mkdir -p "./build/rootfs"
 
 podman run --rm --name $pkg -v $top_src_dir:/$pkg $pkg make install DESTDIR=/$pkg/build/rootfs
 
+# Remove console-login-helper-messages from VM if already exists
+ssh $ssh_opts -i $sshkey_path -p $ssh_port root@localhost \
+    dnf remove -y console-login-helper-messages
+
 # Note: don't use the -a (archive) option for rsync - don't preserve
 # file owner (-o) and groups (-g) (these should all be root), otherwise
 # systemd-tmpfiles appears to run into problems creating the runtime
