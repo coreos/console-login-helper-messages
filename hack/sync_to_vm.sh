@@ -11,6 +11,8 @@ ssh_opts="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
 # rootfs to install to, mounted in the container
 mkdir -p "./build/rootfs"
+# Remove artifacts from previous builds
+rm -rf "./build/rootfs/*"
 
 podman run --rm --name $pkg -v $top_src_dir:/$pkg $pkg make install DESTDIR=/$pkg/build/rootfs
 
@@ -28,8 +30,6 @@ rsync -rlpdv -e "ssh $ssh_opts -i $sshkey_path -p $ssh_port" ./build/rootfs/ roo
 # if installed already.
 ssh $ssh_opts -i $sshkey_path -p $ssh_port root@localhost <<EOF
 set -xeuo pipefail
-systemctl enable console-login-helper-messages-issuegen.path
-systemctl enable console-login-helper-messages-motdgen.path
 systemctl enable console-login-helper-messages-gensnippet-os-release.service
 systemctl enable console-login-helper-messages-gensnippet-ssh-keys.service
 systemctl reboot
