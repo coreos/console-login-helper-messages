@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+# MOTD-related definitions for console-login-helper-messages.
+
+. /usr/lib/console-login-helper-messages/libutil.sh
+
+private_motd_snippets_path="/run/${PKG_NAME}/motd.d"
+public_motd_snippets_path="/run/motd.d"
+if [ "${USE_PUBLIC_RUN_DIR}" == "false" ]; then
+    RUN_SNIPPETS="${private_motd_snippets_path}"
+else
+    RUN_SNIPPETS="${public_motd_snippets_path}"
+fi
