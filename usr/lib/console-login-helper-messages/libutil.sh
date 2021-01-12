@@ -33,6 +33,7 @@ write_via_tempfile() {
     local generated_file="$1"
     local staged_file="$(mktemp --tmpdir="${tempfile_dir}" "${tempfile_template}")"
     cat > "${staged_file}"
+    chmod a+r "${staged_file}"
     ${mv_Z} "${staged_file}" "${generated_file}"
 }
 
