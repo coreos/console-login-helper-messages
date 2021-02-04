@@ -6,11 +6,9 @@ set -xeuo pipefail
 
 . ${KOLA_EXT_DATA}/test-util.sh
 
-for unit in motdgen.path gensnippet-os-release.service; do
-  if ! systemctl is-enabled ${PKG_NAME}-${unit}; then
-    fatal "unit ${unit} not enabled"
-  fi
-done
+if ! systemctl is-enabled ${PKG_NAME}-gensnippet-os-release.service; then
+  fatal "unit ${unit} not enabled"
+fi
 
 # Check that the OS Release snippet was created.
 assert_has_file ${MOTD_RUN_SNIPPETS_PATH}/21_os_release.motd
