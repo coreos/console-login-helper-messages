@@ -24,12 +24,12 @@ Useful in situations where a desktop environment is not available and informatio
 The following messages will show before or upon login after installing `console-login-helper-messages` and enabling the needed units (see [manual](doc/manual.md)).
 
 - issuegen:
-    - [x] available ssh keys from `/etc/ssh`
-    - [x] ip addresses of network interfaces to SSH into
+  - SSH keys (before login)
+  - Network interface information (before login)
 - motdgen:
-    - [x] system information from `/etc/os-release`
+  - OS release information (at login)
 - profile:
-    - [x] failed systemd units
+  - Failed systemd units (at login)
 
 ### Example
 
@@ -62,11 +62,6 @@ To verify working package functionality manually (for now), see the
 ## Customizing
 
 The motd/issue messages are defaults and can be disabled following the [manual](doc/manual.md#Disabling-messages).
-
-Messages can be appended to the motd or issue, by placing
-files in the directories sourced by motdgen/issuegen to generate
-the message (see [manual](doc/manual.md#Appending-messages)).
-
 ## Development
 
 For information on contributing and testing changes in a virtual

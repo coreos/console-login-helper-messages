@@ -21,13 +21,8 @@ all:
 install: all
 	(set -euo pipefail; \
 	# package-specific directories \
-	mkdir -p $(DESTDIR)$(PREFIX)/lib/$(PACKAGE)/issue.d; \
-	mkdir -p $(DESTDIR)$(PREFIX)/lib/$(PACKAGE)/motd.d; \
-	mkdir -p $(DESTDIR)$(SYSCONFDIR)/$(PACKAGE)/issue.d; \
-	mkdir -p $(DESTDIR)$(SYSCONFDIR)/$(PACKAGE)/motd.d; \
 	# external directories \
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/issue.d; \
-	mkdir -p $(DESTDIR)$(SYSCONFDIR)/motd.d; \
 	mkdir -p $(DESTDIR)$(SYSCONFDIR)/profile.d; \
 	# install \
 	# udev rules are not installed by default. \

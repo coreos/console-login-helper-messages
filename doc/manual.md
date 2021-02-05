@@ -21,19 +21,23 @@
 ## Architecture overview
 
 By default, `console-login-helper-messages` provides several units and scripts
-for displaying helpful messages before or at login. Currently, the following 
+for displaying helpful messages before or upon login. Currently, the following 
 messages are displayed:
+- issuegen:
   - SSH keys (before login)
   - Network interface information (before login)
-  - OS release information (after login)
-  - Failed systemd units (after login)
+- motdgen:  
+  - OS release information (at login)
+- profile:  
+  - Failed systemd units (at login)
 
 The following default units and scripts are in charge of generating the information
-that needs to be displayed in a MOTD or issue, and placing the sourced information to
-the public runtime directories `/run/{issue,motd}.d`:
+that needs to be displayed in a MOTD or issue, and displaying the sourced information
+upon and before login:
   - `console-login-helper-messages-gensnippet-ssh-keys.service` (SSH keys)
   - `etc/NetworkManager/dispatcher.d/90-console-login-helper-messages-gensnippet-if` (Network interface info)
   - `console-login-helper-messages-gensnippet-os-release.service` (OS release info)
+  - `share/profile.sh` (Failed systemd units)
 
 ## Installation
 
@@ -54,8 +58,8 @@ subpackages in the following way:
 | package                                | function |
 | -------------------------------------- | -------- |
 | console-login-helper-messages          | base directory layout for this packge (required by all subpackages) |
-| console-login-helper-messages-issuegen | messages shown on serial console using issue (SSH keys, IP address for SSH) |
-| console-login-helper-messages-motdgen  | messages shown using the motd paths after SSH in (OS release information) |
+| console-login-helper-messages-issuegen | messages shown before login via serial console using issue (SSH keys, IP address for SSH) |
+| console-login-helper-messages-motdgen  | messages shown using the motd paths at login (OS release information) |
 | console-login-helper-messages-profile  | messages shown using /etc/profile.d script, shown on login to bash terminal (failed systemd units) |
 
 The `install` target of the [Makefile](../Makefile) is the source of truth
@@ -148,9 +152,7 @@ systemctl enable console-login-helper-messages-gensnippet-ssh-keys.service
 
 Network interface information is shown via a 
 [NetworkManager Dispatcher script](/etc/NetworkManager/dispatcher.d/90-console-login-helper-messages-gensnippet_if),
-and will display in `issue` by default. If using private runtime directories, 
-the `-issuegen` subpackage must also be installed and `-issuegen.path` shown 
-above must be enabled.
+and will display in `issue` by default.
 
 On systems where NetworkManager is unavailable, udev rules could be used to 
 detect new interfaces being added/removed. Udev rules are disabled by default and
@@ -166,10 +168,10 @@ However, provided that the configurations described in
 [Integrating into a distribution](#integrating-into-a-distribution) are configured
 and the right versions of upstream tools are installed, then:
 
-- To have a message appended to the MOTD, the files (ending in `.motd`) to append
-  can be dropped in `/etc/motd.d/`.
-- To have a message appended to the issue, the files (ending in `.issue`)
-  to append can be dropped in `/etc/issue.d/`.
+- To have a message appended to the MOTD, the files to append can be dropped
+  in `/etc/motd.d/`.
+- To have a message appended to the issue, the files to append can be dropped
+  in `/etc/issue.d/`.
 
 ### Disabling messages
 
@@ -184,11 +186,11 @@ systemctl disable console-login-helper-messages-gensnippet-os-release.service
 systemctl disable console-login-helper-messages-gensnippet-ssh-keys.service
 ```
 
-The `profile` messages can be disabled only by uninstalling
+The `profile` messages (failed systemd units) can be disabled only by uninstalling
 `console-login-helper-messages-profile`.
 
 The network interface information can only be disabled by uninstalling
-`console-login-helper-messages-issue`.
+`console-login-helper-messages-issuegen`.
 
 ## Troubleshooting
 
