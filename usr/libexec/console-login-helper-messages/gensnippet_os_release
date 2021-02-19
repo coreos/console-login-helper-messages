@@ -15,5 +15,5 @@ set -e
 
 source /usr/lib/os-release
 OS_RELEASE_OUTDIR="${RUN_SNIPPETS}"
-echo -e "\e[${ANSI_COLOR}m${PRETTY_NAME}\e[39m" \
+echo -e "\e[${ANSI_COLOR}m${PRETTY_NAME}\e[0m" \
     | write_via_tempfile "${OS_RELEASE_OUTDIR}/21_os_release.motd"
