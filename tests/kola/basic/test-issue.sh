@@ -32,7 +32,6 @@ fi
 # Check that a new issue snippet is generated when a .issue file is dropped into 
 # the issue run directory.
 echo 'foo' > ${ISSUE_RUN_SNIPPETS_PATH}/10_foo.issue
-sleep 2
 faketty agetty_output.txt agetty --show-issue
 assert_file_has_content agetty_output.txt 'foo'
 ok "display new single issue snippet"
@@ -43,7 +42,6 @@ for i in {1..150};
 do
     echo "Issue snippet: $i" > ${ISSUE_RUN_SNIPPETS_PATH}/${i}_spam.issue
 done
-sleep 2
 faketty agetty_output.txt agetty --show-issue
 for i in {1..150};
 do

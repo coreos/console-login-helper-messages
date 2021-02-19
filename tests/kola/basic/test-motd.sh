@@ -23,7 +23,6 @@ cat my.key.pub >> ~/.ssh/authorized_keys
 # Check that a new motd snippet will be displayed at login from SSH when a .motd
 # file is dropped into the MOTD run directory.
 echo 'foo' > ${MOTD_RUN_SNIPPETS_PATH}/10_foo.motd
-sleep 1
 ( timeout 1 script -c "ssh -tt -o StrictHostKeyChecking=no -i my.key root@localhost" ssh_login_output.txt ) || :
 assert_file_has_content ssh_login_output.txt 'foo'
 ok "display new MOTD"
