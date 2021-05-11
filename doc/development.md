@@ -72,7 +72,7 @@ run repeatedly.
 
 **Note**: the recommended development flow for faster iteration is using
 `make install` described in the sections above. The specfile in Fedora
-SCM may also be out of date, e.g. if the master branch of the upstream
+SCM may also be out of date, e.g. if the main branch of the upstream
 repository added files that haven't been declared in the specfile.
 
 The included `build_rpm.sh` script will archive the current checked out
@@ -129,14 +129,14 @@ cd hack/
 
 #### Building a FCOS image with the new changes using CoreOS Assembler `build-fast`
 Please refer to the CoreOS Assembler's 
-[Kola external tests README](https://github.com/coreos/coreos-assembler/blob/master/mantle/kola/README-kola-ext.md#fast-build-and-iteration-on-your-projects-tests) 
+[Kola external tests README](https://github.com/coreos/coreos-assembler/blob/main/mantle/kola/README-kola-ext.md#fast-build-and-iteration-on-your-projects-tests) 
 for instructions on fast-building a qemu image for testing.
 
 #### Building a FCOS image with the new changes using CoreOS Assembler overrides
 
 Please refer to the CoreOS Assembler 
-[README](https://github.com/coreos/coreos-assembler/blob/master/README.md#getting-started---prerequisites) 
-and [README-devel](https://github.com/coreos/coreos-assembler/blob/master/README-devel.md#using-overrides) 
+[README](https://github.com/coreos/coreos-assembler/blob/main/README.md#getting-started---prerequisites) 
+and [README-devel](https://github.com/coreos/coreos-assembler/blob/main/README-devel.md#using-overrides) 
 for the most up-to-date instructions on how to build a FCOS image and use 
 overrides, respectively.
 
