@@ -1,6 +1,7 @@
 [Unit]
 Description=Generate SSH keys snippet for display via console-login-helper-messages
 Documentation=https://github.com/coreos/console-login-helper-messages
+Before=systemd-user-sessions.service
 After=sshd-keygen.target
 
 [Service]
