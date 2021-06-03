@@ -21,6 +21,3 @@ for KEY_FILE in $(find "${SSH_DIR}" -name 'ssh_host_*_key') ; do
 done \
     | awk '{print "SSH host key: " $2 " " $4}' \
     | write_via_tempfile "${SSH_KEY_OUTDIR}/21_${CLHM_FILE_MARKER}_ssh_host_keys.issue"
-
-# Reload the agetty console upon generation of new issue
-/usr/sbin/agetty --reload
