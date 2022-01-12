@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/bash
 # This is a NetworkManager dispatcher script for generating issue snippets when
 # networking interfaces that are either physical devices OR virtual devices 
 # backed by physical devices are activated.

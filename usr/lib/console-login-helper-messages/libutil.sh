@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 #
 # Collection of util functions and common definitions for
 # console-login-helper-messages scripts.
