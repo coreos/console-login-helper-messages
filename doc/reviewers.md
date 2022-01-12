@@ -67,7 +67,7 @@ To see the full instructions available to the user, please see the [manual](manu
 - [x] A motd message can be appended and displayed
 
         # echo "hello" > /run/console-login-helper-messages/motd.d/00_hello.motd
-        # cat /run/motd.d/40_console-login-helper-messages.motd 
+        # cat /run/motd.d/40_console-login-helper-messages.motd
         hello
         Fedora 29 (Cloud Edition)
 
