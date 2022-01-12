@@ -1,4 +1,4 @@
-#!/bin/bash     
+#!/bin/bash
 
 # Test for motdgen's basic functionality
 

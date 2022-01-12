@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Generate snippets for network devices, invoked by a NetworkManager dispatcher 
+# Generate snippets for network devices, invoked by a NetworkManager dispatcher
 # script.
 
 # Copyright (c) 2020 Fedora CoreOS Authors. All rights reserved.
@@ -23,13 +23,13 @@ fi
 interface=$1
 action=$2
 
-# We say that a device is backed by a real device if it is a real device or it 
+# We say that a device is backed by a real device if it is a real device or it
 # has any subordinate devices that are backed by a real device.
-# We assume that a device is real if there exists a `device` symlink in the 
-# `/sys/class/net/{interface}` directory of that device. 
-# We assume that a device's subordinate devices (if any), are identified under 
+# We assume that a device is real if there exists a `device` symlink in the
+# `/sys/class/net/{interface}` directory of that device.
+# We assume that a device's subordinate devices (if any), are identified under
 # the `/sys/class/net/${interface}/lower_` directory.
-# Takes in the full path of the device in question as an argument. 
+# Takes in the full path of the device in question as an argument.
 is_iface_backed_by_real_device() {
     iface=$1
 
@@ -38,7 +38,7 @@ is_iface_backed_by_real_device() {
         return 0
     fi
 
-    # Check if device has any subordinate devices that are backed by a real 
+    # Check if device has any subordinate devices that are backed by a real
     # device, recursively.
     for subifacedir in ${iface}/lower_*; do
         # Bash still runs the loop if the wildcard does not match anything.
