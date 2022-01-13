@@ -34,20 +34,20 @@ is_iface_backed_by_real_device() {
     iface=$1
 
     # Check if device is real.
-    if [ -e ${iface}/device ]; then
+    if [[ -e "${iface}/device" ]]; then
         return 0
     fi
 
     # Check if device has any subordinate devices that are backed by a real
     # device, recursively.
-    for subifacedir in ${iface}/lower_*; do
+    for subifacedir in "${iface}/lower_"*; do
         # Bash still runs the loop if the wildcard does not match anything.
         # Skip non-existent directories.
-        if [ ! -e "$subifacedir" ]; then
+        if [[ ! -e "${subifacedir}" ]]; then
             break
         fi
-        subiface=$(readlink -f ${subifacedir})
-        if is_iface_backed_by_real_device ${subiface}; then
+        subiface="$(readlink -f "${subifacedir}")"
+        if is_iface_backed_by_real_device "${subiface}"; then
             return 0
         fi
     done
@@ -61,14 +61,14 @@ outfile="${RUN_SNIPPETS}/22_${CLHM_FILE_MARKER}_${interface}.issue"
 case "${action}" in
     up)
         iface_full_path="/sys/class/net/${interface}"
-        if is_iface_backed_by_real_device ${iface_full_path}; then
+        if is_iface_backed_by_real_device "${iface_full_path}"; then
             echo "${interface}: \\4{${interface}} \\6{${interface}}" \
-                | write_via_tempfile ${outfile}
+                | write_via_tempfile "${outfile}"
         fi
         /usr/sbin/agetty --reload
         ;;
     down)
-        rm -f ${outfile}
+        rm -f "${outfile}"
         /usr/sbin/agetty --reload
         ;;
 esac
