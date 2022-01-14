@@ -3,5 +3,5 @@
 cosaPod {
     checkout scm
     fcosBuild(skipKola: true, make: true)
-    fcosKola(skipUpgrade: true, extraArgs: "ext.*")
+    fcosKola(skipUpgrade: true, extraArgs: "ext.console-login-helper-messages.*")
 }
