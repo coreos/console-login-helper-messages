@@ -20,10 +20,12 @@ tempfile_template="${PKG_NAME}.XXXXXXXXXX.tmp"
 # Use same filesystem, under /run, as where snippets are generated, so
 # that rename operations through `mv` are atomic.
 tempfile_dir="/run/${PKG_NAME}"
-# Default SELinux context at destination is applied, e.g. for sshd which
-# requires that written files in `/run/motd.d` maintain the type
-# `pam_var_run_t`.
-mv_Z="mv -Z"
+# Define the restorecon command to run to apply the default SELinux
+# to the destination file e.g. for sshd which requires that written
+# files in `/run/motd.d` maintain the type `pam_var_run_t`. If no
+# restorecon command exists on the system we'll run `true` instead
+# as a noop.
+restorecon=$(command -v restorecon || echo "true")
 
 # Write stdin to a tempfile, and rename the tempfile to the path given
 # as an argument. When called from multiple processes on the same
@@ -34,7 +36,8 @@ write_via_tempfile() {
     local staged_file="$(mktemp --tmpdir="${tempfile_dir}" "${tempfile_template}")"
     cat > "${staged_file}"
     chmod a+r "${staged_file}"
-    ${mv_Z} "${staged_file}" "${generated_file}"
+    mv "${staged_file}" "${generated_file}"
+    ${restorecon} "${generated_file}"
 }
 
 # Write concatenation of all files with a given suffix from a list of
@@ -53,5 +56,6 @@ cat_via_tempfile() {
         # found in the source directory.
         cat "${source_dir}"/*"$filter_suffix" 2>/dev/null >> "${staged_file}" || :
     done
-    ${mv_Z} "${staged_file}" "${generated_file}"
+    mv "${staged_file}" "${generated_file}"
+    ${restorecon} "${generated_file}"
 }
