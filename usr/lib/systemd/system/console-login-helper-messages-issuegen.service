@@ -3,9 +3,6 @@ Description=Generate console-login-helper-messages issue snippet
 Documentation=https://github.com/coreos/console-login-helper-messages
 Before=systemd-user-sessions.service
 After=console-login-helper-messages-issuegen.path
-# Only run if source directories have `.issue` files.
-ConditionPathExistsGlob=|/run/console-login-helper-messages/issue.d/*.issue
-ConditionPathExistsGlob=|/etc/console-login-helper-messages/issue.d/*.issue
 # Set rate limit to twice per second just in case. With `ExecStartPre=` below,
 # we should not have any systemd 'start-limit-hit' failures.
 StartLimitIntervalSec=1
