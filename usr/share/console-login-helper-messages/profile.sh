@@ -1,5 +1,4 @@
-# /usr/share/console-login-helper-messages/profile.sh
-
+# Print count of failed systemd units for interactive shells
 # Originally from https://github.com/coreos/baselayout/blob/master/baselayout/coreos-profile.sh
 
 # Only print for interactive shells.

@@ -8,7 +8,7 @@ runv() {
 
 N_TESTS=0
 ok() {
-    echo "ok" $@
+    echo "ok" "$@"
     N_TESTS=$((N_TESTS + 1))
 }
 
@@ -18,7 +18,7 @@ tap_finish() {
 }
 
 fatal() {
-    echo error: $@ 1>&2; exit 1
+    echo error: "$@" 1>&2; exit 1
 }
 
 # Dump ls -al + file contents to stderr, then fatal()
