@@ -57,7 +57,7 @@ subpackages in the following way:
 
 | package                                | function |
 | -------------------------------------- | -------- |
-| console-login-helper-messages          | base directory layout for this packge (required by all subpackages) |
+| console-login-helper-messages          | base directory layout for this package (required by all subpackages) |
 | console-login-helper-messages-issuegen | messages shown before login via serial console using issue (SSH keys, IP address for SSH) |
 | console-login-helper-messages-motdgen  | messages shown using the motd paths at login (OS release information) |
 | console-login-helper-messages-profile  | messages shown using /etc/profile.d script, shown on login to bash terminal (failed systemd units) |
