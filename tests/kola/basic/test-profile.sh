@@ -25,7 +25,7 @@ systemctl start ${PKG_NAME}-fail-unit-test.service || :
 
 cd $(mktemp -d)
 
-bash -i <<< "echo Displaying failed units" > console-output.txt
+bash -i <<< "echo Displaying failed units" &> console-output.txt
 assert_file_has_content console-output.txt \
     '[systemd]' \
     'Failed Units: ' \
