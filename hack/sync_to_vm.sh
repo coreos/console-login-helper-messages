@@ -32,6 +32,7 @@ ssh $ssh_opts -i $sshkey_path -p $ssh_port root@localhost <<EOF
 set -xeuo pipefail
 systemctl enable console-login-helper-messages-gensnippet-os-release.service
 systemctl enable console-login-helper-messages-gensnippet-ssh-keys.service
+systemctl enable console-login-helper-messages-gensnippet-check-mounts.service
 systemctl reboot
 EOF
 

@@ -1,0 +1,39 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2020 Fedora CoreOS Authors. All rights reserved.
+# Copyright (c) 2013 The CoreOS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# Modified from the CoreOS repository: https://github.com/coreos/init/blob/master/scripts/sshd_keygen
+
+set -e
+
+. /usr/lib/console-login-helper-messages/libutil.sh
+. /usr/lib/console-login-helper-messages/issue.defs
+
+OUTDIR="${RUN_SNIPPETS}"
+
+message=""
+
+# Check if the root filesystem source is "composefs"
+root_source=$(findmnt / --json | jq -r '.filesystems[0].source')
+if [[ "$root_source" != "composefs" ]]; then
+    message+="Warning: Root mountpoint ('/') is not a 'composefs' mount."$'\n'
+fi
+
+# Check if / is mounted read-only
+root_options=$(findmnt / --json | jq -r '.filesystems[].options')
+if [[ $(echo "$root_options" | tr ',' '\n' | grep -c '^ro$') -ne 1 ]]; then
+    message+="Warning: Root mountpoint ('/') is not mounted read-only"$'\n'
+fi
+
+# Check if /sysroot is mounted read-only
+sysroot_options=$(findmnt /sysroot --json | jq -r '.filesystems[].options')
+if [[ $(echo "$sysroot_options" | tr ',' '\n' | grep -c '^ro$') -ne 1 ]]; then
+    message+="Warning: '/sysroot' is not mounted read-only"$'\n'
+fi
+
+# Remove trailing newline
+message="${message%$'\n'}"
+
+echo "$message" | write_via_tempfile "$OUTDIR/21_mount.issue"
