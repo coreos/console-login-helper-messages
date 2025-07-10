@@ -1,9 +1,3 @@
-discover:
-  how: fmf
-  filter: "tag: smoke"
-execute:
-  how: tmt
-
 # This prepare is used to control when console-login-helper-messages is installed using
 # the distribution package or when it is built from source in the test environment
 prepare:
@@ -32,3 +26,11 @@ prepare:
     script: |
       set -x -e -o pipefail
       echo "CLHM_BIN_DIR=/usr/libexec/console-login-helper-messages"  > /tmp/clhm_bin_dir
+  - name: Enable console-login-helper-messages systemd units
+    when: use_built_from_src is not defined or use_built_from_src == false
+    how: shell
+    script: |
+      set -x -e -o pipefail
+      # Enable the required systemd units for kola tests
+      systemctl enable console-login-helper-messages-gensnippet-ssh-keys.service || true
+      systemctl enable console-login-helper-messages-gensnippet-os-release.service || true
