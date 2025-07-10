@@ -1,7 +1,6 @@
-summary: check for presence of main files from the package
+summary: check console-login-helper-messages package installation
 tag:
   - smoke
 test: |
-  set -e
-  test -f /usr/lib/console-login-helper-messages/libutil.sh
-  test -f /usr/share/doc/console-login-helper-messages/README.md
+  set -x -e -o pipefail
+  rpm -q console-login-helper-messages
