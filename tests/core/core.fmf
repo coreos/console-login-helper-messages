@@ -1,0 +1,7 @@
+summary: check for presence of main files from the package
+tag:
+  - smoke
+test: |
+  set -e
+  test -f /usr/lib/console-login-helper-messages/libutil.sh
+  test -f /usr/share/doc/console-login-helper-messages/README.md

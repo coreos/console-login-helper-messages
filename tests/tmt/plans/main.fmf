@@ -1,0 +1,34 @@
+discover:
+  how: fmf
+  filter: "tag: smoke"
+execute:
+  how: tmt
+
+# This prepare is used to control when console-login-helper-messages is installed using
+# the distribution package or when it is built from source in the test environment
+prepare:
+  - name: Set CLHM_BIN_DIR when built from source
+    when: use_built_from_src is defined and use_built_from_src == true
+    how: shell
+    script: |
+      set -x -e -o pipefail
+      echo "Preparing the test environment"
+      CLHM_BIN_NAME="gensnippet_if"
+      PARENT_DIR=$(dirname "${TMT_TREE}")
+      CLHM_BIN_FULL_PATH=$(find "${PARENT_DIR}" -type f -name "${CLHM_BIN_NAME}")
+      if [ -z "${CLHM_BIN_FULL_PATH}" ]; then
+          echo "gensnippet_if file not found."
+          exit 1
+      fi
+      CLHM_BIN_DIR=$(dirname "${CLHM_BIN_FULL_PATH}")
+      echo "CLHM_BIN_DIR=${CLHM_BIN_DIR}" > /tmp/clhm_bin_dir
+  - name: Install console-login-helper-messages package
+    when: use_built_from_src is not defined or use_built_from_src == false
+    how: install
+    package: console-login-helper-messages
+  - name: Set CLHM_BIN_DIR when installed package
+    when: use_built_from_src is not defined or use_built_from_src == false
+    how: shell
+    script: |
+      set -x -e -o pipefail
+      echo "CLHM_BIN_DIR=/usr/libexec/console-login-helper-messages"  > /tmp/clhm_bin_dir
