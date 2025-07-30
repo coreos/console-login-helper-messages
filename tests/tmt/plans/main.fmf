@@ -7,11 +7,11 @@ prepare:
     script: |
       set -x -e -o pipefail
       echo "Preparing the test environment"
-      CLHM_BIN_NAME="gensnippet_if"
+      CLHM_BIN_NAME="gensnippet_os_release"
       PARENT_DIR=$(dirname "${TMT_TREE}")
       CLHM_BIN_FULL_PATH=$(find "${PARENT_DIR}" -type f -name "${CLHM_BIN_NAME}")
       if [ -z "${CLHM_BIN_FULL_PATH}" ]; then
-          echo "gensnippet_if file not found."
+          echo "gensnippet_os_release file not found."
           exit 1
       fi
       CLHM_BIN_DIR=$(dirname "${CLHM_BIN_FULL_PATH}")
