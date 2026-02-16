@@ -26,11 +26,11 @@ To see the full instructions available to the user, please see the [manual](manu
         `ssh localhost` from within the machine should display this
         information.
 
-- [x] The issue symlink was created and issue generated
+- [x] The issue file was created and issue generated
 
-        $ ls -l /etc/issue.d/40_console-login-helper-messages.issue
-        lrwxrwxrwx. 1 root root 48 Dec 10 20:12 /etc/issue.d/40_console-login-helper-messages.issue -> /run/console-login-helper-messages/40_console-login-helper-messages.issue
-        $ cat /run/console-login-helper-messages/40_console-login-helper-messages.issue
+        $ ls -l /run/issue.d/40_console-login-helper-messages.issue
+        -rw-r--r--. 1 root root 256 Dec 10 20:12 /run/issue.d/40_console-login-helper-messages.issue
+        $ cat /run/issue.d/40_console-login-helper-messages.issue
         SSH host key: SHA256:0n7Zlbmhnjr7P+pNA2hYM0MPmdmPBNnGQ+I90Q1Dwgk (ECDSA)
         SSH host key: SHA256:FUpLCL6eYYCT5s2izSxGvwaE6lEqjp3GO34UEa7G/UQ (ED25519)
         SSH host key: SHA256:nApsM6b6l2peh/+X5iYInMFcAeEm4T6irRp/VTeSvDM (RSA)
