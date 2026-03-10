@@ -1,10 +1,14 @@
 #!/bin/bash
+## kola:
+##   tags: "platform-independent needs-internet"
 
 # Test for motdgen's basic functionality
 
 set -xeuo pipefail
 
 . ${KOLA_EXT_DATA}/test-util.sh
+
+install_dependencies
 
 unit="${PKG_NAME}-gensnippet-os-release.service"
 if ! systemctl is-enabled "${unit}"; then
