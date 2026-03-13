@@ -1,10 +1,14 @@
 #!/bin/bash
+## kola:
+##   tags: "platform-independent needs-internet"
 
 # Test for profile.sh
 
 set -xeuo pipefail
 
 . ${KOLA_EXT_DATA}/test-util.sh
+
+install_dependencies
 
 # Add a systemd unit that will fail
 cat > /etc/systemd/system/${PKG_NAME}-fail-unit-test.service <<EOF

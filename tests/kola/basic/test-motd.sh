@@ -1,10 +1,14 @@
 #!/bin/bash
+## kola:
+##   tags: "platform-independent needs-internet"
 
 # Test for motdgen's basic functionality
 
 set -xeuo pipefail
 
 . ${KOLA_EXT_DATA}/test-util.sh
+
+install_dependencies
 
 unit="${PKG_NAME}-gensnippet-os-release.service"
 if ! systemctl is-enabled "${unit}"; then
@@ -25,7 +29,7 @@ cat my.key.pub >> ~/.ssh/authorized_keys
 # file is dropped into the MOTD run directory.
 echo 'foo' > "${MOTD_RUN_SNIPPETS_PATH}/10_foo.motd"
 ( timeout 5 script -c "ssh -tt -o StrictHostKeyChecking=no -i my.key root@localhost" ssh_login_output.txt ) || :
-assert_file_has_content ssh_login_output.txt 'foo'
+assert_file_has_content ssh_login_output.txt '^foo'
 ok "display new MOTD"
 
 tap_finish

@@ -1,4 +1,6 @@
 #!/bin/bash
+## kola:
+##   tags: "platform-independent needs-internet"
 
 # Test for issuegen's basic functionality
 
@@ -6,6 +8,7 @@ set -xeuo pipefail
 
 . ${KOLA_EXT_DATA}/test-util.sh
 
+install_dependencies
 # Pretend to be running from a TTY
 faketty () {
     outfile=$1
