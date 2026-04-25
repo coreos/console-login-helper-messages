@@ -1,0 +1,6 @@
+summary: check console-login-helper-messages package installation
+tag:
+  - smoke
+test: |
+  set -x -e -o pipefail
+  rpm -q console-login-helper-messages
