@@ -1,0 +1,48 @@
+name: TMT Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      plan_filter:
+        description: |
+          Test plan filter name, ie: tag:smoke.
+          If provided, only tests matching this filter will be run,
+          otherwise all tests will be run.
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  tmt-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set additional paths
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          set -xeuo pipefail
+          sudo apt-get update
+          sudo apt-get install -y podman
+          pip install --user "tmt[provision]"
+
+      - name: Run TMT tests
+        run: |
+          set -xeuo pipefail
+          PLAN_FILTER=()
+          if [ -n "${{ github.event.inputs.plan_filter }}" ]; then
+            PLAN_FILTER=(plan --filter '${{ github.event.inputs.plan_filter }}')
+          fi
+          tmt run --all --debug -vvvv provision --how container "${PLAN_FILTER[@]}"

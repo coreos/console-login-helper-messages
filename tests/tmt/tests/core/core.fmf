@@ -1,0 +1,6 @@
+summary: check clhm package is installed
+tag:
+  - smoke
+test: |
+  set -xeuo pipefail
+  rpm -q console-login-helper-messages

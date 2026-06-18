@@ -1,0 +1,26 @@
+upstream_package_name: console-login-helper-messages
+upstream_tag_template: v{version}
+
+downstream_package_name: console-login-helper-messages
+specfile_path: rpm/console-login-helper-messages.spec
+
+jobs:
+  - job: copr_build
+    trigger: pull_request
+    targets:
+      - fedora-rawhide-x86_64
+      - centos-stream-10-x86_64
+      - centos-stream-9-x86_64
+
+  - job: tests
+    trigger: pull_request
+    targets:
+      - fedora-rawhide-x86_64
+      - centos-stream-10-x86_64
+      - centos-stream-9-x86_64
+    tmt_plan: /tests/tmt/plans/smoke
+
+  - job: propose_downstream
+    trigger: release
+    dist_git_branches:
+      - fedora-all
