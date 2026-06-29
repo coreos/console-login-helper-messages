@@ -1,0 +1,4 @@
+prepare:
+  - name: Install console-login-helper-messages package
+    how: install
+    package: console-login-helper-messages
