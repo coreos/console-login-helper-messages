@@ -3,8 +3,8 @@
 
 # Only print for interactive shells.
 if [[ $- == *i* ]]; then
-    # If not using systemd, return.
-    if ! grep -q 'systemd' /proc/1/stat; then
+    # If not booted with systemd, return.
+    if [[ ! -d /run/systemd/system ]]; then
         return 0
     fi
 
